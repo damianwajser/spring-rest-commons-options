@@ -1,4 +1,4 @@
-package ar.com.dwajser.annotations;
+package com.github.damianwajser.annotations;
 
 import static java.lang.annotation.ElementType.FIELD;
 

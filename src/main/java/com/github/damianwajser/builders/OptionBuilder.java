@@ -1,4 +1,4 @@
-package ar.com.dwajser.builders;
+package com.github.damianwajser.builders;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -19,9 +19,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import ar.com.dwajser.annotations.Auditable;
-import ar.com.dwajser.model.DetailField;
-import ar.com.dwajser.model.DetailResponse;
+import com.github.damianwajser.annotations.Auditable;
+import com.github.damianwajser.model.DetailField;
+import com.github.damianwajser.model.DetailResponse;
 
 public class OptionBuilder {
 

@@ -1,4 +1,4 @@
-package ar.com.dwajser.model;
+package com.github.damianwajser.model;
 
 import java.util.Collection;
 
