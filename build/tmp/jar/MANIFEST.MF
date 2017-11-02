@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Class-Path: gradle-api-4.3.jar groovy-all-2.4.12.jar gradle-installati
+ on-beacon-4.3.jar spring-web-4.3.12.RELEASE.jar jackson-databind-2.9.
+ 2.jar spring-context-4.3.12.RELEASE.jar spring-aop-4.3.12.RELEASE.jar
+  spring-beans-4.3.12.RELEASE.jar spring-expression-4.3.12.RELEASE.jar
+  spring-core-4.3.12.RELEASE.jar jackson-annotations-2.9.0.jar jackson
+ -core-2.9.2.jar commons-logging-1.2.jar
+
