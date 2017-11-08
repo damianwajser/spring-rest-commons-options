@@ -32,3 +32,5 @@ build
 .classpath
 .proyect
 local.properties
+
+target/
