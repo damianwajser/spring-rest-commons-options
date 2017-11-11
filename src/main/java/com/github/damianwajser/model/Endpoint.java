@@ -20,6 +20,7 @@ public class Endpoint implements Comparable<Endpoint> {
 	private QueryString queryString;
 	@JsonIgnore
 	private RequestMethod[] methods;
+	@JsonIgnore
 	private String baseUrl;
 	private String relativeUrl;
 	private Collection<DetailField> bodyRequest;

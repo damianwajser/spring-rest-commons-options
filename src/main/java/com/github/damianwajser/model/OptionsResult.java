@@ -4,7 +4,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
+
+@JsonPropertyOrder("baseUrl")
 public class OptionsResult {
+	@JsonUnwrapped
 	private List<Endpoint> enpoints = new ArrayList<>();
 	private String baseUrl;
 

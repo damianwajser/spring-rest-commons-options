@@ -20,8 +20,10 @@ import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -30,6 +32,9 @@ import com.github.damianwajser.annotations.Auditable;
 import com.github.damianwajser.model.DetailField;
 import com.github.damianwajser.model.QueryString;
 import com.github.damianwajser.model.RequestParams;
+
+import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
+import sun.reflect.generics.reflectiveObjects.TypeVariableImpl;
 
 public final class ReflectionUtils {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ReflectionUtils.class);
@@ -76,35 +81,71 @@ public final class ReflectionUtils {
 		return Optional.ofNullable((RequestMethod[]) AnnotationUtils.getValue(getRequestMqpping(a), "method"));
 	}
 
-	private Type getGenericClass(Class clazz) {
+	private static Type getGenericClass(Class clazz) {
 		return ((ParameterizedType) clazz.getGenericSuperclass()).getActualTypeArguments()[0];
 	}
 
-	private Collection<DetailField> getFieldDetail(Class<?> sourceClass, boolean addAuditble) {
+	public static Collection<DetailField> getFieldDetail(Method m, Class<?> controller, boolean addAuditble) {
 		Collection<DetailField> fields = new ArrayList<>();
-		Class<?> clazz = (Class<?>) this.getGenericClass(sourceClass);
-		while (clazz != null) {
-			for (Field field : clazz.getDeclaredFields()) {
-				if (!Modifier.isStatic(field.getModifiers())) {
-					if (addAuditble) {
-						fields.add(createDetail(field));
-					} else if (!field.isAnnotationPresent(Auditable.class)) {
-						fields.add(createDetail(field));
-					}
-				}
-			}
+		Arrays.asList(m.getParameters()).stream().filter(p -> {
+			boolean ok = p.getAnnotation(PathVariable.class) == null;
+			ok = ok && p.getAnnotation(RequestParam.class) == null;
+			return ok && p.getAnnotation(RequestHeader.class) == null;
+		}).forEach(p1 -> fields.addAll(createDetail(p1, controller, addAuditble)));
 
-			clazz = clazz.getSuperclass();
-		}
 		return fields;
 	}
 
-	private DetailField createDetail(Field field) {
+	// TODO: ver cuando se recive collections de objetos de negocio
+	private static Collection<DetailField> createDetail(Parameter p, Class<?> controller, boolean addAuditable) {
+		Collection<DetailField> detailFields = new ArrayList<>();
+		Type type = p.getParameterizedType();
+		if (type.getClass().equals(TypeVariableImpl.class)) {
+			type = getGenericClass(controller);
+		}
+		if (!isJDKClass(type)) {
+			Class<?> clazz;
+			try {
+				clazz = Class.forName(type.getTypeName());
+				while (clazz != null) {
+					detailFields.addAll(createDetail(addAuditable, clazz));
+					clazz = clazz.getSuperclass();
+				}
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
+		} else {
+			// TODO: ver aca primitivos
+			DetailField detail = new DetailField();
+			detailFields.add(detail);
+		}
+		return detailFields;
+	}
+
+	private static Collection<DetailField> createDetail(boolean addAuditable, Class<?> clazz) {
+		Collection<DetailField> detailFields = new ArrayList<>();
+		for (Field field : clazz.getDeclaredFields()) {
+			if (!Modifier.isStatic(field.getModifiers())) {
+				if (addAuditable) {
+					detailFields.add(createDetail(field));
+				} else if (!field.isAnnotationPresent(Auditable.class)) {
+					detailFields.add(createDetail(field));
+				}
+			}
+		}
+		return detailFields;
+	}
+
+	private static DetailField createDetail(Field field) {
 		DetailField detailField = new DetailField();
 		detailField.setName(field.getName());
 		detailField.setType(field.getType().getSimpleName());
-		detailField.setValidation(this.getValidations(field));
+		detailField.setValidation(getValidations(field));
 		return detailField;
+	}
+
+	private static boolean isJDKClass(Type t) {
+		return t.getTypeName().startsWith("java");
 	}
 
 	public static Collection<String> getValidations(Field field) {
@@ -137,15 +178,15 @@ public final class ReflectionUtils {
 		QueryString q = new QueryString();
 		Arrays.asList(m.getParameters()).forEach(parameter -> {
 			RequestParam a = parameter.getAnnotation(RequestParam.class);
-			if (a != null)
-				q.add(new RequestParams(a.required(), a.value(), parameter.getType().getSimpleName()));
+			if (a != null) {
+				String typeStr = parameter.getType().getSimpleName();
+				Type type = parameter.getParameterizedType();
+				if (type instanceof ParameterizedTypeImpl) {
+					typeStr = ((Class<?>) ((ParameterizedTypeImpl) type).getActualTypeArguments()[0]).getSimpleName();
+				}
+				q.add(new RequestParams(a.required(), a.value(), typeStr));
+			}
 		});
 		return q;
-	}
-
-	public Collection<DetailField> getRequestParamentersDetail(Method m) {
-		Collection<Parameter> parameters = Arrays.asList(m.getParameters());
-		// parameters.forEach(p->get);
-		return null;
 	}
 }

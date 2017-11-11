@@ -8,17 +8,19 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import com.github.damianwajser.model.Endpoint;
 import com.github.damianwajser.model.OptionsResult;
 import com.github.damianwajser.model.QueryString;
 import com.github.damianwajser.utils.ReflectionUtils;
 
 public class OptionBuilder {
-	
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(OptionBuilder.class);
-	
+
 	private Object controller;
 	private String url;
+	@JsonUnwrapped
 	private Collection<Method> methods;
 
 	public OptionBuilder(Object obj) {
@@ -31,7 +33,7 @@ public class OptionBuilder {
 	}
 
 	private void fillBaseUrl() {
-		this.url = ReflectionUtils.getUrls(controller).orElse(new String[]{"/"})[0];
+		this.url = ReflectionUtils.getUrls(controller).orElse(new String[] { "/" })[0];
 	}
 
 	public OptionsResult build() {
@@ -42,11 +44,10 @@ public class OptionBuilder {
 		this.methods.forEach(m -> {
 			String relativeUrl = ReflectionUtils.getRelativeUrl(m);
 			QueryString queryString = ReflectionUtils.getQueryString(m);
-			RequestMethod[] httpMethod = ReflectionUtils.getHttpRequestMethod(m).orElse(new RequestMethod[]{});
-			Endpoint endpoint = new Endpoint(this.url, relativeUrl,httpMethod ,
-					queryString);
+			RequestMethod[] httpMethod = ReflectionUtils.getHttpRequestMethod(m).orElse(new RequestMethod[] {});
+			Endpoint endpoint = new Endpoint(this.url, relativeUrl, httpMethod, queryString);
+			endpoint.setBodyRequest(ReflectionUtils.getFieldDetail(m, controller.getClass(), false));
 			if (!endpoint.getHttpMethod().equals(HttpMethod.OPTIONS.toString())) {
-				System.out.println(endpoint.toString());
 				response.addEnpoint(endpoint);
 			}
 		});
