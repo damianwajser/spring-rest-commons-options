@@ -29,9 +29,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.github.damianwajser.annotations.Auditable;
-import com.github.damianwajser.model.DetailField;
 import com.github.damianwajser.model.QueryString;
 import com.github.damianwajser.model.RequestParams;
+import com.github.damianwajser.model.detailsFields.DetailField;
+import com.github.damianwajser.model.detailsFields.strategys.DetailFieldCreatedStrategyFactory;
 
 import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
 import sun.reflect.generics.reflectiveObjects.TypeVariableImpl;
@@ -81,85 +82,24 @@ public final class ReflectionUtils {
 		return Optional.ofNullable((RequestMethod[]) AnnotationUtils.getValue(getRequestMqpping(a), "method"));
 	}
 
-	private static Type getGenericClass(Class clazz) {
+	public static Type getGenericClass(Class clazz) {
 		return ((ParameterizedType) clazz.getGenericSuperclass()).getActualTypeArguments()[0];
 	}
 
-	public static Collection<DetailField> getFieldDetail(Method m, Class<?> controller, boolean addAuditble) {
+	public static Collection<DetailField> getFieldDetail(Method m, Class<?> controller, boolean addAuditable) {
 		Collection<DetailField> fields = new ArrayList<>();
 		Arrays.asList(m.getParameters()).stream().filter(p -> {
 			boolean ok = p.getAnnotation(PathVariable.class) == null;
 			ok = ok && p.getAnnotation(RequestParam.class) == null;
 			return ok && p.getAnnotation(RequestHeader.class) == null;
-		}).forEach(p1 -> fields.addAll(createDetail(p1, controller, addAuditble)));
+		}).forEach(p1 -> fields.addAll(
+				DetailFieldCreatedStrategyFactory.getCreationStrategy(p1, controller).createDetailField(addAuditable)));
 
 		return fields;
 	}
 
-	// TODO: ver cuando se recive collections de objetos de negocio
-	private static Collection<DetailField> createDetail(Parameter p, Class<?> controller, boolean addAuditable) {
-		Collection<DetailField> detailFields = new ArrayList<>();
-		Type type = p.getParameterizedType();
-		if (type.getClass().equals(TypeVariableImpl.class)) {
-			type = getGenericClass(controller);
-		}
-		if (!isJDKClass(type)) {
-			Class<?> clazz;
-			try {
-				clazz = Class.forName(type.getTypeName());
-				while (clazz != null) {
-					detailFields.addAll(createDetail(addAuditable, clazz));
-					clazz = clazz.getSuperclass();
-				}
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
-			}
-		} else {
-			// TODO: ver aca primitivos
-			DetailField detail = new DetailField();
-			detailFields.add(detail);
-		}
-		return detailFields;
-	}
-
-	private static Collection<DetailField> createDetail(boolean addAuditable, Class<?> clazz) {
-		Collection<DetailField> detailFields = new ArrayList<>();
-		for (Field field : clazz.getDeclaredFields()) {
-			if (!Modifier.isStatic(field.getModifiers())) {
-				if (addAuditable) {
-					detailFields.add(createDetail(field));
-				} else if (!field.isAnnotationPresent(Auditable.class)) {
-					detailFields.add(createDetail(field));
-				}
-			}
-		}
-		return detailFields;
-	}
-
-	private static DetailField createDetail(Field field) {
-		DetailField detailField = new DetailField();
-		detailField.setName(field.getName());
-		detailField.setType(field.getType().getSimpleName());
-		detailField.setValidation(getValidations(field));
-		return detailField;
-	}
-
-	private static boolean isJDKClass(Type t) {
+	public static boolean isJDKClass(Type t) {
 		return t.getTypeName().startsWith("java");
-	}
-
-	public static Collection<String> getValidations(Field field) {
-		Collection<String> validations = new ArrayList<>();
-		Annotation annotations[] = field.getDeclaredAnnotations();
-		if (annotations.length > 0) {
-			for (Annotation annotation : annotations) {
-				Package p = annotation.annotationType().getPackage();
-				if (p.getImplementationTitle() != null && p.getImplementationTitle().equals("hibernate-validator")) {
-					validations.add(field.getDeclaredAnnotations()[0].annotationType().getSimpleName());
-				}
-			}
-		}
-		return validations;
 	}
 
 	/**
