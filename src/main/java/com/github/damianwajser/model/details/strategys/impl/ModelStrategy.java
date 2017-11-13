@@ -1,4 +1,4 @@
-package com.github.damianwajser.model.detailsFields.strategys.impl;
+package com.github.damianwajser.model.details.strategys.impl;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -7,10 +7,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import com.github.damianwajser.annotations.Auditable;
-import com.github.damianwajser.model.detailsFields.DetailField;
-import com.github.damianwajser.model.detailsFields.strategys.DetailFieldStrategy;
+import com.github.damianwajser.model.details.DetailField;
+import com.github.damianwajser.model.details.strategys.DetailFieldStrategy;
 
-public class ModelStrategy implements DetailFieldStrategy{
+public class ModelStrategy extends DetailFieldStrategy{
 
 	private Type type;
 	private Class<?> clazz;

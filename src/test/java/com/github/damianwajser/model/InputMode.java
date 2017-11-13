@@ -12,7 +12,7 @@ public class InputMode extends GenericParameter{
 	 * 
 	 */
 	private static final long serialVersionUID = 8706741155379757541L;
-	@NotEmpty(message="El campo description es obligatorio")
+	@javax.validation.constraints.NotEmpty(message="El campo description es obligatorio")
 	private String description;
 	
 	@NotEmpty(message="El campo channelCode es obligatorio")

@@ -1,18 +1,20 @@
-package com.github.damianwajser.model.detailsFields;
+package com.github.damianwajser.model.details;
 
 import java.util.Collection;
+
+import com.github.damianwajser.model.validators.Validator;
 
 public class DetailField {
 
 	private String name;
 	private String type;
-	private Collection<String> validation;
+	private Collection<Validator> validation;
 
-	public Collection<String> getValidation() {
+	public Collection<Validator> getValidation() {
 		return validation;
 	}
 
-	public void setValidation(Collection<String> validation) {
+	public void setValidation(Collection<Validator> validation) {
 		this.validation = validation;
 	}
 

@@ -1,10 +1,10 @@
-package com.github.damianwajser.model.detailsFields.strategys;
+package com.github.damianwajser.model.details.strategys;
 
 import java.lang.reflect.Parameter;
 import java.lang.reflect.Type;
 
-import com.github.damianwajser.model.detailsFields.strategys.impl.ModelStrategy;
-import com.github.damianwajser.model.detailsFields.strategys.impl.PrimitiveStrategy;
+import com.github.damianwajser.model.details.strategys.impl.ModelStrategy;
+import com.github.damianwajser.model.details.strategys.impl.PrimitiveStrategy;
 import com.github.damianwajser.utils.ReflectionUtils;
 
 import sun.reflect.generics.reflectiveObjects.TypeVariableImpl;

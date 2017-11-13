@@ -1,10 +1,7 @@
 package com.github.damianwajser.utils;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.Parameter;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -28,14 +25,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.github.damianwajser.annotations.Auditable;
 import com.github.damianwajser.model.QueryString;
 import com.github.damianwajser.model.RequestParams;
-import com.github.damianwajser.model.detailsFields.DetailField;
-import com.github.damianwajser.model.detailsFields.strategys.DetailFieldCreatedStrategyFactory;
+import com.github.damianwajser.model.details.DetailField;
+import com.github.damianwajser.model.details.strategys.DetailFieldCreatedStrategyFactory;
 
 import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
-import sun.reflect.generics.reflectiveObjects.TypeVariableImpl;
 
 public final class ReflectionUtils {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ReflectionUtils.class);
@@ -82,7 +77,7 @@ public final class ReflectionUtils {
 		return Optional.ofNullable((RequestMethod[]) AnnotationUtils.getValue(getRequestMqpping(a), "method"));
 	}
 
-	public static Type getGenericClass(Class clazz) {
+	public static Type getGenericClass(Class<?> clazz) {
 		return ((ParameterizedType) clazz.getGenericSuperclass()).getActualTypeArguments()[0];
 	}
 
@@ -92,8 +87,8 @@ public final class ReflectionUtils {
 			boolean ok = p.getAnnotation(PathVariable.class) == null;
 			ok = ok && p.getAnnotation(RequestParam.class) == null;
 			return ok && p.getAnnotation(RequestHeader.class) == null;
-		}).forEach(p1 -> fields.addAll(
-				DetailFieldCreatedStrategyFactory.getCreationStrategy(p1, controller).createDetailField(addAuditable)));
+		}).forEach(p -> fields.addAll(
+				DetailFieldCreatedStrategyFactory.getCreationStrategy(p, controller).createDetailField(addAuditable)));
 
 		return fields;
 	}
