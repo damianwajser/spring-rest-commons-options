@@ -7,6 +7,8 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.aop.framework.Advised;
+import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationContext;
@@ -52,6 +54,13 @@ public class OptionsController implements ApplicationListener<ApplicationReadyEv
 	}
 
 	private void addController(Object v) {
+		if(AopUtils.isAopProxy(v)){
+			try {
+				v = ((Advised)v).getTargetSource().getTarget();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 		String packageName = v.getClass().getPackage().getName();
 		if (!packageName.startsWith("org.springframework.boot.autoconfigure.web")) {
 			OptionsResult result = new OptionBuilder(v).build();

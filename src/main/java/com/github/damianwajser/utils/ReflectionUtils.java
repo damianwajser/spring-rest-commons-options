@@ -81,14 +81,14 @@ public final class ReflectionUtils {
 		return ((ParameterizedType) clazz.getGenericSuperclass()).getActualTypeArguments()[0];
 	}
 
-	public static Collection<DetailField> getFieldDetail(Method m, Class<?> controller, boolean addAuditable) {
+	public static Collection<DetailField> getFieldDetail(Method m, Class<?> controller) {
 		Collection<DetailField> fields = new ArrayList<>();
 		Arrays.asList(m.getParameters()).stream().filter(p -> {
 			boolean ok = p.getAnnotation(PathVariable.class) == null;
 			ok = ok && p.getAnnotation(RequestParam.class) == null;
 			return ok && p.getAnnotation(RequestHeader.class) == null;
 		}).forEach(p -> fields.addAll(
-				DetailFieldCreatedStrategyFactory.getCreationStrategy(p, controller).createDetailField(addAuditable)));
+				DetailFieldCreatedStrategyFactory.getCreationStrategy(p, controller).createDetailField()));
 
 		return fields;
 	}

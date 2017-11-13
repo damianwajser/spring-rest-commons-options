@@ -39,6 +39,10 @@ public class OptionBuilder {
 	public OptionsResult build() {
 		this.fillMethods();
 		this.fillBaseUrl();
+		return getResult();
+	}
+
+	private OptionsResult getResult() {
 		OptionsResult response = new OptionsResult(this.url);
 
 		this.methods.forEach(m -> {
@@ -46,12 +50,11 @@ public class OptionBuilder {
 			QueryString queryString = ReflectionUtils.getQueryString(m);
 			RequestMethod[] httpMethod = ReflectionUtils.getHttpRequestMethod(m).orElse(new RequestMethod[] {});
 			Endpoint endpoint = new Endpoint(this.url, relativeUrl, httpMethod, queryString);
-			endpoint.setBodyRequest(ReflectionUtils.getFieldDetail(m, controller.getClass(), false));
+			endpoint.setBodyRequest(ReflectionUtils.getFieldDetail(m, controller.getClass()));
 			if (!endpoint.getHttpMethod().equals(HttpMethod.OPTIONS.toString())) {
 				response.addEnpoint(endpoint);
 			}
 		});
-
 		return response;
 	}
 

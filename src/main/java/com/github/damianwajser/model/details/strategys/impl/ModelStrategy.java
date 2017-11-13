@@ -10,24 +10,24 @@ import com.github.damianwajser.annotations.Auditable;
 import com.github.damianwajser.model.details.DetailField;
 import com.github.damianwajser.model.details.strategys.DetailFieldStrategy;
 
-public class ModelStrategy extends DetailFieldStrategy{
+public class ModelStrategy extends DetailFieldStrategy {
 
 	private Type type;
 	private Class<?> clazz;
-	
-	
+
 	public ModelStrategy(Type type, Class<?> clazz) {
 		super();
 		this.type = type;
 		this.clazz = clazz;
 	}
+
 	@Override
-	public Collection<DetailField> createDetailField(boolean addAuditable) {
+	public Collection<DetailField> createDetailField() {
 		Collection<DetailField> detailFields = new ArrayList<>();
 		try {
 			clazz = Class.forName(type.getTypeName());
 			while (clazz != null) {
-				detailFields.addAll(createDetail(addAuditable, clazz));
+				detailFields.addAll(createDetail(clazz));
 				clazz = clazz.getSuperclass();
 			}
 		} catch (ClassNotFoundException e) {
@@ -35,15 +35,12 @@ public class ModelStrategy extends DetailFieldStrategy{
 		}
 		return detailFields;
 	}
-	private Collection<DetailField> createDetail(boolean addAuditable, Class<?> clazz) {
+
+	private Collection<DetailField> createDetail(Class<?> clazz) {
 		Collection<DetailField> detailFields = new ArrayList<>();
 		for (Field field : clazz.getDeclaredFields()) {
 			if (!Modifier.isStatic(field.getModifiers())) {
-				if (addAuditable) {
-					detailFields.add(createDetail(field));
-				} else if (!field.isAnnotationPresent(Auditable.class)) {
-					detailFields.add(createDetail(field));
-				}
+				detailFields.add(createDetail(field));
 			}
 		}
 		return detailFields;

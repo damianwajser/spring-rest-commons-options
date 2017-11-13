@@ -8,13 +8,20 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.Range;
+import org.springframework.core.annotation.AnnotationUtils;
+
 import com.github.damianwajser.model.validators.impl.DefaultValidator;
+import com.github.damianwajser.model.validators.impl.RangeValidator;
+import com.github.damianwajser.model.validators.impl.Validator;
 
 public final class ValidatorFactory {
 	private ValidatorFactory() {
 	}
 
-	private static List<String> validatorsPackage = Arrays.asList("javax.validation.constraints", "hibernate-validator");
+	private static List<String> validatorsPackage = Arrays.asList("javax.validation.constraints",
+			"hibernate-validator");
 
 	public static Optional<Collection<Validator>> getValidations(Field field) {
 		Optional<Collection<Validator>> validations = Optional.empty();
@@ -34,11 +41,21 @@ public final class ValidatorFactory {
 	}
 
 	private static Optional<Validator> getValidator(Annotation annotation) {
-		Optional<Validator> v = Optional.empty();
-		Package p = annotation.annotationType().getPackage();
-		if (p.getName() != null && validatorsPackage.contains(p.getImplementationTitle()) || validatorsPackage.contains(p.getName())) {
-			v = Optional.of(new DefaultValidator(annotation));
+		Validator validator = null;
+
+		if (isValidable(annotation)) {
+			if (annotation instanceof Range || annotation instanceof Length) {
+				validator = new RangeValidator(annotation);
+			} else {
+				validator = new DefaultValidator(annotation);
+			}
 		}
-		return v;
+		return Optional.ofNullable(validator);
+	}
+
+	private static boolean isValidable(Annotation annotation) {
+		Package p = annotation.annotationType().getPackage();
+		return p.getName() != null && validatorsPackage.contains(p.getImplementationTitle())
+				|| validatorsPackage.contains(p.getName());
 	}
 }

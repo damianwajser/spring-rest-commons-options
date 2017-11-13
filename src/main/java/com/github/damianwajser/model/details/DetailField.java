@@ -2,13 +2,21 @@ package com.github.damianwajser.model.details;
 
 import java.util.Collection;
 
-import com.github.damianwajser.model.validators.Validator;
+import com.github.damianwajser.model.validators.impl.Validator;
 
 public class DetailField {
 
 	private String name;
 	private String type;
 	private Collection<Validator> validation;
+	boolean auditable;
+	public boolean isAuditable() {
+		return auditable;
+	}
+
+	public void setAuditable(boolean auditable) {
+		this.auditable = auditable;
+	}
 
 	public Collection<Validator> getValidation() {
 		return validation;
