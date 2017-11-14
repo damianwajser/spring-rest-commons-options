@@ -32,7 +32,7 @@ public final class DetailFieldCreatedStrategyFactory {
 	}
 
 	private static DetailFieldStrategy getCreationStrategy(Class<?> controller, Type type) {
-		LOGGER.info("seleccionando strategyField: " + type.getTypeName());
+		LOGGER.debug("seleccionando strategyField: " + type.getTypeName());
 		DetailFieldStrategy strategy = null;
 		if (!ReflectionUtils.isJDKClass(type)) {
 			strategy = new ModelStrategy(type, controller);

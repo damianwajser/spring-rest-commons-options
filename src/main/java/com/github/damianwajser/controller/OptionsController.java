@@ -56,7 +56,7 @@ public class OptionsController implements ApplicationListener<ApplicationReadyEv
 		return result;
 	}
 
-	@RequestMapping(value = "/**", method = RequestMethod.OPTIONS, consumes = "application/x-yaml")
+	@RequestMapping(value = "/**", method = RequestMethod.OPTIONS, consumes = "application/x-yaml", produces = "application/x-yaml")
 	public Object handleResultsYML(HttpServletRequest request) throws HttpRequestMethodNotSupportedException {
 		String path = StringUtils.deleteIfEnd(request.getServletPath(), "/");
 		LOGGER.info("solicitando RAML: " + path);
@@ -75,27 +75,12 @@ public class OptionsController implements ApplicationListener<ApplicationReadyEv
 			Map<String, Object> beans = context.getBeansWithAnnotation(RestController.class);
 			LOGGER.debug("Get All Controllers");
 			beans.putAll(context.getBeansWithAnnotation(Controller.class));
-			beans.forEach((k, v) -> addController(v));
+			beans.forEach((k, v) -> new JsonBuilder(v).build().ifPresent(c -> {
+				LOGGER.info("Add the controller for: " + c.getBaseUrl());
+				controllers.put(c.getBaseUrl(), c);
+			}));
 		} catch (Exception e) {
 			LOGGER.error("problemas al crear la dcumentacion", e);
-		}
-	}
-
-	private void addController(Object v) {
-		if (AopUtils.isAopProxy(v)) {
-			try {
-				LOGGER.debug(v + " spring proxy, get real object");
-				v = ((Advised) v).getTargetSource().getTarget();
-				LOGGER.debug("Real Object: " + v);
-			} catch (Exception e) {
-				LOGGER.error("Problemas al obtener el controller: " + v, e);
-			}
-		}
-		String packageName = v.getClass().getPackage().getName();
-		if (!packageName.startsWith("org.springframework.boot.autoconfigure.web")) {
-			OptionsResult result = new JsonBuilder(v).build();
-			LOGGER.info("Add the controller for: " + result.getBaseUrl());
-			controllers.put(result.getBaseUrl(), result);
 		}
 	}
 }
