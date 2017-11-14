@@ -6,28 +6,28 @@ import org.springframework.core.annotation.AnnotationUtils;
 
 public class RangeValidator extends Validator {
 	
-	private Integer min = 0;
-	private Integer max = Integer.MAX_VALUE;
+	private Long min = 0l;
+	private Long max = Long.MAX_VALUE;
 
 	public RangeValidator(Annotation annotation) {
 		super(annotation);
-		this.setMin((Integer)AnnotationUtils.getValue(annotation,"min"));
-		this.setMax((Integer)AnnotationUtils.getValue(annotation,"max"));
+		this.setMin((Long)AnnotationUtils.getValue(annotation,"min"));
+		this.setMax((Long)AnnotationUtils.getValue(annotation,"max"));
 	}
 
-	public Integer getMin() {
+	public Long getMin() {
 		return min;
 	}
 
-	protected void setMin(Integer min) {
+	protected void setMin(Long min) {
 		this.min = min;
 	}
 
-	public Integer getMax() {
+	public Long getMax() {
 		return max;
 	}
 
-	protected void setMax(Integer max) {
+	protected void setMax(Long max) {
 		this.max = max;
 	}
 
