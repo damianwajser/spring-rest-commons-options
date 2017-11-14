@@ -11,8 +11,8 @@ public class RangeValidator extends Validator {
 
 	public RangeValidator(Annotation annotation) {
 		super(annotation);
-		this.setMin((Long)AnnotationUtils.getValue(annotation,"min"));
-		this.setMax((Long)AnnotationUtils.getValue(annotation,"max"));
+		this.setMin(((Number)AnnotationUtils.getValue(annotation,"min")).longValue());
+		this.setMax(((Number)AnnotationUtils.getValue(annotation,"max")).longValue());
 	}
 
 	public Long getMin() {
