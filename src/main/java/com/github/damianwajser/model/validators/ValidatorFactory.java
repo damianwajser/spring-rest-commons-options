@@ -10,7 +10,6 @@ import java.util.Optional;
 
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.Range;
-import org.springframework.core.annotation.AnnotationUtils;
 
 import com.github.damianwajser.model.validators.impl.DefaultValidator;
 import com.github.damianwajser.model.validators.impl.RangeValidator;

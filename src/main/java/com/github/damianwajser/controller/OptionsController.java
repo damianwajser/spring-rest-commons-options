@@ -1,5 +1,7 @@
 package com.github.damianwajser.controller;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -17,11 +19,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.github.damianwajser.builders.OptionBuilder;
+import com.github.damianwajser.builders.raml.RamlBuilder;
+import com.github.damianwajser.model.Endpoint;
 import com.github.damianwajser.model.OptionsResult;
+import com.github.damianwajser.model.QueryString;
+import com.github.damianwajser.model.RequestParams;
 import com.github.damianwajser.utils.StringUtils;
 
 @RestController
@@ -32,11 +37,18 @@ public class OptionsController implements ApplicationListener<ApplicationReadyEv
 
 	private Map<String, OptionsResult> controllers = new HashMap<>();
 
-	@RequestMapping(value = "/**", method = RequestMethod.OPTIONS)
-	public OptionsResult handleResults(HttpServletRequest request) throws HttpRequestMethodNotSupportedException {
+	@RequestMapping(value = "/**", method = RequestMethod.OPTIONS, consumes = "application/json")
+	public OptionsResult handleResultsJson(HttpServletRequest request) throws HttpRequestMethodNotSupportedException {
 		String path = StringUtils.deleteIfEnd(request.getServletPath(), "/");
 		return Optional.ofNullable(controllers.get(path))
 				.orElseThrow(() -> new HttpRequestMethodNotSupportedException("OPTIONS"));
+	}
+
+	@RequestMapping(value = "/**", method = RequestMethod.OPTIONS, consumes = "application/x-yaml")
+	public Object handleResultsYML(HttpServletRequest request) throws HttpRequestMethodNotSupportedException {
+		String path = StringUtils.deleteIfEnd(request.getServletPath(), "/");
+		return new RamlBuilder(controllers.get(path)).build();
+
 	}
 
 	@RequestMapping(value = "/endpoints", method = RequestMethod.GET)
@@ -54,9 +66,9 @@ public class OptionsController implements ApplicationListener<ApplicationReadyEv
 	}
 
 	private void addController(Object v) {
-		if(AopUtils.isAopProxy(v)){
+		if (AopUtils.isAopProxy(v)) {
 			try {
-				v = ((Advised)v).getTargetSource().getTarget();
+				v = ((Advised) v).getTargetSource().getTarget();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

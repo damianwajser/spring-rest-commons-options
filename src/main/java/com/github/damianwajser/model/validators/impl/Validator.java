@@ -4,7 +4,6 @@ import java.lang.annotation.Annotation;
 import java.util.Optional;
 
 import org.springframework.core.annotation.AnnotationUtils;
-import org.springframework.util.ReflectionUtils;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;

@@ -6,7 +6,6 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import com.github.damianwajser.annotations.Auditable;
 import com.github.damianwajser.model.details.DetailField;
 import com.github.damianwajser.model.details.strategys.DetailFieldStrategy;
 
