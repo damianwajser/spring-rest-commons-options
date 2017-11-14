@@ -21,12 +21,12 @@ public class ModelStrategy extends DetailFieldStrategy {
 	}
 
 	@Override
-	public Collection<DetailField> createDetailField() {
+	public Collection<DetailField> createDetailField(boolean isRequest) {
 		Collection<DetailField> detailFields = new ArrayList<>();
 		try {
 			clazz = Class.forName(type.getTypeName());
 			while (clazz != null) {
-				detailFields.addAll(createDetail(clazz));
+				detailFields.addAll(createDetail(clazz, isRequest));
 				clazz = clazz.getSuperclass();
 			}
 		} catch (ClassNotFoundException e) {
@@ -35,11 +35,11 @@ public class ModelStrategy extends DetailFieldStrategy {
 		return detailFields;
 	}
 
-	private Collection<DetailField> createDetail(Class<?> clazz) {
+	private Collection<DetailField> createDetail(Class<?> clazz, boolean isRequest) {
 		Collection<DetailField> detailFields = new ArrayList<>();
 		for (Field field : clazz.getDeclaredFields()) {
 			if (!Modifier.isStatic(field.getModifiers())) {
-				detailFields.add(createDetail(field));
+				detailFields.add(createDetail(field, isRequest));
 			}
 		}
 		return detailFields;

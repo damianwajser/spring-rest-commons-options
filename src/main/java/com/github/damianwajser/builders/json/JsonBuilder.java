@@ -1,4 +1,4 @@
-package com.github.damianwajser.builders;
+package com.github.damianwajser.builders.json;
 
 import java.lang.reflect.Method;
 import java.util.Collection;
@@ -14,16 +14,16 @@ import com.github.damianwajser.model.OptionsResult;
 import com.github.damianwajser.model.QueryString;
 import com.github.damianwajser.utils.ReflectionUtils;
 
-public class OptionBuilder {
+public class JsonBuilder {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(OptionBuilder.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(JsonBuilder.class);
 
 	private Object controller;
 	private String url;
 	@JsonUnwrapped
 	private Collection<Method> methods;
 
-	public OptionBuilder(Object obj) {
+	public JsonBuilder(Object obj) {
 		LOGGER.info("create options to: " + obj.getClass().getSimpleName());
 		this.controller = obj;
 	}
@@ -50,7 +50,8 @@ public class OptionBuilder {
 			QueryString queryString = ReflectionUtils.getQueryString(m);
 			RequestMethod[] httpMethod = ReflectionUtils.getHttpRequestMethod(m).orElse(new RequestMethod[] {});
 			Endpoint endpoint = new Endpoint(this.url, relativeUrl, httpMethod, queryString);
-			endpoint.setBodyRequest(ReflectionUtils.getFieldDetail(m, controller.getClass()));
+			endpoint.setBodyRequest(ReflectionUtils.getRequestFieldDetail(m, controller.getClass()));
+			endpoint.setBodyResponse(ReflectionUtils.getResponseFieldDetail(m, controller.getClass()));
 			if (!endpoint.getHttpMethod().equals(HttpMethod.OPTIONS.toString())) {
 				response.addEnpoint(endpoint);
 			}

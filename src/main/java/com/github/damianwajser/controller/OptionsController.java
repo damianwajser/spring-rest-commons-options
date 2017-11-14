@@ -1,16 +1,18 @@
 package com.github.damianwajser.controller;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.aop.framework.Advised;
 import org.springframework.aop.support.AopUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationContext;
@@ -19,34 +21,43 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.github.damianwajser.builders.OptionBuilder;
+import com.github.damianwajser.builders.json.JsonBuilder;
 import com.github.damianwajser.builders.raml.RamlBuilder;
-import com.github.damianwajser.model.Endpoint;
 import com.github.damianwajser.model.OptionsResult;
-import com.github.damianwajser.model.QueryString;
-import com.github.damianwajser.model.RequestParams;
 import com.github.damianwajser.utils.StringUtils;
 
 @RestController
 public class OptionsController implements ApplicationListener<ApplicationReadyEvent> {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(OptionsController.class);
+
 	@Autowired
 	private ApplicationContext context;
 
-	private Map<String, OptionsResult> controllers = new HashMap<>();
+	private static Map<String, OptionsResult> controllers = new HashMap<>();
 
 	@RequestMapping(value = "/**", method = RequestMethod.OPTIONS, consumes = "application/json")
-	public OptionsResult handleResultsJson(HttpServletRequest request) throws HttpRequestMethodNotSupportedException {
+	public OptionsResult handleResultsJson(HttpServletRequest request, @RequestParam("method") Optional<String> method) throws HttpRequestMethodNotSupportedException {
 		String path = StringUtils.deleteIfEnd(request.getServletPath(), "/");
-		return Optional.ofNullable(controllers.get(path))
+		LOGGER.info("solicitando JSON: " + path);
+		OptionsResult result = Optional.ofNullable(controllers.get(path))
 				.orElseThrow(() -> new HttpRequestMethodNotSupportedException("OPTIONS"));
+		if(method.isPresent()){
+			OptionsResult aux = new OptionsResult(result.getBaseUrl());
+			BeanUtils.copyProperties(result, aux);
+			aux.setEnpoints(result.getEnpoints().stream().filter(e->e.getHttpMethod().equalsIgnoreCase(method.get())).collect(Collectors.toList()));
+			result = aux;
+		}
+		return result;
 	}
 
 	@RequestMapping(value = "/**", method = RequestMethod.OPTIONS, consumes = "application/x-yaml")
 	public Object handleResultsYML(HttpServletRequest request) throws HttpRequestMethodNotSupportedException {
 		String path = StringUtils.deleteIfEnd(request.getServletPath(), "/");
+		LOGGER.info("solicitando RAML: " + path);
 		return new RamlBuilder(controllers.get(path)).build();
 
 	}
@@ -54,13 +65,12 @@ public class OptionsController implements ApplicationListener<ApplicationReadyEv
 	@RequestMapping(value = "/endpoints", method = RequestMethod.GET)
 	public Set<String> handleResults() {
 		return controllers.keySet();
-
 	}
 
 	@Override
 	public void onApplicationEvent(final ApplicationReadyEvent event) {
-
 		Map<String, Object> beans = context.getBeansWithAnnotation(RestController.class);
+		LOGGER.debug("Get All Controllers");
 		beans.putAll(context.getBeansWithAnnotation(Controller.class));
 		beans.forEach((k, v) -> addController(v));
 	}
@@ -68,14 +78,17 @@ public class OptionsController implements ApplicationListener<ApplicationReadyEv
 	private void addController(Object v) {
 		if (AopUtils.isAopProxy(v)) {
 			try {
+				LOGGER.debug(v + " spring proxy, get real object");
 				v = ((Advised) v).getTargetSource().getTarget();
+				LOGGER.debug("Real Object: " + v);
 			} catch (Exception e) {
-				e.printStackTrace();
+				LOGGER.error("Problemas al obtener el controller: " + v, e);
 			}
 		}
 		String packageName = v.getClass().getPackage().getName();
 		if (!packageName.startsWith("org.springframework.boot.autoconfigure.web")) {
-			OptionsResult result = new OptionBuilder(v).build();
+			OptionsResult result = new JsonBuilder(v).build();
+			LOGGER.info("Add the controller for: " + result.getBaseUrl());
 			controllers.put(result.getBaseUrl(), result);
 		}
 	}

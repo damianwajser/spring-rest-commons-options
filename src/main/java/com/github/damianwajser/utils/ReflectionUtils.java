@@ -7,6 +7,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -29,11 +30,14 @@ import com.github.damianwajser.model.QueryString;
 import com.github.damianwajser.model.RequestParams;
 import com.github.damianwajser.model.details.DetailField;
 import com.github.damianwajser.model.details.strategys.DetailFieldCreatedStrategyFactory;
+import com.github.damianwajser.model.details.strategys.DetailFieldStrategy;
 
 import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
 
 public final class ReflectionUtils {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ReflectionUtils.class);
+	private static final List<String> PRIMITIVES = Arrays.asList("boolean", "byte", "char", "short", "int", "long",
+			"float", "double", "void");
 
 	private ReflectionUtils() {
 	};
@@ -81,20 +85,26 @@ public final class ReflectionUtils {
 		return ((ParameterizedType) clazz.getGenericSuperclass()).getActualTypeArguments()[0];
 	}
 
-	public static Collection<DetailField> getFieldDetail(Method m, Class<?> controller) {
+	public static Collection<DetailField> getRequestFieldDetail(Method m, Class<?> controller) {
 		Collection<DetailField> fields = new ArrayList<>();
 		Arrays.asList(m.getParameters()).stream().filter(p -> {
 			boolean ok = p.getAnnotation(PathVariable.class) == null;
 			ok = ok && p.getAnnotation(RequestParam.class) == null;
 			return ok && p.getAnnotation(RequestHeader.class) == null;
-		}).forEach(p -> fields.addAll(
-				DetailFieldCreatedStrategyFactory.getCreationStrategy(p, controller).createDetailField()));
+		}).forEach(p -> fields
+				.addAll(DetailFieldCreatedStrategyFactory.getCreationStrategy(p, controller).createDetailField(true)));
 
 		return fields;
 	}
 
+	public static Collection<DetailField> getResponseFieldDetail(Method m, Class<?> controller) {
+		Class<?> returnType = m.getReturnType();
+		DetailFieldStrategy strategy = DetailFieldCreatedStrategyFactory.getCreationStrategy(returnType, controller);
+		return strategy.createDetailField(false);
+	}
+
 	public static boolean isJDKClass(Type t) {
-		return t.getTypeName().startsWith("java");
+		return t.getTypeName().startsWith("java") || PRIMITIVES.contains(t.getTypeName());
 	}
 
 	/**
