@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github.damianwajser</groupId>
 	<artifactId>spring-rest-commons-options</artifactId>
-	<version>0.0.11</version>
+	<version>0.0.12-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>spring-rest-commons-options</name>
@@ -24,7 +24,7 @@
 		<connection>scm:git:https://github.com/damianwajser/spring-rest-commons-options.git</connection>
 		<developerConnection>scm:git:https://github.com/damianwajser/spring-rest-commons-options.git</developerConnection>
 		<url>https://github.com/damianwajser/spring-rest-commons-options.git</url>
-		<tag>spring-rest-commons-options-0.0.11</tag>
+		<tag>spring-rest-commons-options-0.0.10</tag>
 	</scm>
 	<developers>
 		<developer>
