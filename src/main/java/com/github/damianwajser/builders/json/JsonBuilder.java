@@ -33,7 +33,12 @@ public class JsonBuilder {
 	}
 
 	private void fillBaseUrl() {
-		this.url = ReflectionUtils.getUrls(controller).orElse(new String[] { "/" })[0];
+		String[] urls = ReflectionUtils.getUrls(controller).orElse(new String[] { "/" });
+		if(urls.length>0){
+			this.url=urls[0];
+		}else{
+			this.url="/";
+		}
 	}
 
 	public OptionsResult build() {

@@ -40,15 +40,17 @@ public class OptionsController implements ApplicationListener<ApplicationReadyEv
 	private static Map<String, OptionsResult> controllers = new HashMap<>();
 
 	@RequestMapping(value = "/**", method = RequestMethod.OPTIONS, consumes = "application/json")
-	public OptionsResult handleResultsJson(HttpServletRequest request, @RequestParam("method") Optional<String> method) throws HttpRequestMethodNotSupportedException {
+	public OptionsResult handleResultsJson(HttpServletRequest request, @RequestParam("method") Optional<String> method)
+			throws HttpRequestMethodNotSupportedException {
 		String path = StringUtils.deleteIfEnd(request.getServletPath(), "/");
 		LOGGER.info("solicitando JSON: " + path);
 		OptionsResult result = Optional.ofNullable(controllers.get(path))
 				.orElseThrow(() -> new HttpRequestMethodNotSupportedException("OPTIONS"));
-		if(method.isPresent()){
+		if (method.isPresent()) {
 			OptionsResult aux = new OptionsResult(result.getBaseUrl());
 			BeanUtils.copyProperties(result, aux);
-			aux.setEnpoints(result.getEnpoints().stream().filter(e->e.getHttpMethod().equalsIgnoreCase(method.get())).collect(Collectors.toList()));
+			aux.setEnpoints(result.getEnpoints().stream().filter(e -> e.getHttpMethod().equalsIgnoreCase(method.get()))
+					.collect(Collectors.toList()));
 			result = aux;
 		}
 		return result;
@@ -69,10 +71,14 @@ public class OptionsController implements ApplicationListener<ApplicationReadyEv
 
 	@Override
 	public void onApplicationEvent(final ApplicationReadyEvent event) {
-		Map<String, Object> beans = context.getBeansWithAnnotation(RestController.class);
-		LOGGER.debug("Get All Controllers");
-		beans.putAll(context.getBeansWithAnnotation(Controller.class));
-		beans.forEach((k, v) -> addController(v));
+		try {
+			Map<String, Object> beans = context.getBeansWithAnnotation(RestController.class);
+			LOGGER.debug("Get All Controllers");
+			beans.putAll(context.getBeansWithAnnotation(Controller.class));
+			beans.forEach((k, v) -> addController(v));
+		} catch (Exception e) {
+			LOGGER.error("problemas al crear la dcumentacion", e);
+		}
 	}
 
 	private void addController(Object v) {
