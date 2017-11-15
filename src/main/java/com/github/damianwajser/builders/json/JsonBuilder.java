@@ -59,6 +59,7 @@ public class JsonBuilder implements OptionsBuilder{
 		if (result.getBaseUrl().equals("/")) {
 			Map<String, Integer> count = new HashMap<>();
 			result.getEnpoints().forEach(e -> {
+				LOGGER.info("fixeando relative url: " + e.getRelativeUrl());
 				String[] relatives = e.getRelativeUrl().split("/");
 
 				for (int i = 0; i < relatives.length; i++) {
