@@ -13,15 +13,14 @@ import org.springframework.aop.framework.Advised;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.http.HttpMethod;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
+import com.github.damianwajser.builders.OptionsBuilder;
 import com.github.damianwajser.model.Endpoint;
 import com.github.damianwajser.model.OptionsResult;
-import com.github.damianwajser.model.QueryString;
 import com.github.damianwajser.utils.ReflectionUtils;
 
-public class JsonBuilder {
+public class JsonBuilder implements OptionsBuilder{
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(JsonBuilder.class);
 
@@ -86,11 +85,7 @@ public class JsonBuilder {
 
 			this.methods.forEach(m -> {
 				String relativeUrl = ReflectionUtils.getRelativeUrl(m);
-				QueryString queryString = ReflectionUtils.getQueryString(m);
-				RequestMethod[] httpMethod = ReflectionUtils.getHttpRequestMethod(m).orElse(new RequestMethod[] {});
-				Endpoint endpoint = new Endpoint(this.url, relativeUrl, httpMethod, queryString);
-				endpoint.setBodyRequest(ReflectionUtils.getRequestFieldDetail(m, controller.getClass()));
-				endpoint.setBodyResponse(ReflectionUtils.getResponseFieldDetail(m, controller.getClass()));
+				Endpoint endpoint = new Endpoint(this.url, relativeUrl, m, controller);
 				if (!endpoint.getHttpMethod().equals(HttpMethod.OPTIONS.toString())) {
 					result.addEnpoint(endpoint);
 				}

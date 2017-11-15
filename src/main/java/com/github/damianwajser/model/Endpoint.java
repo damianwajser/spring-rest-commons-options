@@ -1,45 +1,45 @@
 package com.github.damianwajser.model;
 
+import java.lang.reflect.Method;
 import java.util.Collection;
 
 import org.springframework.http.HttpMethod;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import com.github.damianwajser.model.details.DetailField;
+import com.github.damianwajser.utils.ReflectionUtils;
 
 @JsonAutoDetect(fieldVisibility = Visibility.ANY)
 @JsonPropertyOrder({ "endpoint", "httpMethod", "baseUrl", "relativeUrl" })
 public class Endpoint implements Comparable<Endpoint> {
 
-	@JsonUnwrapped
 	private QueryString queryString;
+
+	private PathVariable pathVariable;
 	@JsonIgnore
-	private RequestMethod[] methods;
+	private RequestHttpMethod methods;
 	@JsonIgnore
 	private String baseUrl;
 	private String relativeUrl;
 	private Collection<DetailField> bodyRequest;
 	private Collection<DetailField> bodyResponse;
 
-	public Endpoint(String url, String relativeUrl, RequestMethod[] httpRequestMethod, QueryString queryString) {
+	public Endpoint(String url, String relativeUrl, Method m, Object controller) {
 		this.setBaseUrl(url);
 		this.setRelativeUrl(relativeUrl);
-		this.methods = httpRequestMethod;
-		this.queryString = queryString;
+		this.methods = new RequestHttpMethod(m);
+		this.queryString = new QueryString(m);
+		this.setPathVariable(new PathVariable(m));
+		this.setBodyRequest(ReflectionUtils.getRequestFieldDetail(m, controller.getClass()));
+		this.setBodyResponse(ReflectionUtils.getResponseFieldDetail(m, controller.getClass()));
 	}
 
 	public String getHttpMethod() {
-		return this.methods.length==0?"":this.methods[0].name();
-	}
-
-	public void setMethods(RequestMethod[] methods) {
-		this.methods = methods;
+		return this.methods.getHttpMethod().length == 0 ? "" : this.methods.getHttpMethod()[0].name();
 	}
 
 	public QueryString getQueryString() {
@@ -93,5 +93,13 @@ public class Endpoint implements Comparable<Endpoint> {
 
 	public void setBodyResponse(Collection<DetailField> bodyResponse) {
 		this.bodyResponse = bodyResponse;
+	}
+
+	public PathVariable getPathVariable() {
+		return pathVariable;
+	}
+
+	public void setPathVariable(PathVariable pathVariable) {
+		this.pathVariable = pathVariable;
 	}
 }

@@ -4,12 +4,12 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 
 @JsonAutoDetect(fieldVisibility = Visibility.ANY)
-public class RequestParams {
+public class Parameters {
 	private boolean required;
 	private String name;
 	private String type;
 
-	public RequestParams(boolean required, String name, String type) {
+	public Parameters(boolean required, String name, String type) {
 		super();
 		this.type = type;
 		this.required = required;

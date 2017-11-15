@@ -30,6 +30,11 @@ public final class DetailFieldCreatedStrategyFactory {
 		return getCreationStrategy(controller, type);
 
 	}
+	public static DetailFieldStrategy getCreationStrategy(Type returnType, Class<?> controller) {
+		Type type = getRealType(returnType, controller);
+		return getCreationStrategy(controller, type);
+
+	}
 
 	private static DetailFieldStrategy getCreationStrategy(Class<?> controller, Type type) {
 		LOGGER.debug("seleccionando strategyField: " + type.getTypeName());
@@ -37,7 +42,7 @@ public final class DetailFieldCreatedStrategyFactory {
 		if (!ReflectionUtils.isJDKClass(type)) {
 			strategy = new ModelStrategy(type, controller);
 		} else {
-			strategy = new PrimitiveStrategy();
+			strategy = new PrimitiveStrategy(type, controller);
 		}
 		LOGGER.info("Se selecciono strategy " + strategy);
 		return strategy;
@@ -45,7 +50,7 @@ public final class DetailFieldCreatedStrategyFactory {
 
 	private static Type getRealType(Type type, Class<?> controller) {
 		if (type.getClass().equals(TypeVariableImpl.class)) {
-			type = ReflectionUtils.getGenericClass(controller);
+			type = ReflectionUtils.getGenericType(controller).get();
 		}
 		return type;
 	}

@@ -7,12 +7,13 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.github.damianwajser.builders.OptionsBuilder;
 import com.github.damianwajser.model.Endpoint;
 import com.github.damianwajser.model.OptionsResult;
+import com.github.damianwajser.model.Parameters;
 import com.github.damianwajser.model.QueryString;
-import com.github.damianwajser.model.RequestParams;
 
-public class RamlBuilder {
+public class RamlBuilder implements OptionsBuilder {
 	private static Logger LOGGER = LoggerFactory.getLogger(RamlBuilder.class);
 	private OptionsResult controller;
 
@@ -29,10 +30,10 @@ public class RamlBuilder {
 		Map<String, Map<String, Object>> endpoints = new HashMap<>();
 		controller.getEnpoints().forEach(e -> {
 			LOGGER.info("create raml for: " + e);
-			String relativeUrl = e.getRelativeUrl().isEmpty()?"/":e.getRelativeUrl();
-			if(!endpoints.containsKey(relativeUrl)){
+			String relativeUrl = e.getRelativeUrl().isEmpty() ? "/" : e.getRelativeUrl();
+			if (!endpoints.containsKey(relativeUrl)) {
 				endpoints.put(relativeUrl, getMethods(e));
-			}else{
+			} else {
 				endpoints.get(relativeUrl).putAll(getMethods(e));
 			}
 		});
@@ -61,7 +62,7 @@ public class RamlBuilder {
 		return parameters.isEmpty() ? Optional.empty() : Optional.of(parameters);
 	}
 
-	private Object getParameterInfo(RequestParams p) {
+	private Object getParameterInfo(Parameters p) {
 		Map<String, Object> info = new HashMap<>();
 		info.put("required", p.isRequired());
 		info.put("type", p.getType());

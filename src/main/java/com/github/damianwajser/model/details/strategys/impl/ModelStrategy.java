@@ -11,23 +11,18 @@ import com.github.damianwajser.model.details.strategys.DetailFieldStrategy;
 
 public class ModelStrategy extends DetailFieldStrategy {
 
-	private Type type;
-	private Class<?> clazz;
-
-	public ModelStrategy(Type type, Class<?> clazz) {
-		super();
-		this.type = type;
-		this.clazz = clazz;
+	public ModelStrategy(Type type, Class<?> controller) {
+		super(type, controller);
 	}
 
 	@Override
 	public Collection<DetailField> createDetailField(boolean isRequest) {
 		Collection<DetailField> detailFields = new ArrayList<>();
 		try {
-			clazz = Class.forName(type.getTypeName());
-			while (clazz != null) {
-				detailFields.addAll(createDetail(clazz, isRequest));
-				clazz = clazz.getSuperclass();
+			this.setController(Class.forName(this.getType().getTypeName()));
+			while (this.getController() != null) {
+				detailFields.addAll(createDetail(this.getController(), isRequest));
+				this.setController(this.getController().getSuperclass());
 			}
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
