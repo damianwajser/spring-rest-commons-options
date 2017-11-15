@@ -48,6 +48,7 @@ public class JsonBuilder implements OptionsBuilder{
 	}
 
 	public Optional<OptionsResult> build() {
+		getRealController();
 		this.fillMethods();
 		this.fillBaseUrl();
 		Optional<OptionsResult> result = getResult();
@@ -80,7 +81,6 @@ public class JsonBuilder implements OptionsBuilder{
 
 	private Optional<OptionsResult> getResult() {
 		Optional<OptionsResult> response = Optional.empty();
-		getRealController();
 		String packageName = this.controller.getClass().getPackage().getName();
 		if (!packageName.startsWith("org.springframework.boot.autoconfigure.web")) {
 			OptionsResult result = new OptionsResult(this.url);
