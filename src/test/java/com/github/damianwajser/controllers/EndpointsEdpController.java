@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.github.damianwajser.model.EndpointsEdp;
 
-@RestController
-@RequestMapping("/edp/endpoints")
+//@RestController
+//@RequestMapping("/edp/endpoints")
 public class EndpointsEdpController extends AbstractController<EndpointsEdp> {
 }

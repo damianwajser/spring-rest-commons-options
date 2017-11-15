@@ -11,7 +11,7 @@ import com.github.damianwajser.model.InputMode;
 @RequestMapping("/input_mode")
 public class InputModeController extends AbstractController<InputMode> {
 
-	@GetMapping("/test1")
+//	@GetMapping("/test1")
 	public InputMode lala(@RequestParam("code") String c, @RequestParam("cod") int a) {
 		return null;
 	}

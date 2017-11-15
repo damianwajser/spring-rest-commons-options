@@ -33,7 +33,7 @@ public class Endpoint implements Comparable<Endpoint> {
 		this.setRelativeUrl(relativeUrl);
 		this.methods = new RequestHttpMethod(m);
 		this.queryString = new QueryString(m);
-		this.setPathVariable(new PathVariable(m));
+		this.setPathVariable(new PathVariable(m, this.getRelativeUrl()));
 		this.setBodyRequest(ReflectionUtils.getRequestFieldDetail(m, controller.getClass()));
 		this.setBodyResponse(ReflectionUtils.getResponseFieldDetail(m, controller.getClass()));
 	}

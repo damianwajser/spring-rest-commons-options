@@ -156,8 +156,8 @@ public final class ReflectionUtils {
 		}
 	}
 
-	public static Collection<Parameters> getPathVariable(Method m) {
-		Collection<Parameters> parameters = new ArrayList<>();
+	public static List<Parameters> getPathVariable(Method m) {
+		List<Parameters> parameters = new ArrayList<>();
 		Arrays.asList(m.getParameters()).forEach(parameter -> {
 			PathVariable a = parameter.getAnnotation(PathVariable.class);
 			collectParameters(parameters, parameter, a);
