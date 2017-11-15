@@ -68,6 +68,7 @@ public class JsonBuilder implements OptionsBuilder{
 					}
 				}
 			});
+			LOGGER.info("Contador de arbol: " + count);
 			String realBaseUrl = "/"+Collections
 					.max(count.entrySet(), (entry1, entry2) -> entry1.getValue() - entry2.getValue()).getKey();
 			LOGGER.info("real url for: " + realBaseUrl);
