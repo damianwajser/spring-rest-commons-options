@@ -22,15 +22,25 @@ public class PathVariable {
 		if (!params.isEmpty()) {
 			Matcher matcher = pattern.matcher(relativePath);
 			LOGGER.info("fix path variable: " + relativePath);
-			if (matcher.find()) {
-				for (int i = 0; i < params.size(); i++) {
-					String param = matcher.group(i);
-					LOGGER.info("param: "+param);
+			for (int i = 0; i < params.size(); i++) {
+				if (matcher.find()) {
+					String param = matcher.group(0);
+					LOGGER.info("param" + param);
 					params.get(i).setName(param.replaceAll("\\{", "").replaceAll("\\}", ""));
 				}
 			}
 		}
 	}
+
+//	public static void main(String[] args) {
+//		String url = "/idCuenta/{idCuenta}/fechaDesde/{fechaDesde}/fechaHasta/{fechaHasta}/tipoMovimiento/{tipoMovimiento}/medioDePago/{medioDePago}/palabra/{palabra}/operationID/{operationID}/estado/{estado}/cantidadTrxPorPagina/{cantidadTrxPorPagina}/nroPagina/{nroPagina}/sessionId/{sessionId}";
+//		Matcher matcher = pattern.matcher(url);
+//		int i = 0;
+//		while (matcher.find()) {
+//			System.out.println(matcher.group(0));
+//			i++;
+//		}
+//	}
 
 	public Collection<Parameters> getParams() {
 		return params;
