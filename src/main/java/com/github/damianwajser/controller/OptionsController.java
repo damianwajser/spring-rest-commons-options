@@ -70,6 +70,7 @@ public class OptionsController implements ApplicationListener<ApplicationReadyEv
 	@Override
 	public void onApplicationEvent(final ApplicationReadyEvent event) {
 		try {
+			LOGGER.info("Comenzando la creacion de documentacion");
 			Map<String, Object> beans = context.getBeansWithAnnotation(RestController.class);
 			LOGGER.debug("Get All Controllers");
 			beans.putAll(context.getBeansWithAnnotation(Controller.class));
