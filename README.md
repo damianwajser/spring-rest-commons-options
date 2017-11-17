@@ -1,4 +1,4 @@
-#<img src="/images/Logo.png" width="80" height="80"> spring-rest-commons-options
+<img src="/images/Logo.png" width="100" height="80"> spring-rest-commons-options
 Libreria utilitaria para utilizar el verbo options con Spring
 
 ## License
