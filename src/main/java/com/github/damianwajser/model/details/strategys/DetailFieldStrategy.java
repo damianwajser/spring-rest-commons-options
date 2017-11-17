@@ -3,6 +3,9 @@ package com.github.damianwajser.model.details.strategys;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.util.Collection;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.github.damianwajser.annotations.Auditable;
 import com.github.damianwajser.model.details.DetailField;
@@ -20,14 +23,15 @@ public abstract class DetailFieldStrategy {
 		this.setController(clazz);
 	}
 
-	protected DetailField createDetail(Field field, boolean isRequest) {
-		DetailField detailField = new DetailField();
-
-		if (isRequest) {
-			detailField = new DetailFieldWithValidations(ValidatorFactory.getValidations(field).orElse(null));
+	protected Optional<DetailField> createDetail(Field field, boolean isRequest) {
+		Optional<DetailField> detailField = Optional.empty();
+		if (!field.isAnnotationPresent(Autowired.class)) {
+			if (isRequest) {
+				detailField = Optional.ofNullable(
+						new DetailFieldWithValidations(ValidatorFactory.getValidations(field).orElse(null)));
+			}
+			detailField.ifPresent(d -> fillDetails(field, d));
 		}
-
-		fillDetails(field, detailField);
 		return detailField;
 	}
 

@@ -34,7 +34,7 @@ public class ModelStrategy extends DetailFieldStrategy {
 		Collection<DetailField> detailFields = new ArrayList<>();
 		for (Field field : clazz.getDeclaredFields()) {
 			if (!Modifier.isStatic(field.getModifiers())) {
-				detailFields.add(createDetail(field, isRequest));
+				createDetail(field, isRequest).ifPresent(d -> detailFields.add(d));
 			}
 		}
 		return detailFields;

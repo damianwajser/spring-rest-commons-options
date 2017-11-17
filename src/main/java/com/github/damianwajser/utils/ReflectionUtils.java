@@ -109,7 +109,7 @@ public final class ReflectionUtils {
 	public static Collection<DetailField> getResponseFieldDetail(Method m, Class<?> controller) {
 		Class<?> returnType = m.getReturnType();
 		DetailFieldStrategy strategy = null;
-		
+
 		if (Iterable.class.isAssignableFrom(returnType)) {
 			Type t = m.getGenericReturnType();
 			strategy = DetailFieldCreatedStrategyFactory.getCreationStrategy(t, controller);
