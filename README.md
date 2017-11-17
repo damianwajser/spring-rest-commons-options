@@ -1,6 +1,6 @@
-<p aling="center"><img src="/images/Logo.png" width="100" height="80"><p> 
+<p align="center"><img src="/images/Logo.png" width="100" height="80"><p> 
 
-#spring-rest-commons-options
+# spring-rest-commons-options
 Libreria utilitaria para utilizar el verbo options con Spring
 
 ## License
