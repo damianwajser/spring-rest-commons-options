@@ -20,18 +20,18 @@ public final class DetailFieldCreatedStrategyFactory {
 
 	// TODO: ver cuando se recive collections de objetos de negocio
 	public static DetailFieldStrategy getCreationStrategy(Parameter p, Class<?> controller) {
-		Type type = getRealType(p.getParameterizedType(), controller);
+		Type type = ReflectionUtils.getRealType(p.getParameterizedType(), controller);
 		return getCreationStrategy(controller, type);
 
 	}
 
 	public static DetailFieldStrategy getCreationStrategy(Class<?> returnType, Class<?> controller) {
-		Type type = getRealType(returnType, controller);
+		Type type = ReflectionUtils.getRealType(returnType, controller);
 		return getCreationStrategy(controller, type);
 
 	}
 	public static DetailFieldStrategy getCreationStrategy(Type returnType, Class<?> controller) {
-		Type type = getRealType(returnType, controller);
+		Type type = ReflectionUtils.getRealType(returnType, controller);
 		return getCreationStrategy(controller, type);
 
 	}
@@ -48,10 +48,4 @@ public final class DetailFieldCreatedStrategyFactory {
 		return strategy;
 	}
 
-	private static Type getRealType(Type type, Class<?> controller) {
-		if (type.getClass().equals(TypeVariableImpl.class)) {
-			type = ReflectionUtils.getGenericType(controller).get();
-		}
-		return type;
-	}
 }

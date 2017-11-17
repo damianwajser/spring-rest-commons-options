@@ -10,7 +10,9 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
 import com.github.damianwajser.model.details.DetailField;
+import com.github.damianwajser.utils.JsonSchemmaUtils;
 import com.github.damianwajser.utils.ReflectionUtils;
 
 @JsonAutoDetect(fieldVisibility = Visibility.ANY)
@@ -27,6 +29,8 @@ public class Endpoint implements Comparable<Endpoint> {
 	private String relativeUrl;
 	private Collection<DetailField> bodyRequest;
 	private Collection<DetailField> bodyResponse;
+	private JsonSchema bodyRequestSchema = null;
+	private JsonSchema bodyResponseSchema = null;
 
 	public Endpoint(String url, String relativeUrl, Method m, Object controller) {
 		this.setBaseUrl(url);
@@ -36,6 +40,8 @@ public class Endpoint implements Comparable<Endpoint> {
 		this.setPathVariable(new PathVariable(m, this.getRelativeUrl()));
 		this.setBodyRequest(ReflectionUtils.getRequestFieldDetail(m, controller.getClass()));
 		this.setBodyResponse(ReflectionUtils.getResponseFieldDetail(m, controller.getClass()));
+		this.bodyRequestSchema = JsonSchemmaUtils.getSchemma(m, controller.getClass(), true).orElse(null);
+		this.bodyResponseSchema = JsonSchemmaUtils.getSchemma(m, controller.getClass(), false).orElse(null);
 	}
 
 	public String getHttpMethod() {
@@ -101,5 +107,21 @@ public class Endpoint implements Comparable<Endpoint> {
 
 	public void setPathVariable(PathVariable pathVariable) {
 		this.pathVariable = pathVariable;
+	}
+
+	public JsonSchema getBodyRequestSchema() {
+		return bodyRequestSchema;
+	}
+
+	public void setBodyRequestSchema(JsonSchema bodyRequestSchema) {
+		this.bodyRequestSchema = bodyRequestSchema;
+	}
+
+	public JsonSchema getBodyResponseSchema() {
+		return bodyResponseSchema;
+	}
+
+	public void setBodyResponseSchema(JsonSchema bodyResponseSchema) {
+		this.bodyResponseSchema = bodyResponseSchema;
 	}
 }

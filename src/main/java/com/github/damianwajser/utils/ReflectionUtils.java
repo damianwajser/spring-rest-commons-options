@@ -33,6 +33,7 @@ import com.github.damianwajser.model.details.strategys.DetailFieldCreatedStrateg
 import com.github.damianwajser.model.details.strategys.DetailFieldStrategy;
 
 import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
+import sun.reflect.generics.reflectiveObjects.TypeVariableImpl;
 
 public final class ReflectionUtils {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ReflectionUtils.class);
@@ -82,7 +83,10 @@ public final class ReflectionUtils {
 	}
 
 	public static Optional<Type> getGenericType(Class<?> clazz) {
-		return Optional.ofNullable(((ParameterizedType) clazz.getGenericSuperclass()).getActualTypeArguments()[0]);
+		Optional<Type> t = Optional.empty();
+		if (clazz != null && clazz.getGenericSuperclass() != null && clazz.getGenericSuperclass() instanceof ParameterizedType)
+			t = Optional.ofNullable(((ParameterizedType) clazz.getGenericSuperclass()).getActualTypeArguments()[0]);
+		return t;
 	}
 
 	public static Optional<Type> getGenericType(Type t) {
@@ -90,20 +94,31 @@ public final class ReflectionUtils {
 	}
 
 	public static Optional<Class<?>> getGenericClass(Class<?> clazz) {
-		Type t = getGenericType(clazz).orElse(null);
+		Type t = getGenericType(clazz).orElse(clazz);
 		return getClass(t);
 	}
 
 	public static Collection<DetailField> getRequestFieldDetail(Method m, Class<?> controller) {
 		Collection<DetailField> fields = new ArrayList<>();
-		Arrays.asList(m.getParameters()).stream().filter(p -> {
-			boolean ok = p.getAnnotation(PathVariable.class) == null;
-			ok = ok && p.getAnnotation(RequestParam.class) == null;
-			return ok && p.getAnnotation(RequestHeader.class) == null;
-		}).forEach(p -> fields
+		getParameters(m).forEach(p -> fields
 				.addAll(DetailFieldCreatedStrategyFactory.getCreationStrategy(p, controller).createDetailField(true)));
 
 		return fields;
+	}
+
+	public static List<Parameter> getParameters(Method m) {
+		return Arrays.asList(m.getParameters()).stream().filter(p -> {
+			boolean ok = p.getAnnotation(PathVariable.class) == null;
+			ok = ok && p.getAnnotation(RequestParam.class) == null;
+			return ok && p.getAnnotation(RequestHeader.class) == null;
+		}).collect(Collectors.toList());
+	}
+
+	public static Type getRealType(Type type, Class<?> controller) {
+		if (type.getClass().equals(TypeVariableImpl.class)) {
+			type = ReflectionUtils.getGenericType(controller).get();
+		}
+		return type;
 	}
 
 	public static Collection<DetailField> getResponseFieldDetail(Method m, Class<?> controller) {
@@ -167,11 +182,17 @@ public final class ReflectionUtils {
 
 	public static Optional<Class<?>> getClass(Type type) {
 		Optional<Class<?>> clazz = Optional.empty();
-		if (type instanceof Class) {
-			clazz = Optional.of((Class<?>) type);
-		}else{
-			clazz = getClass(((ParameterizedType)type).getRawType());
+		if (type != null) {
+			if (type instanceof Class) {
+				clazz = Optional.of((Class<?>) type);
+			} else {
+				clazz = getClass(((ParameterizedType) type).getRawType());
+			}
 		}
 		return clazz;
+	}
+
+	public static Optional<Class<?>> getRealClass(Class<?> type, Class<?> controller) {
+		return getClass(getRealType(type, controller));
 	}
 }
