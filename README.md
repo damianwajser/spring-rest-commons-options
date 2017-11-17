@@ -1,7 +1,36 @@
 <p align="center"><img src="/images/Logo.png" width="100" height="80"><p> 
 
-# spring-rest-commons-options
-Libreria utilitaria para utilizar el verbo options con Spring
+# Overview
+
+This project contains the general-purpose documentation to spring rest api http options.
+Project is licensed under [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0).
+
+-----
+
+# Get it!
+
+## Maven
+
+Functionality of this package is contained in Java package `com.github.damianwajser`, and can be used using following Maven dependency:
+
+```xml
+<properties>
+  ...
+  <!-- Use the latest version whenever possible. -->
+  <options.spring.docs>0.0.14</options.spring.docs>
+  ...
+</properties>
+
+<dependencies>
+  ...
+  <dependency>
+    <groupId>com.github.damianwajser</groupId>
+    <artifactId>spring-rest-commons-options</artifactId>
+    <version>${options.spring.docs}</version>
+  </dependency>
+  ...
+</dependencies>
+```
 
 ## License
 
