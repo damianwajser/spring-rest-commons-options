@@ -3,7 +3,7 @@ language: java
 jdk:
   - oraclejdk8
 
-script: mvn --settings .travis/settings.xml clean verify deploy
+script: mvn --settings .travis/settings.xml clean verify
 
 deploy:
     skip_cleanup: true
@@ -11,7 +11,8 @@ deploy:
       repo: damianwajser/spring-rest-commons-options
       tags: true
       jdk: oraclejdk8
-      branch: master
+      branch: CI
+      script: mvn --settings .travis/settings.xml clean verify deploy
 
 notifications:
   email:
