@@ -13,7 +13,7 @@ deploy:
       tags: true
       jdk: oraclejdk8
       branch: CI
-      script: mvn --settings .travis/settings.xml clean verify deploy
+      script: lala.sh
 
 notifications:
   email:
