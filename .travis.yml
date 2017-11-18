@@ -3,8 +3,6 @@ language: java
 jdk:
   - oraclejdk8
 
-script: mvn --settings .travis/settings.xml clean verify
-
 deploy:
     provider: script
     skip_cleanup: true
@@ -13,7 +11,7 @@ deploy:
       tags: true
       jdk: oraclejdk8
       branch: CI
-      script: lala.sh
+      script: mvn --settings .travis/settings.xml clean verify
 
 notifications:
   email:
