@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-
+echo "------------ quiero algo --------"
 set -e
 
 echo "----------------- EMPIEZA DEPLOOY --------------"

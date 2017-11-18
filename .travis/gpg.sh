@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-
+echo "-------------------- GPG ----------------"
 set -e
 
 # create a random passphrase
