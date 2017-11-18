@@ -6,15 +6,13 @@ jdk:
 script: mvn --settings .travis/settings.xml clean  verify
 
 deploy:
-  -
     provider: script
-    script: .travis/deploy.sh
+    script: chmod u+x .travis/deploy.sh
     skip_cleanup: true
     on:
       repo: damianwajser/spring-rest-commons-options
       tags: true
       jdk: oraclejdk8
-
 
 notifications:
   email:
