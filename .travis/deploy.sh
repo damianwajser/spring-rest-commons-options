@@ -2,6 +2,7 @@
 
 set -e
 
+echo "----------------- EMPIEZA DEPLOOY --------------"
 # only do deployment, when travis detects a new tag
 if [ ! -z "$TRAVIS_TAG" ]
 then
