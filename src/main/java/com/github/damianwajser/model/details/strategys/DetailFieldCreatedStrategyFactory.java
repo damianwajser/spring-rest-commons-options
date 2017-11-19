@@ -10,8 +10,6 @@ import com.github.damianwajser.model.details.strategys.impl.ModelStrategy;
 import com.github.damianwajser.model.details.strategys.impl.PrimitiveStrategy;
 import com.github.damianwajser.utils.ReflectionUtils;
 
-import sun.reflect.generics.reflectiveObjects.TypeVariableImpl;
-
 public final class DetailFieldCreatedStrategyFactory {
 	private static final Logger LOGGER = LoggerFactory.getLogger(DetailFieldCreatedStrategyFactory.class);
 

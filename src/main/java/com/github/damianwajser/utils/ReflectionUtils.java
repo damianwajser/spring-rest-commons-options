@@ -1,10 +1,12 @@
 package com.github.damianwajser.utils;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.GenericDeclaration;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -32,8 +34,6 @@ import com.github.damianwajser.model.details.DetailField;
 import com.github.damianwajser.model.details.strategys.DetailFieldCreatedStrategyFactory;
 import com.github.damianwajser.model.details.strategys.DetailFieldStrategy;
 
-import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
-import sun.reflect.generics.reflectiveObjects.TypeVariableImpl;
 
 public final class ReflectionUtils {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ReflectionUtils.class);
@@ -115,7 +115,7 @@ public final class ReflectionUtils {
 	}
 
 	public static Type getRealType(Type type, Class<?> controller) {
-		if (type.getClass().equals(TypeVariableImpl.class)) {
+		if (TypeVariable.class.isAssignableFrom(type.getClass())) {
 			type = ReflectionUtils.getGenericType(controller).get();
 		}
 		return type;
@@ -163,8 +163,8 @@ public final class ReflectionUtils {
 		if (a != null) {
 			String typeStr = parameter.getType().getSimpleName();
 			Type type = parameter.getParameterizedType();
-			if (type instanceof ParameterizedTypeImpl) {
-				typeStr = ((Class<?>) ((ParameterizedTypeImpl) type).getActualTypeArguments()[0]).getSimpleName();
+			if (type instanceof ParameterizedType) {
+				typeStr = ((Class<?>) ((ParameterizedType) type).getActualTypeArguments()[0]).getSimpleName();
 			}
 			parameters.add(new Parameters((boolean) AnnotationUtils.getValue(a, "required"),
 					(String) AnnotationUtils.getValue(a), typeStr));
