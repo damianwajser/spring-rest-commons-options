@@ -111,7 +111,40 @@ curl -X OPTIONS http://localhost:8080/example
 ```
 Response:
 ```js
-{"baseUrl":"/example","enpoints":[{"endpoint":"GET - /example/{id}","httpMethod":"GET","relativeUrl":"/{id}","queryString":{"params":[]},"pathVariable":{"params":[{"required":true,"name":"id","type":"Integer"}]},"bodyRequest":[],"bodyResponse":[],"bodyRequestSchema":null,"bodyResponseSchema":{"type":"object","id":"urn:jsonschema:com:test:damianwajser:model:Example","properties":{"description":{"type":"string"}}}}]}
+{
+    "baseUrl": "/example",
+    "enpoints": [
+        {
+            "endpoint": "GET - /example/{id}",
+            "httpMethod": "GET",
+            "relativeUrl": "/{id}",
+            "queryString": {
+                "params": []
+            },
+            "pathVariable": {
+                "params": [
+                    {
+                        "required": true,
+                        "name": "id",
+                        "type": "Integer"
+                    }
+                ]
+            },
+            "bodyRequest": [],
+            "bodyResponse": [],
+            "bodyRequestSchema": null,
+            "bodyResponseSchema": {
+                "type": "object",
+                "id": "urn:jsonschema:com:test:damianwajser:model:Example",
+                "properties": {
+                    "description": {
+                        "type": "string"
+                    }
+                }
+            }
+        }
+    ]
+}
 ```
 ## License
 
