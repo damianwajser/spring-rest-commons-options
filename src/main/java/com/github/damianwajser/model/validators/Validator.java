@@ -1,4 +1,4 @@
-package com.github.damianwajser.model.validators.impl;
+package com.github.damianwajser.model.validators;
 
 import java.lang.annotation.Annotation;
 import java.util.Optional;

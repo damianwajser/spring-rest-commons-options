@@ -4,6 +4,8 @@ import java.lang.annotation.Annotation;
 
 import org.springframework.core.annotation.AnnotationUtils;
 
+import com.github.damianwajser.model.validators.Validator;
+
 public class RangeValidator extends Validator {
 	
 	private Long min = 0l;

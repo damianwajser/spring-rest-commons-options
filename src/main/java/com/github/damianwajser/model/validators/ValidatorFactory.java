@@ -8,12 +8,14 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
+import javax.validation.constraints.Pattern;
+
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.Range;
 
 import com.github.damianwajser.model.validators.impl.DefaultValidator;
+import com.github.damianwajser.model.validators.impl.PatternValidator;
 import com.github.damianwajser.model.validators.impl.RangeValidator;
-import com.github.damianwajser.model.validators.impl.Validator;
 
 public final class ValidatorFactory {
 	private ValidatorFactory() {
@@ -45,6 +47,8 @@ public final class ValidatorFactory {
 		if (isValidable(annotation)) {
 			if (annotation instanceof Range || annotation instanceof Length) {
 				validator = new RangeValidator(annotation);
+			} else if (annotation instanceof Pattern){
+				validator = new PatternValidator(annotation);
 			} else {
 				validator = new DefaultValidator(annotation);
 			}

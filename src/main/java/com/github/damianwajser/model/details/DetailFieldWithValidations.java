@@ -2,7 +2,7 @@ package com.github.damianwajser.model.details;
 
 import java.util.Collection;
 
-import com.github.damianwajser.model.validators.impl.Validator;
+import com.github.damianwajser.model.validators.Validator;
 
 public class DetailFieldWithValidations extends DetailField {
 

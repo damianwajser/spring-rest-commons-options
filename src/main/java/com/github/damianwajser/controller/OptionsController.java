@@ -37,7 +37,7 @@ public class OptionsController implements ApplicationListener<ApplicationReadyEv
 
 	private static Map<String, OptionsResult> controllers = new HashMap<>();
 
-	@RequestMapping(value = "/**", method = RequestMethod.OPTIONS, consumes = "application/json")
+	@RequestMapping(value = "/**", method = RequestMethod.OPTIONS, produces = "application/json")
 	public OptionsResult handleResultsJson(HttpServletRequest request, @RequestParam("method") Optional<String> method)
 			throws HttpRequestMethodNotSupportedException {
 		String path = StringUtils.deleteIfEnd(request.getServletPath(), "/");

@@ -29,6 +29,8 @@ public abstract class DetailFieldStrategy {
 			if (isRequest) {
 				detailField = Optional.ofNullable(
 						new DetailFieldWithValidations(ValidatorFactory.getValidations(field).orElse(null)));
+			}else {
+				detailField = Optional.ofNullable(new DetailField());
 			}
 			detailField.ifPresent(d -> fillDetails(field, d));
 		}
