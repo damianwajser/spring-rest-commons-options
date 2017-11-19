@@ -1,18 +1,23 @@
+# spring-rest-commons-options
+
 <p align="center"><img src="/images/Logo.png" width="100" height="80"><p> 
 
 [![Build Status](https://travis-ci.org/damianwajser/spring-rest-commons-options.svg?branch=master)](https://travis-ci.org/damianwajser/spring-rest-commons-options) [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/1400/badge)](https://bestpractices.coreinfrastructure.org/projects/1400) [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.damianwajser/spring-rest-commons-options/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.damianwajser/spring-rest-commons-options) [![Maintainability](https://api.codeclimate.com/v1/badges/dc020f5455c0b6f31089/maintainability)](https://codeclimate.com/github/damianwajser/spring-rest-commons-options/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/dc020f5455c0b6f31089/test_coverage)](https://codeclimate.com/github/damianwajser/spring-rest-commons-options/test_coverage)
 
 
-# Overview
+## Overview
 
 This project contains the general-purpose documentation to spring rest api http options.
 Project is licensed under [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0).
 
 -----
+## Roadmap
 
-# Get it!
+Consult the proyect for details on the current [spring-rest-commons-options roadmap](https://github.com/damianwajser/spring-rest-commons-options/projects/1).
 
-## Maven
+## Get it!
+
+### Maven
 
 Functionality of this package is contained in Java package `com.github.damianwajser`, and can be used using following Maven dependency:
 
@@ -35,6 +40,118 @@ Functionality of this package is contained in Java package `com.github.damianwaj
 </dependencies>
 ```
 
+## Usage
+
+Create a spring-boot application.
+
+```java
+//declare the package to create de options controllers
+@ComponentScan({"com.github.damianwajser","{YOUR-PINCIPAL-PACKAGE}"})
+@SpringBootApplication
+public class Application {
+
+	public static void main(String[] args) {
+		SpringApplication.run(Application.class, args);
+	}
+  
+}
+```
+
+### Example
+
+Create the model, if you required, add the validation with the hibernate-validators or java-validators:
+
+```java
+public class Example {
+	@NotEmpty(message = "The field description is required")
+	private String description;
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+}
+```
+
+Create a Controller:
+```java
+@RestController
+@RequestMapping("/example")
+public class ExapmleResource {
+	
+	@GetMapping("/{id}")
+	public Example getById(@PathVariable("id") Integer id) {
+		Example example = new Example();
+		example.setDescription("description");
+		return example;
+
+	}
+}
+```
+
+### Test It!!
+
+The firts enpooint created:
+
+```curl 
+curl -X GET http://localhost:8080/endpoints
+```
+
+The response: 
+```js
+["/example","/endpoints"]
+```
+#### Check options
+```curl
+curl -X OPTIONS http://localhost:8080/example
+```
+Response:
+```js
+{
+    "baseUrl": "/example",
+    "enpoints": [
+        {
+            "endpoint": "GET - /example/{id}",
+            "httpMethod": "GET",
+            "relativeUrl": "/{id}",
+            "queryString": {
+                "params": []
+            },
+            "pathVariable": {
+                "params": [
+                    {
+                        "required": true,
+                        "name": "id",
+                        "type": "Integer"
+                    }
+                ]
+            },
+            "bodyRequest": [],
+            "bodyResponse": [
+                {
+                    "name": "description",
+                    "type": "String",
+                    "auditable": false
+                }
+            ],
+            "bodyRequestSchema": null,
+            "bodyResponseSchema": {
+                "type": "object",
+                "id": "urn:jsonschema:com:test:damianwajser:model:Example",
+                "properties": {
+                    "description": {
+                        "type": "string"
+                    }
+                }
+            }
+        }
+    ]
+}
+```
 ## License
 
 The Spring Framework is released under version 2.0 of the
