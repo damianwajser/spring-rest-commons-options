@@ -1,6 +1,6 @@
 <p align="center"><img src="/images/Logo.png" width="100" height="80"><p> 
 
-[![Build Status](https://travis-ci.org/damianwajser/spring-rest-commons-options.svg?branch=master)](https://travis-ci.org/damianwajser/spring-rest-commons-options) [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/1400/badge)](https://bestpractices.coreinfrastructure.org/projects/1400) [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.damianwajser/spring-rest-commons-options/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.damianwajser/spring-rest-commons-options)
+[![Build Status](https://travis-ci.org/damianwajser/spring-rest-commons-options.svg?branch=master)](https://travis-ci.org/damianwajser/spring-rest-commons-options) [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/1400/badge)](https://bestpractices.coreinfrastructure.org/projects/1400) [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.damianwajser/spring-rest-commons-options/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.damianwajser/spring-rest-commons-options) [![Maintainability](https://api.codeclimate.com/v1/badges/dc020f5455c0b6f31089/maintainability)](https://codeclimate.com/github/damianwajser/spring-rest-commons-options/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/dc020f5455c0b6f31089/test_coverage)](https://codeclimate.com/github/damianwajser/spring-rest-commons-options/test_coverage)
 
 
 # Overview
