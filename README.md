@@ -13,7 +13,7 @@ Project is licensed under [Apache License 2.0](http://www.apache.org/licenses/LI
 -----
 ## Roadmap
 
-Consult the wiki for details on the current [JUnit 5 roadmap](https://github.com/junit-team/junit5/wiki/Roadmap).
+Consult the proyect for details on the current [spring-rest-commons-options roadmap](https://github.com/damianwajser/spring-rest-commons-options/projects/1).
 
 ## Get it!
 
