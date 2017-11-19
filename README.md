@@ -102,7 +102,7 @@ curl -X GET http://localhost:8080/endpoints
 ```
 
 The response: 
-```json 
+```js
 ["/example","/endpoints"]
 ```
 #### Check options
@@ -110,7 +110,7 @@ The response:
 curl -X OPTIONS http://localhost:8080/example
 ```
 Response:
-```json
+```js
 {"baseUrl":"/example","enpoints":[{"endpoint":"GET - /example/{id}","httpMethod":"GET","relativeUrl":"/{id}","queryString":{"params":[]},"pathVariable":{"params":[{"required":true,"name":"id","type":"Integer"}]},"bodyRequest":[],"bodyResponse":[],"bodyRequestSchema":null,"bodyResponseSchema":{"type":"object","id":"urn:jsonschema:com:test:damianwajser:model:Example","properties":{"description":{"type":"string"}}}}]}
 ```
 ## License
