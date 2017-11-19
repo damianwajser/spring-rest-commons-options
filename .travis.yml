@@ -1,14 +1,17 @@
 sudo: false
 language: java
-services:
-- docker
 cache:
   directories:
   - "$HOME/.cache"
 
 deploy:
-  provider: script
-  script: "cp .travis.settings.xml $HOME/.m2/settings.xml && mvn deploy"
-  skip_cleanup: true
-  on:
-    tags: true
+    skip_cleanup: true
+    on:
+      repo: damianwajser/spring-rest-commons-options
+      tags: true
+      jdk: oraclejdk8
+      branch: master
+
+notifications:
+  email:
+    - wajser@gmail.com
