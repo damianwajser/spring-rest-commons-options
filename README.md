@@ -1,18 +1,23 @@
+# spring-rest-commons-options
+
 <p align="center"><img src="/images/Logo.png" width="100" height="80"><p> 
 
 [![Build Status](https://travis-ci.org/damianwajser/spring-rest-commons-options.svg?branch=master)](https://travis-ci.org/damianwajser/spring-rest-commons-options) [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/1400/badge)](https://bestpractices.coreinfrastructure.org/projects/1400) [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.damianwajser/spring-rest-commons-options/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.damianwajser/spring-rest-commons-options) [![Maintainability](https://api.codeclimate.com/v1/badges/dc020f5455c0b6f31089/maintainability)](https://codeclimate.com/github/damianwajser/spring-rest-commons-options/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/dc020f5455c0b6f31089/test_coverage)](https://codeclimate.com/github/damianwajser/spring-rest-commons-options/test_coverage)
 
 
-# Overview
+## Overview
 
 This project contains the general-purpose documentation to spring rest api http options.
 Project is licensed under [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0).
 
 -----
+## Roadmap
 
-# Get it!
+Consult the wiki for details on the current [JUnit 5 roadmap](https://github.com/junit-team/junit5/wiki/Roadmap).
 
-## Maven
+## Get it!
+
+### Maven
 
 Functionality of this package is contained in Java package `com.github.damianwajser`, and can be used using following Maven dependency:
 
