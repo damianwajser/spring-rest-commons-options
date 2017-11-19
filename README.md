@@ -41,6 +41,9 @@ Functionality of this package is contained in Java package `com.github.damianwaj
 ```
 
 ## Usage
+
+Create a spring-boot application.
+
 ```java
 //declare the package to create de options controllers
 @ComponentScan({"com.github.damianwajser","{YOUR-PINCIPAL-PACKAGE}"})
@@ -53,6 +56,16 @@ public class Application {
   
 }
 ```
+
+### Example
+
+### Test It!!
+
+```curl 
+curl -X GET http://localhost:8080/endpoints
+```
+```json ["/parameter","/other/parameter","/endpoints"] ```
+
 ## License
 
 The Spring Framework is released under version 2.0 of the
