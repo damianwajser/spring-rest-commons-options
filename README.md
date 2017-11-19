@@ -105,7 +105,14 @@ The response:
 ```json 
 ["/example","/endpoints"]
 ```
-
+#### Check options
+```curl
+curl -X OPTIONS http://localhost:8080/example
+```
+Response:
+```json
+{"baseUrl":"/example","enpoints":[{"endpoint":"GET - /example/{id}","httpMethod":"GET","relativeUrl":"/{id}","queryString":{"params":[]},"pathVariable":{"params":[{"required":true,"name":"id","type":"Integer"}]},"bodyRequest":[],"bodyResponse":[],"bodyRequestSchema":null,"bodyResponseSchema":{"type":"object","id":"urn:jsonschema:com:test:damianwajser:model:Example","properties":{"description":{"type":"string"}}}}]}
+```
 ## License
 
 The Spring Framework is released under version 2.0 of the
