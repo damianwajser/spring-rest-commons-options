@@ -61,10 +61,16 @@ public class Application {
 
 ### Test It!!
 
+The firts enpooint created:
+
 ```curl 
 curl -X GET http://localhost:8080/endpoints
 ```
-```json ["/parameter","/other/parameter","/endpoints"] ```
+
+The response: 
+```json 
+["/parameter","/other/parameter","/endpoints"]
+```
 
 ## License
 
