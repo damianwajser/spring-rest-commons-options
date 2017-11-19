@@ -1,5 +1,6 @@
 <p align="center"><img src="/images/Logo.png" width="100" height="80"><p> 
 [![Build Status](https://travis-ci.org/damianwajser/spring-rest-commons-options.svg?branch=master)](https://travis-ci.org/damianwajser/spring-rest-commons-options)
+
 # Overview
 
 This project contains the general-purpose documentation to spring rest api http options.
