@@ -40,6 +40,18 @@ Functionality of this package is contained in Java package `com.github.damianwaj
 </dependencies>
 ```
 
+## Usage
+```java
+@ComponentScan({"com.github.damianwajser","com.test.damianwajser"})
+@SpringBootApplication
+public class Application {
+
+	public static void main(String[] args) {
+		SpringApplication.run(Application.class, args);
+	}
+  
+}
+```
 ## License
 
 The Spring Framework is released under version 2.0 of the
