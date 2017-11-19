@@ -42,7 +42,8 @@ Functionality of this package is contained in Java package `com.github.damianwaj
 
 ## Usage
 ```java
-@ComponentScan({"com.github.damianwajser","com.test.damianwajser"})
+//declare the package to create de options controllers
+@ComponentScan({"com.github.damianwajser","{YOUR-PINCIPAL-PACKAGE}"})
 @SpringBootApplication
 public class Application {
 
