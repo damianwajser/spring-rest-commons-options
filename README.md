@@ -59,6 +59,40 @@ public class Application {
 
 ### Example
 
+Create the model, if you required, add the validation with the hibernate-validators or java-validators:
+
+```java
+public class Example {
+	@NotEmpty(message = "The field description is required")
+	private String description;
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+}
+```
+
+Create a Controller:
+```java
+@RestController
+@RequestMapping("/example")
+public class ExapmleResource {
+	
+	@GetMapping("/{id}")
+	public Example getById(@PathVariable("id") Integer id) {
+		Example example = new Example();
+		example.setDescription("description");
+		return example;
+
+	}
+}
+```
+
 ### Test It!!
 
 The firts enpooint created:
@@ -69,7 +103,7 @@ curl -X GET http://localhost:8080/endpoints
 
 The response: 
 ```json 
-["/parameter","/other/parameter","/endpoints"]
+["/example","/endpoints"]
 ```
 
 ## License
