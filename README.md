@@ -131,7 +131,13 @@ Response:
                 ]
             },
             "bodyRequest": [],
-            "bodyResponse": [],
+            "bodyResponse": [
+                {
+                    "name": "description",
+                    "type": "String",
+                    "auditable": false
+                }
+            ],
             "bodyRequestSchema": null,
             "bodyResponseSchema": {
                 "type": "object",
