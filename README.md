@@ -2,6 +2,9 @@
 
 [![Build Status](https://travis-ci.org/damianwajser/spring-rest-commons-options.svg?branch=master)](https://travis-ci.org/damianwajser/spring-rest-commons-options)
 
+
+[![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/1400/badge)](https://bestpractices.coreinfrastructure.org/projects/1400)
+
 # Overview
 
 This project contains the general-purpose documentation to spring rest api http options.
