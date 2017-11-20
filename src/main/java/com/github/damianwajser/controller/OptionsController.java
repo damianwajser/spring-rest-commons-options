@@ -40,7 +40,7 @@ public class OptionsController implements ApplicationListener<ApplicationReadyEv
 	@RequestMapping(value = "/**", method = RequestMethod.OPTIONS, produces = "application/json")
 	public OptionsResult handleResultsJson(HttpServletRequest request, @RequestParam("method") Optional<String> method)
 			throws HttpRequestMethodNotSupportedException {
-		String path = StringUtils.deleteIfEnd(request.getServletPath(), "/");
+		String path = request.getServletPath().equals("/")?request.getServletPath():StringUtils.deleteIfEnd(request.getServletPath(), "/");
 		LOGGER.info("solicitando JSON: " + path);
 		OptionsResult result = Optional.ofNullable(controllers.get(path))
 				.orElseThrow(() -> new HttpRequestMethodNotSupportedException("OPTIONS"));

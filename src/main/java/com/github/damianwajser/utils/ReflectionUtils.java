@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -74,9 +75,19 @@ public final class ReflectionUtils {
 		}).collect(Collectors.toList());
 	}
 
+	public static Optional<Type> getRealType(Type type, Optional<Class<?>> parametrizedClass){
+		Optional<Type> optType = Optional.empty();
+		if(parametrizedClass.isPresent()) {
+			optType = getRealType(type, parametrizedClass.get());
+		} else {
+			optType = getRealType(type);
+		}
+		return optType;
+		
+	}
 	public static Optional<Type> getRealType(Type type, Class<?> parametrizedClass){
 		Optional<Type> optType = Optional.empty();
-		if(isParametrizedClass(parametrizedClass)) {
+		if(isParametrizedClass(parametrizedClass) && !Void.TYPE.equals(type)) {
 			optType = getRealType(((ParameterizedType)parametrizedClass.getGenericSuperclass()).getActualTypeArguments()[0]);
 		}else {
 			optType = getRealType(type);
@@ -140,6 +151,8 @@ public final class ReflectionUtils {
 				clazz = Optional.of((Class<?>) type);
 			} else if (type instanceof ParameterizedType) {
 				clazz = getClass(((ParameterizedType) type).getRawType());
+			}else if (TypeVariable.class.isAssignableFrom(type.getClass())) {
+				clazz = getClass(((TypeVariable<?>)type).getClass());
 			}
 		}
 		return clazz;

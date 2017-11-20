@@ -52,10 +52,12 @@ public class JsonBuilder implements OptionsBuilder {
 			this.url = "/";
 		}
 	}
+
 	private Optional<String[]> getUrls(Object controller) {
 		return Optional.ofNullable(
 				(String[]) AnnotationUtils.getValue(controller.getClass().getAnnotation(RequestMapping.class)));
 	}
+
 	public Optional<OptionsResult> build() {
 		getRealController();
 		this.fillMethods();
@@ -80,11 +82,13 @@ public class JsonBuilder implements OptionsBuilder {
 				}
 			});
 			LOGGER.info("Contador de arbol: " + count);
-			String realBaseUrl = "/" + Collections
-					.max(count.entrySet(), (entry1, entry2) -> entry1.getValue() - entry2.getValue()).getKey();
-			LOGGER.info("real url for: " + realBaseUrl);
-			result.setBaseUrl(realBaseUrl);
-			result.getEnpoints().forEach(e -> e.setBaseUrl(realBaseUrl));
+			if (!count.isEmpty()) {
+				String realBaseUrl = "/" + Collections
+						.max(count.entrySet(), (entry1, entry2) -> entry1.getValue() - entry2.getValue()).getKey();
+				LOGGER.info("real url for: " + realBaseUrl);
+				result.setBaseUrl(realBaseUrl);
+				result.getEnpoints().forEach(e -> e.setBaseUrl(realBaseUrl));
+			}
 		}
 	}
 
