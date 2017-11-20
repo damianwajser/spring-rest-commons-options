@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.Optional;
 
 import com.github.damianwajser.model.details.DetailField;
+import com.github.damianwajser.model.details.strategys.DetailFieldCreatedStrategyFactory;
 import com.github.damianwajser.model.details.strategys.DetailFieldStrategy;
 import com.github.damianwajser.utils.ReflectionUtils;
 
@@ -31,10 +32,19 @@ public class ModelStrategy extends DetailFieldStrategy {
 
 	private Collection<DetailField> createDetail(Class<?> clazz, boolean isRequest) {
 		Collection<DetailField> detailFields = new ArrayList<>();
-		for (Field field : clazz.getDeclaredFields()) {
-			if (!Modifier.isStatic(field.getModifiers())) {
-				createDetail(field, isRequest).ifPresent(d -> detailFields.add(d));
+		if (!Iterable.class.isAssignableFrom(clazz)) {
+			for (Field field : clazz.getDeclaredFields()) {
+				if (!Modifier.isStatic(field.getModifiers())) {
+					Optional<DetailField> detail = createDetail(field, isRequest);
+					if (detail.isPresent()) {
+						detailFields.add(detail.get());
+					}
+				}
 			}
+		} else {
+			detailFields = DetailFieldCreatedStrategyFactory
+					.getCreationStrategy(this.getType(), Optional.empty())
+					.createDetailField(isRequest);
 		}
 		return detailFields;
 	}

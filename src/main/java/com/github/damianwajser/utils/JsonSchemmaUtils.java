@@ -2,9 +2,13 @@ package com.github.damianwajser.utils;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Optional;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -13,6 +17,8 @@ import com.fasterxml.jackson.module.jsonSchema.JsonSchemaGenerator;
 import com.fasterxml.jackson.module.jsonSchema.factories.SchemaFactoryWrapper;
 
 public final class JsonSchemmaUtils {
+	private static final Logger LOGGER = LoggerFactory.getLogger(JsonSchemmaUtils.class);
+
 	private JsonSchemmaUtils() {
 	}
 
@@ -50,12 +56,27 @@ public final class JsonSchemmaUtils {
 	}
 
 	private static Optional<JsonSchema> getResponseSchemma(Method m, Class<?> parametrizedClass) {
-		Optional<Type> returnType = Optional.of(m.getReturnType());
+		Optional<JsonSchema> schemma = Optional.empty();
+		// obtengo el tipo real de retorno por si es generic
+		Optional<Type> returnType = ReflectionUtils.getRealType(m.getGenericReturnType(), parametrizedClass);
+		if (returnType.isPresent()) {
+			// el return type puede ser una colleccion para eso obtengo la clase real del
+			// parametro a traves de reflection utils
+			Optional<Class<?>> realClass = ReflectionUtils.getClass(returnType.get());
+			if (realClass.isPresent()) {
+				if (Iterable.class.isAssignableFrom(realClass.get())) {
+					// si es una collection tengo que saber si es generic, para eso le pido la clase
+					// al return type
+					if (ParameterizedType.class.isAssignableFrom(returnType.get().getClass()))
+						returnType = ReflectionUtils.getGenericType((ParameterizedType) returnType.get());
+				}
 
-		if (Iterable.class.isAssignableFrom(ReflectionUtils.getClass(returnType.get()).get())) {
-			returnType = ReflectionUtils.getRealType(null, parametrizedClass);
+				schemma = getSchemma(ReflectionUtils.getClass(returnType.orElse(null)).orElse(realClass.get()));
+			} else {
+				LOGGER.error("No existe una real class para: " + returnType);
+			}
 		}
-		return getSchemma(ReflectionUtils.getClass(returnType.get()).get());
+		return schemma;
 	}
 
 	private static Optional<JsonSchema> getRequestSchemma(Method m, Class<?> controller) {
@@ -67,7 +88,11 @@ public final class JsonSchemmaUtils {
 				Optional<Class<?>> c = ReflectionUtils.getClass(t.get());
 				if (c.isPresent()) {
 					schemma = getSchemma(c.get());
+				} else {
+					schemma = getSchemma(t.getClass());
 				}
+			} else {
+				schemma = getSchemma(ReflectionUtils.getClass(p.get(0).getParameterizedType()).get());
 			}
 		}
 		return schemma;

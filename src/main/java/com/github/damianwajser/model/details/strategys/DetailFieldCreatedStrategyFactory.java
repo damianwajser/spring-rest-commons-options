@@ -1,6 +1,5 @@
 package com.github.damianwajser.model.details.strategys;
 
-import java.lang.reflect.Parameter;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Optional;
@@ -18,34 +17,34 @@ public final class DetailFieldCreatedStrategyFactory {
 	private DetailFieldCreatedStrategyFactory() {
 	}
 
-	public static DetailFieldStrategy getCreationStrategy(Type t, Class<?> parametrizedClass, boolean isCollection) {
-		Optional<Type> type = Optional.empty();
-		// si el controller es parametrico <Paramenter>
-		type = ReflectionUtils.getRealType(t, parametrizedClass);
-		return getCreationStrategy(type, isCollection);
-
-	}
-
-	public static DetailFieldStrategy getCreationStrategy(Class<?> returnType, Class<?> parametrizedClass,
-			boolean isCollection) {
-		Optional<Type> type = ReflectionUtils.getRealType(returnType, parametrizedClass);
-		return getCreationStrategy(type, isCollection);
-
-	}
-
-	public static DetailFieldStrategy getCreationStrategy(Optional<Type> type, boolean isCollection) {
+	public static DetailFieldStrategy getCreationStrategy(Type type, Optional<Class<?>> parametrizedClass) {
+		LOGGER.debug("seleccionando strategyField: " + type.getTypeName());
 		DetailFieldStrategy strategy = null;
-		if (type.isPresent()) {
-			LOGGER.debug("seleccionando strategyField: " + type.get().getTypeName());
-			if (!ReflectionUtils.isJDKClass(type.get()) && !isCollection) {
-				strategy = new ModelStrategy(type.get());
+		if (type != null) {
+			if (ParameterizedType.class.isAssignableFrom(type.getClass())) {
+				strategy = getGenericParameterStrategy(type, strategy);
 			} else {
-				strategy = new PrimitiveStrategy(type.get(), isCollection);
+				if (!ReflectionUtils.isJDKClass(type)) {
+					strategy = new ModelStrategy(ReflectionUtils.getRealType(type, parametrizedClass).get());
+				} else {
+					strategy = new PrimitiveStrategy(type);
+				}
 			}
-		} else {
-			strategy = new PrimitiveStrategy(type.orElse(null));
 		}
 		LOGGER.info("Se selecciono strategy " + strategy);
+		return strategy;
+	}
+
+	private static DetailFieldStrategy getGenericParameterStrategy(Type type, DetailFieldStrategy strategy) {
+		// es un tipo generico y tengo que obtener la info de la clase
+		Optional<Class<?>> genericClazz = ReflectionUtils.getClass(((ParameterizedType) type).getRawType());
+		// si la clase contenedora del parametro es collection
+		Type genericType = ReflectionUtils.getGenericType((ParameterizedType) type).orElseThrow(RuntimeException::new);
+		if (Iterable.class.isAssignableFrom(genericClazz.get())) {
+			strategy = new CollectionStrategy(genericType);
+		} else {
+			strategy = new ModelStrategy(genericType);
+		}
 		return strategy;
 	}
 

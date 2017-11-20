@@ -4,9 +4,8 @@ import org.junit.jupiter.api.Test;
 
 public class SarazaTest {
 
-    @Test
-    public void contextLoads() throws Exception {
-    		//assertTrue(false);
-    }
-
+	@Test
+	public void contextLoads() throws Exception {
+		// assertTrue(false);
+	}
 }

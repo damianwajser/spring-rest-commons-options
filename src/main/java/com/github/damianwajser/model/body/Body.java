@@ -14,7 +14,7 @@ public abstract class Body {
 	@JsonIgnore
 	private Method method;
 	@JsonIgnore
-	private Class<?> controllerClass;
+	private Class<?> parametrizedClass;
 
 	@JsonUnwrapped
 	private Collection<DetailField> fields = new ArrayList<>();
@@ -23,7 +23,7 @@ public abstract class Body {
 	
 	public Body(Method m, Class<?> controllerClass) {
 		this.method = m;
-		this.controllerClass = controllerClass;
+		this.parametrizedClass = controllerClass;
 		this.fields = this.buildFields();
 		this.setJsonSchema(fillJsonSchema());
 	}
@@ -36,16 +36,12 @@ public abstract class Body {
 		return fields;
 	}
 
-	public void setFields(Collection<DetailField> fields) {
-		this.fields = fields;
-	}
-	
 	protected Method getMethod() {
 		return this.method;
 	}
 
-	public Class<?> getControllerClass() {
-		return this.controllerClass;
+	protected Class<?> getParametrizedClass() {
+		return this.parametrizedClass;
 	}
 
 	public JsonSchema getJsonSchema() {
