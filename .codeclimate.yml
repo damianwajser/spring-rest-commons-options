@@ -5,3 +5,5 @@ plugins:
     enabled: true
     config:
       sonar.java.source: 8
+  pmd:
+    enabled: true
