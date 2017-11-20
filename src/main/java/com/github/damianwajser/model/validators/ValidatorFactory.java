@@ -24,8 +24,8 @@ public final class ValidatorFactory {
 	private static List<String> validatorsPackage = Arrays.asList("javax.validation.constraints",
 			"hibernate-validator");
 
-	public static Optional<Collection<Validator>> getValidations(Field field) {
-		Optional<Collection<Validator>> validations = Optional.empty();
+	public static Optional<List<Validator>> getValidations(Field field) {
+		Optional<List<Validator>> validations = Optional.empty();
 		Annotation[] annotations = field.getDeclaredAnnotations();
 		if (annotations.length > 0) {
 			validations = Optional.ofNullable(getValidators(annotations));
@@ -33,8 +33,8 @@ public final class ValidatorFactory {
 		return validations;
 	}
 
-	private static Collection<Validator> getValidators(Annotation[] annotations) {
-		Collection<Validator> validations = new ArrayList<>();
+	private static List<Validator> getValidators(Annotation[] annotations) {
+		List<Validator> validations = new ArrayList<>();
 		for (Annotation annotation : annotations) {
 			getValidator(annotation).ifPresent(v -> validations.add(v));
 		}
