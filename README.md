@@ -90,6 +90,12 @@ public class ExapmleResource {
 		return example;
 
 	}
+	
+	@PostMapping("/")
+	public Example post(@Valid Example example) {
+		return example;
+
+	}
 }
 ```
 
@@ -130,21 +136,78 @@ Response:
                     }
                 ]
             },
-            "bodyRequest": [],
-            "bodyResponse": [
-                {
-                    "name": "description",
-                    "type": "String",
-                    "auditable": false
+            "bodyRequest": {
+                "fields": [],
+                "jsonSchema": null
+            },
+            "bodyResponse": {
+                "fields": [
+                    {
+                        "name": "description",
+                        "type": "String",
+                        "auditable": false
+                    }
+                ],
+                "jsonSchema": {
+                    "type": "object",
+                    "id": "urn:jsonschema:com:test:damianwajser:model:Example",
+                    "properties": {
+                        "description": {
+                            "type": "string"
+                        }
+                    }
                 }
-            ],
-            "bodyRequestSchema": null,
-            "bodyResponseSchema": {
-                "type": "object",
-                "id": "urn:jsonschema:com:test:damianwajser:model:Example",
-                "properties": {
-                    "description": {
-                        "type": "string"
+            }
+        },
+        {
+            "endpoint": "POST - /example/",
+            "httpMethod": "POST",
+            "relativeUrl": "/",
+            "queryString": {
+                "params": []
+            },
+            "pathVariable": {
+                "params": []
+            },
+            "bodyRequest": {
+                "fields": [
+                    {
+                        "name": "description",
+                        "type": "String",
+                        "auditable": false,
+                        "validation": [
+                            {
+                                "name": "NotEmpty",
+                                "message": "The field description is required"
+                            }
+                        ]
+                    }
+                ],
+                "jsonSchema": {
+                    "type": "object",
+                    "id": "urn:jsonschema:com:test:damianwajser:model:Example",
+                    "properties": {
+                        "description": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "bodyResponse": {
+                "fields": [
+                    {
+                        "name": "description",
+                        "type": "String",
+                        "auditable": false
+                    }
+                ],
+                "jsonSchema": {
+                    "type": "object",
+                    "id": "urn:jsonschema:com:test:damianwajser:model:Example",
+                    "properties": {
+                        "description": {
+                            "type": "string"
+                        }
                     }
                 }
             }
