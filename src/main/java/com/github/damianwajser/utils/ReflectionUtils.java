@@ -1,12 +1,10 @@
 package com.github.damianwajser.utils;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.GenericDeclaration;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.lang.reflect.TypeVariable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -26,14 +24,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.github.damianwajser.model.Parameters;
-import com.github.damianwajser.model.details.DetailField;
-import com.github.damianwajser.model.details.strategys.DetailFieldCreatedStrategyFactory;
-import com.github.damianwajser.model.details.strategys.DetailFieldStrategy;
-
 
 public final class ReflectionUtils {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ReflectionUtils.class);
@@ -46,64 +39,31 @@ public final class ReflectionUtils {
 	private static Collection<Class<? extends Annotation>> requestAnnotation = Arrays.asList(RequestMapping.class,
 			PutMapping.class, DeleteMapping.class, PostMapping.class, GetMapping.class, PatchMapping.class);
 
-	private static boolean containsRequestAnnotation(Method m) {
+	public static boolean containsRequestAnnotation(Method m) {
 		LOGGER.debug("check conteins annotation " + m.getName());
 		return filterRequestMappingAnnontations(m).findAny().isPresent();
 
 	}
 
-	private static Stream<Annotation> filterRequestMappingAnnontations(Method m) {
+	public static Stream<Annotation> filterRequestMappingAnnontations(Method m) {
 		return Arrays.asList(m.getAnnotations()).stream().filter(a -> requestAnnotation.contains(a.annotationType()));
-	}
-
-	private static Annotation getRequestMqpping(Annotation annotation) {
-		if (AnnotationUtils.getValue(annotation, "method") == null) {
-			annotation = annotation.annotationType().getDeclaredAnnotation(RequestMapping.class);
-		}
-		return annotation;
-	}
-
-	public static String getRelativeUrl(Method m) {
-		StringBuilder relativeUrl = new StringBuilder();
-		// me quedo con la annotation (alguna de la lista)
-		Annotation annotation = filterRequestMappingAnnontations(m).findFirst().get();
-		Optional<Object> value = Optional.ofNullable(AnnotationUtils.getValue(annotation));
-		value.ifPresent(v -> relativeUrl.append(Arrays.asList((String[]) v).stream().findFirst().orElse("")));
-		return relativeUrl.toString();
-	}
-
-	public static Optional<String[]> getUrls(Object controller) {
-		return Optional.ofNullable(
-				(String[]) AnnotationUtils.getValue(controller.getClass().getAnnotation(RequestMapping.class)));
-	}
-
-	public static Optional<RequestMethod[]> getHttpRequestMethod(Method m) {
-		Annotation a = filterRequestMappingAnnontations(m).findFirst().get();
-		return Optional.ofNullable((RequestMethod[]) AnnotationUtils.getValue(getRequestMqpping(a), "method"));
 	}
 
 	public static Optional<Type> getGenericType(Class<?> clazz) {
 		Optional<Type> t = Optional.empty();
-		if (clazz != null && clazz.getGenericSuperclass() != null && clazz.getGenericSuperclass() instanceof ParameterizedType)
+		if (clazz != null && clazz.getGenericSuperclass() != null
+				&& clazz.getGenericSuperclass() instanceof ParameterizedType)
 			t = Optional.ofNullable(((ParameterizedType) clazz.getGenericSuperclass()).getActualTypeArguments()[0]);
 		return t;
 	}
 
-	public static Optional<Type> getGenericType(Type t) {
+	public static Optional<Type> getGenericType(ParameterizedType t) {
 		return Optional.ofNullable(((ParameterizedType) t).getActualTypeArguments()[0]);
 	}
 
 	public static Optional<Class<?>> getGenericClass(Class<?> clazz) {
 		Type t = getGenericType(clazz).orElse(clazz);
 		return getClass(t);
-	}
-
-	public static Collection<DetailField> getRequestFieldDetail(Method m, Class<?> controller) {
-		Collection<DetailField> fields = new ArrayList<>();
-		getParameters(m).forEach(p -> fields
-				.addAll(DetailFieldCreatedStrategyFactory.getCreationStrategy(p, controller).createDetailField(true)));
-
-		return fields;
 	}
 
 	public static List<Parameter> getParameters(Method m) {
@@ -114,40 +74,33 @@ public final class ReflectionUtils {
 		}).collect(Collectors.toList());
 	}
 
-	public static Type getRealType(Type type, Class<?> controller) {
-		if (TypeVariable.class.isAssignableFrom(type.getClass())) {
-			type = ReflectionUtils.getGenericType(controller).get();
+	public static Optional<Type> getRealType(Type type, Class<?> parametrizedClass){
+		Optional<Type> optType = Optional.empty();
+		if(isParametrizedClass(parametrizedClass)) {
+			optType = getRealType(((ParameterizedType)parametrizedClass.getGenericSuperclass()).getActualTypeArguments()[0]);
+		}else {
+			optType = getRealType(type);
 		}
-		return type;
+		return optType;
+		
 	}
 
-	public static Collection<DetailField> getResponseFieldDetail(Method m, Class<?> controller) {
-		Class<?> returnType = m.getReturnType();
-		DetailFieldStrategy strategy = null;
-
-		if (Iterable.class.isAssignableFrom(returnType)) {
-			Type t = m.getGenericReturnType();
-			strategy = DetailFieldCreatedStrategyFactory.getCreationStrategy(t, controller);
+	public static boolean isParametrizedClass(Class<?> parametrizedClass) {
+		return ParameterizedType.class.isAssignableFrom(parametrizedClass.getGenericSuperclass().getClass());
+	}
+	
+	public static Optional<Type> getRealType(Type type) {
+		Optional<Type> t = Optional.ofNullable(type);
+		if (ParameterizedType.class.isAssignableFrom(type.getClass())) {
+			t = ReflectionUtils.getGenericType(type.getClass());
 		} else {
-			strategy = DetailFieldCreatedStrategyFactory.getCreationStrategy(returnType, controller);
+			// type = ReflectionUtils.getGenericType(type).get();
 		}
-		return strategy.createDetailField(false);
+		return t;
 	}
 
 	public static boolean isJDKClass(Type t) {
 		return t.getTypeName().startsWith("java") || PRIMITIVES.contains(t.getTypeName());
-	}
-
-	/**
-	 * Gets the request methods.
-	 *
-	 * @param object
-	 *            to extract methods (Controller or RestController)
-	 * @return the methos only represent the request controller
-	 */
-	public static Collection<Method> getRequestMethods(Object object) {
-		return Arrays.asList(object.getClass().getMethods()).stream().filter(m -> containsRequestAnnotation(m))
-				.collect(Collectors.toList());
 	}
 
 	public static Collection<Parameters> getQueryString(Method m) {
@@ -185,14 +138,14 @@ public final class ReflectionUtils {
 		if (type != null) {
 			if (type instanceof Class) {
 				clazz = Optional.of((Class<?>) type);
-			} else {
+			} else if (type instanceof ParameterizedType) {
 				clazz = getClass(((ParameterizedType) type).getRawType());
 			}
 		}
 		return clazz;
 	}
 
-	public static Optional<Class<?>> getRealClass(Class<?> type, Class<?> controller) {
-		return getClass(getRealType(type, controller));
+	public static Optional<Class<?>> getRealClass(Class<?> type) {
+		return getClass(getRealType(type).orElse(null));
 	}
 }

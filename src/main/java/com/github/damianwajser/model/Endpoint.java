@@ -1,7 +1,6 @@
 package com.github.damianwajser.model;
 
 import java.lang.reflect.Method;
-import java.util.Collection;
 
 import org.springframework.http.HttpMethod;
 
@@ -10,10 +9,9 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
-import com.github.damianwajser.model.details.DetailField;
-import com.github.damianwajser.utils.JsonSchemmaUtils;
-import com.github.damianwajser.utils.ReflectionUtils;
+import com.github.damianwajser.model.body.Body;
+import com.github.damianwajser.model.body.BodyRequest;
+import com.github.damianwajser.model.body.BodyResponse;
 
 @JsonAutoDetect(fieldVisibility = Visibility.ANY)
 @JsonPropertyOrder({ "endpoint", "httpMethod", "baseUrl", "relativeUrl" })
@@ -27,21 +25,17 @@ public class Endpoint implements Comparable<Endpoint> {
 	@JsonIgnore
 	private String baseUrl;
 	private String relativeUrl;
-	private Collection<DetailField> bodyRequest;
-	private Collection<DetailField> bodyResponse;
-	private JsonSchema bodyRequestSchema = null;
-	private JsonSchema bodyResponseSchema = null;
+	private Body bodyRequest;
+	private Body bodyResponse;
 
 	public Endpoint(String url, String relativeUrl, Method m, Object controller) {
 		this.setBaseUrl(url);
 		this.setRelativeUrl(relativeUrl);
+		this.setPathVariable(new PathVariable(m, this.getRelativeUrl()));
 		this.methods = new RequestHttpMethod(m);
 		this.queryString = new QueryString(m);
-		this.setPathVariable(new PathVariable(m, this.getRelativeUrl()));
-		this.setBodyRequest(ReflectionUtils.getRequestFieldDetail(m, controller.getClass()));
-		this.setBodyResponse(ReflectionUtils.getResponseFieldDetail(m, controller.getClass()));
-		this.bodyRequestSchema = JsonSchemmaUtils.getSchemma(m, controller.getClass(), true).orElse(null);
-		this.bodyResponseSchema = JsonSchemmaUtils.getSchemma(m, controller.getClass(), false).orElse(null);
+		this.setBodyRequest(new BodyRequest(m, controller.getClass()));
+		this.setBodyResponse(new BodyResponse(m, controller.getClass()));
 	}
 
 	public String getHttpMethod() {
@@ -85,19 +79,19 @@ public class Endpoint implements Comparable<Endpoint> {
 		return isGet ? 1 : this.getHttpMethod().compareTo(o.getHttpMethod());
 	}
 
-	public Collection<DetailField> getBodyRequest() {
+	public Body getBodyRequest() {
 		return bodyRequest;
 	}
 
-	public void setBodyRequest(Collection<DetailField> bodyRequest) {
+	public void setBodyRequest(Body bodyRequest) {
 		this.bodyRequest = bodyRequest;
 	}
 
-	public Collection<DetailField> getBodyResponse() {
+	public Body getBodyResponse() {
 		return bodyResponse;
 	}
 
-	public void setBodyResponse(Collection<DetailField> bodyResponse) {
+	public void setBodyResponse(Body bodyResponse) {
 		this.bodyResponse = bodyResponse;
 	}
 
@@ -107,21 +101,5 @@ public class Endpoint implements Comparable<Endpoint> {
 
 	public void setPathVariable(PathVariable pathVariable) {
 		this.pathVariable = pathVariable;
-	}
-
-	public JsonSchema getBodyRequestSchema() {
-		return bodyRequestSchema;
-	}
-
-	public void setBodyRequestSchema(JsonSchema bodyRequestSchema) {
-		this.bodyRequestSchema = bodyRequestSchema;
-	}
-
-	public JsonSchema getBodyResponseSchema() {
-		return bodyResponseSchema;
-	}
-
-	public void setBodyResponseSchema(JsonSchema bodyResponseSchema) {
-		this.bodyResponseSchema = bodyResponseSchema;
 	}
 }

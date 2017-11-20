@@ -5,6 +5,7 @@ import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.Optional;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.github.damianwajser.annotations.Auditable;
@@ -14,13 +15,11 @@ import com.github.damianwajser.model.validators.ValidatorFactory;
 
 public abstract class DetailFieldStrategy {
 	private Type type;
-	private Class<?> controller;
 
 	public abstract Collection<DetailField> createDetailField(boolean isRequest);
 
-	public DetailFieldStrategy(Type type, Class<?> clazz) {
+	public DetailFieldStrategy(Type type) {
 		this.setType(type);
-		this.setController(clazz);
 	}
 
 	protected Optional<DetailField> createDetail(Field field, boolean isRequest) {
@@ -29,7 +28,7 @@ public abstract class DetailFieldStrategy {
 			if (isRequest) {
 				detailField = Optional.ofNullable(
 						new DetailFieldWithValidations(ValidatorFactory.getValidations(field).orElse(null)));
-			}else {
+			} else {
 				detailField = Optional.ofNullable(new DetailField());
 			}
 			detailField.ifPresent(d -> fillDetails(field, d));
@@ -50,12 +49,8 @@ public abstract class DetailFieldStrategy {
 	protected void setType(Type type) {
 		this.type = type;
 	}
-
-	protected Class<?> getController() {
-		return controller;
-	}
-
-	protected void setController(Class<?> clazz) {
-		this.controller = clazz;
+	@Override
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this);
 	}
 }

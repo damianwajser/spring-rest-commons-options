@@ -1,18 +1,23 @@
 package com.github.damianwajser.builders.json;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.aop.framework.Advised;
 import org.springframework.aop.support.AopUtils;
+import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.http.HttpMethod;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import com.github.damianwajser.builders.OptionsBuilder;
@@ -20,7 +25,7 @@ import com.github.damianwajser.model.Endpoint;
 import com.github.damianwajser.model.OptionsResult;
 import com.github.damianwajser.utils.ReflectionUtils;
 
-public class JsonBuilder implements OptionsBuilder{
+public class JsonBuilder implements OptionsBuilder {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(JsonBuilder.class);
 
@@ -35,18 +40,22 @@ public class JsonBuilder implements OptionsBuilder{
 	}
 
 	private void fillMethods() {
-		this.methods = ReflectionUtils.getRequestMethods(controller);
+		this.methods = Arrays.asList(this.controller.getClass().getMethods()).stream()
+				.filter(m -> ReflectionUtils.containsRequestAnnotation(m)).collect(Collectors.toList());
 	}
 
 	private void fillBaseUrl() {
-		String[] urls = ReflectionUtils.getUrls(controller).orElse(new String[] { "/" });
+		String[] urls = getUrls(controller).orElse(new String[] { "/" });
 		if (urls.length > 0) {
 			this.url = urls[0];
 		} else {
 			this.url = "/";
 		}
 	}
-
+	private Optional<String[]> getUrls(Object controller) {
+		return Optional.ofNullable(
+				(String[]) AnnotationUtils.getValue(controller.getClass().getAnnotation(RequestMapping.class)));
+	}
 	public Optional<OptionsResult> build() {
 		getRealController();
 		this.fillMethods();
@@ -71,7 +80,7 @@ public class JsonBuilder implements OptionsBuilder{
 				}
 			});
 			LOGGER.info("Contador de arbol: " + count);
-			String realBaseUrl = "/"+Collections
+			String realBaseUrl = "/" + Collections
 					.max(count.entrySet(), (entry1, entry2) -> entry1.getValue() - entry2.getValue()).getKey();
 			LOGGER.info("real url for: " + realBaseUrl);
 			result.setBaseUrl(realBaseUrl);
@@ -86,7 +95,7 @@ public class JsonBuilder implements OptionsBuilder{
 			OptionsResult result = new OptionsResult(this.url);
 
 			this.methods.forEach(m -> {
-				String relativeUrl = ReflectionUtils.getRelativeUrl(m);
+				String relativeUrl = getRelativeUrl(m);
 				Endpoint endpoint = new Endpoint(this.url, relativeUrl, m, controller);
 				if (!endpoint.getHttpMethod().equals(HttpMethod.OPTIONS.toString())) {
 					result.addEnpoint(endpoint);
@@ -95,6 +104,15 @@ public class JsonBuilder implements OptionsBuilder{
 			response = Optional.of(result);
 		}
 		return response;
+	}
+
+	private String getRelativeUrl(Method m) {
+		StringBuilder relativeUrl = new StringBuilder();
+		// me quedo con la annotation (alguna de la lista)
+		Annotation annotation = ReflectionUtils.filterRequestMappingAnnontations(m).findFirst().get();
+		Optional<Object> value = Optional.ofNullable(AnnotationUtils.getValue(annotation));
+		value.ifPresent(v -> relativeUrl.append(Arrays.asList((String[]) v).stream().findFirst().orElse("")));
+		return relativeUrl.toString();
 	}
 
 	private void getRealController() {
@@ -108,5 +126,4 @@ public class JsonBuilder implements OptionsBuilder{
 			}
 		}
 	}
-
 }

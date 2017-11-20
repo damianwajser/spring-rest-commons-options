@@ -2,6 +2,7 @@ package com.github.damianwajser.utils;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
+import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,28 +43,31 @@ public final class JsonSchemmaUtils {
 		Optional<JsonSchema> schemma = Optional.empty();
 		if (isRequest) {
 			schemma = getRequestSchemma(m, controller);
-		}else{
-			schemma = getResponseSchemma(m);
+		} else {
+			schemma = getResponseSchemma(m, controller);
 		}
 		return schemma;
 	}
 
-	private static Optional<JsonSchema> getResponseSchemma(Method m) {
-		Class<?> returnType = m.getReturnType();
+	private static Optional<JsonSchema> getResponseSchemma(Method m, Class<?> parametrizedClass) {
+		Optional<Type> returnType = Optional.of(m.getReturnType());
 
-		if (Iterable.class.isAssignableFrom(returnType)) {
-			returnType = ReflectionUtils.getClass(m.getGenericReturnType()).orElse(returnType);
+		if (Iterable.class.isAssignableFrom(ReflectionUtils.getClass(returnType.get()).get())) {
+			returnType = ReflectionUtils.getRealType(null, parametrizedClass);
 		}
-		return getSchemma(returnType);
+		return getSchemma(ReflectionUtils.getClass(returnType.get()).get());
 	}
 
 	private static Optional<JsonSchema> getRequestSchemma(Method m, Class<?> controller) {
 		List<Parameter> p = ReflectionUtils.getParameters(m);
 		Optional<JsonSchema> schemma = Optional.empty();
 		if (!p.isEmpty()) {
-			Optional<Class<?>> c = ReflectionUtils.getClass(ReflectionUtils.getRealType(p.get(0).getParameterizedType(), controller));
-			if (c.isPresent()) {
-				schemma = getSchemma(c.get());
+			Optional<Type> t = ReflectionUtils.getRealType(p.get(0).getParameterizedType(), controller);
+			if (t.isPresent()) {
+				Optional<Class<?>> c = ReflectionUtils.getClass(t.get());
+				if (c.isPresent()) {
+					schemma = getSchemma(c.get());
+				}
 			}
 		}
 		return schemma;

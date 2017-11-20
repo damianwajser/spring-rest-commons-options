@@ -1,8 +1,6 @@
-package com.github.damianwajser.model;
+package com.github.damianwajser.model.details;
 
 import java.util.Collection;
-
-import com.github.damianwajser.model.details.DetailField;
 
 public class DetailFieldCollection extends DetailField{
 

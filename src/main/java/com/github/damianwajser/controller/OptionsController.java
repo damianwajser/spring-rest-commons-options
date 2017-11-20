@@ -74,10 +74,14 @@ public class OptionsController implements ApplicationListener<ApplicationReadyEv
 			Map<String, Object> beans = context.getBeansWithAnnotation(RestController.class);
 			LOGGER.debug("Get All Controllers");
 			beans.putAll(context.getBeansWithAnnotation(Controller.class));
-			beans.forEach((k, v) -> new JsonBuilder(v).build().ifPresent(c -> {
-				LOGGER.info("Add the controller for: " + c.getBaseUrl());
-				controllers.put(c.getBaseUrl(), c);
-			}));
+			beans.forEach((k, v) -> {
+				if (!v.equals(this)) {
+					new JsonBuilder(v).build().ifPresent(c -> {
+						LOGGER.info("Add the controller for: " + c.getBaseUrl());
+						controllers.put(c.getBaseUrl(), c);
+					});
+				}
+			});
 		} catch (Exception e) {
 			LOGGER.error("problemas al crear la dcumentacion", e);
 		}

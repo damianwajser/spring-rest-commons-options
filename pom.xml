@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github.damianwajser</groupId>
 	<artifactId>spring-rest-commons-options</artifactId>
-	<version>0.0.15</version>
+	<version>0.0.16</version>
 	<packaging>jar</packaging>
 
 	<name>spring-rest-commons-options</name>
@@ -50,6 +50,11 @@
 			<artifactId>spring-boot-starter-web</artifactId>
 			<version>1.5.8.RELEASE</version>
 			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.7</version>
 		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.jackson.dataformat</groupId>
