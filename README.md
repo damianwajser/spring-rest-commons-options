@@ -25,7 +25,7 @@ Functionality of this package is contained in Java package `com.github.damianwaj
 <properties>
   ...
   <!-- Use the latest version whenever possible. -->
-  <options.spring.docs>0.0.14</options.spring.docs>
+  <options.spring.docs>{lastversion}</options.spring.docs>
   ...
 </properties>
 
