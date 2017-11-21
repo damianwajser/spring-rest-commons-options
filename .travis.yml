@@ -3,6 +3,10 @@ language: java
 cache:
   directories:
   - "$HOME/.cache"
+  
+addons:
+    code_climate:
+        repo_token: 7862abceeb6f0fc29dd5c16432b2538d841e3491dfcf05e4a8d39a0988056baa
 
 deploy:
     skip_cleanup: true
@@ -11,7 +15,8 @@ deploy:
       tags: true
       jdk: oraclejdk8
       branch: master
-
+after_success:
+  - codeclimate-test-reporter < target/site/jacoco.xml
 notifications:
   email:
     - wajser@gmail.com
