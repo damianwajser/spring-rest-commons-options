@@ -16,7 +16,8 @@ deploy:
       jdk: oraclejdk8
       branch: master
 after_success:
-  - ./codeclimate-test-reporter < target/jacoco.exec
+  - mvn test
+  - codeclimate-test-reporter < target/jacoco.exec
 notifications:
   email:
     - wajser@gmail.com
