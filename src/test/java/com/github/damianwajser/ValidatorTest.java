@@ -18,15 +18,12 @@ import com.github.damianwajser.model.validators.ValidatorFactory;
 public class ValidatorTest {
 
 	@Test
+	@org.junit.jupiter.api.Test
 	public void contextLoads() throws Exception {
-		for (Field f:Pojo.class.getDeclaredFields()) {
-			Optional<List<Validator>> optValidators = ValidatorFactory.getValidations(f);
-			System.out.println(optValidators);
-			List<Validator> validators = optValidators.get();
-			assertNotNull("no se encontraron validators", validators);
-			
-		}
+		Optional<List<Validator>> optValidators = ValidatorFactory.getValidations(Pojo.class.getDeclaredField("notBlank"));
 
+		List<Validator> validators = optValidators.get();
+		assertNotNull("no se encontraron validators", validators);
 	}
 
 }
