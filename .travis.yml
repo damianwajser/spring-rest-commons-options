@@ -17,8 +17,8 @@ deploy:
       branch: master
 after_success:
   - npm install -g codeclimate-test-reporter 
-  - mvn test cobertura:cobertura
-  - codeclimate-test-reporter < target/site/jacoco/jacoco.xml
+  - mvn test
+  - codeclimate-test-reporter format-coverage -t jacoco < target/jacoco.exec
 notifications:
   email:
     - wajser@gmail.com
