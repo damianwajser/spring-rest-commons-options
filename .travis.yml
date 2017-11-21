@@ -13,7 +13,7 @@ addons:
 script:
   # other script steps might be done before running the actual analysis
   - sonar-scanner
-
+  - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent package sonar:sonar
 deploy:
     skip_cleanup: true
     on:
@@ -21,9 +21,7 @@ deploy:
       tags: true
       jdk: oraclejdk8
       branch: master
-after-success:
-  - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent package sonar:sonar 
- 
+
 notifications:
   email:
     - wajser@gmail.com
