@@ -5,8 +5,14 @@ cache:
   - "$HOME/.cache"
   
 addons:
-    code_climate:
-        repo_token: 7862abceeb6f0fc29dd5c16432b2538d841e3491dfcf05e4a8d39a0988056baa
+  sonarcloud:
+    organization: damianwajser # the key of the org you chose at step #3
+    token:
+      secure: 264c9a60f4ea64c54863f4df372ca741ede516dc # encrypted value of your token
+
+script:
+  # other script steps might be done before running the actual analysis
+  - sonar-scanner
 
 deploy:
     skip_cleanup: true
@@ -15,10 +21,9 @@ deploy:
       tags: true
       jdk: oraclejdk8
       branch: master
-after_success:
-  - npm install -g codeclimate-test-reporter 
-  - mvn test
-  - codeclimate-test-reporter < target/jacoco.exec
+after-success:
+  - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent package sonar:sonar 
+ 
 notifications:
   email:
     - wajser@gmail.com
