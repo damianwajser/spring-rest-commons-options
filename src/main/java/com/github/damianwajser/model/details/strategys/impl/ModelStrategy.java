@@ -21,7 +21,6 @@ public class ModelStrategy extends DetailFieldStrategy {
 	@Override
 	public Collection<DetailField> createDetailField(boolean isRequest) {
 		Collection<DetailField> detailFields = new ArrayList<>();
-		// this.setClassOfType(Class.forName(this.getType().getTypeName()));
 		Optional<Class<?>> clazz = ReflectionUtils.getClass(this.getType());
 		while (clazz.isPresent()) {
 			detailFields.addAll(createDetail(clazz.get(), isRequest));

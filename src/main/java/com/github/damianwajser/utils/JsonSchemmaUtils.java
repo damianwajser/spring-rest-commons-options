@@ -46,7 +46,7 @@ public final class JsonSchemmaUtils {
 	}
 
 	public static Optional<JsonSchema> getSchemma(Method m, Class<?> controller, boolean isRequest) {
-		Optional<JsonSchema> schemma = Optional.empty();
+		Optional<JsonSchema> schemma;
 		if (isRequest) {
 			schemma = getRequestSchemma(m, controller);
 		} else {
@@ -73,7 +73,7 @@ public final class JsonSchemmaUtils {
 
 				schemma = getSchemma(ReflectionUtils.getClass(returnType.orElse(null)).orElse(realClass.get()));
 			} else {
-				LOGGER.error("No existe una real class para: " + returnType);
+				LOGGER.error("No existe una real class para: {}", returnType);
 			}
 		}
 		return schemma;

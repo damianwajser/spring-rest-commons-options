@@ -35,7 +35,7 @@ public final class ReflectionUtils {
 			"float", "double", "void");
 
 	private ReflectionUtils() {
-	};
+	}
 
 	private static Collection<Class<? extends Annotation>> requestAnnotation = Arrays.asList(RequestMapping.class,
 			PutMapping.class, DeleteMapping.class, PostMapping.class, GetMapping.class, PatchMapping.class);
@@ -59,7 +59,7 @@ public final class ReflectionUtils {
 	}
 
 	public static Optional<Type> getGenericType(ParameterizedType t) {
-		return Optional.ofNullable(((ParameterizedType) t).getActualTypeArguments()[0]);
+		return Optional.ofNullable(t.getActualTypeArguments()[0]);
 	}
 
 	public static Optional<Class<?>> getGenericClass(Class<?> clazz) {

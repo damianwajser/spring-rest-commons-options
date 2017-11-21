@@ -18,9 +18,9 @@ public final class DetailFieldCreatedStrategyFactory {
 	}
 
 	public static DetailFieldStrategy getCreationStrategy(Type type, Optional<Class<?>> parametrizedClass) {
-		LOGGER.debug("seleccionando strategyField: " + type.getTypeName());
 		DetailFieldStrategy strategy = null;
 		if (type != null) {
+			LOGGER.debug("seleccionando strategyField: {}", type.getTypeName());
 			if (ParameterizedType.class.isAssignableFrom(type.getClass())) {
 				strategy = getGenericParameterStrategy(type, strategy);
 			} else {
@@ -31,7 +31,7 @@ public final class DetailFieldCreatedStrategyFactory {
 				}
 			}
 		}
-		LOGGER.info("Se selecciono strategy " + strategy);
+		LOGGER.info("Se selecciono strategy {}", strategy);
 		return strategy;
 	}
 

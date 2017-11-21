@@ -41,7 +41,7 @@ public class OptionsController implements ApplicationListener<ApplicationReadyEv
 	public OptionsResult handleResultsJson(HttpServletRequest request, @RequestParam("method") Optional<String> method)
 			throws HttpRequestMethodNotSupportedException {
 		String path = request.getServletPath().equals("/")?request.getServletPath():StringUtils.deleteIfEnd(request.getServletPath(), "/");
-		LOGGER.info("solicitando JSON: " + path);
+		LOGGER.info("solicitando JSON: {}", path);
 		OptionsResult result = Optional.ofNullable(controllers.get(path))
 				.orElseThrow(() -> new HttpRequestMethodNotSupportedException("OPTIONS"));
 		if (method.isPresent()) {
@@ -57,7 +57,7 @@ public class OptionsController implements ApplicationListener<ApplicationReadyEv
 	@RequestMapping(value = "/**", method = RequestMethod.OPTIONS, consumes = "application/x-yaml", produces = "application/x-yaml")
 	public Object handleResultsYML(HttpServletRequest request) throws HttpRequestMethodNotSupportedException {
 		String path = StringUtils.deleteIfEnd(request.getServletPath(), "/");
-		LOGGER.info("solicitando RAML: " + path);
+		LOGGER.info("solicitando RAML: {}", path);
 		return new RamlBuilder(controllers.get(path)).build();
 
 	}
