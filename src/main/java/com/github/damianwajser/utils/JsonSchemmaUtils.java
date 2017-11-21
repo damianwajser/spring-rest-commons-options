@@ -40,7 +40,7 @@ public final class JsonSchemmaUtils {
 				// TODO: decirle que es una collection
 			}
 		} catch (JsonMappingException e) {
-			e.printStackTrace();
+			LOGGER.error("Se produjo un error al crear el JsonSchemma para la clase {}", clazz.getSimpleName(), e);
 		}
 		return schema;
 	}
