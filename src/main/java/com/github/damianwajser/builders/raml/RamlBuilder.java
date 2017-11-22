@@ -13,7 +13,7 @@ import com.github.damianwajser.model.OptionsResult;
 import com.github.damianwajser.model.Parameters;
 import com.github.damianwajser.model.QueryString;
 
-public class RamlBuilder implements OptionsBuilder {
+public class RamlBuilder implements OptionsBuilder<Map<String, Object>> {
 	private static Logger LOGGER = LoggerFactory.getLogger(RamlBuilder.class);
 	private OptionsResult controller;
 

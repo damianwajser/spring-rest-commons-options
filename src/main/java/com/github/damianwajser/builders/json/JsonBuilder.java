@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.aop.framework.Advised;
@@ -25,7 +26,7 @@ import com.github.damianwajser.model.Endpoint;
 import com.github.damianwajser.model.OptionsResult;
 import com.github.damianwajser.utils.ReflectionUtils;
 
-public class JsonBuilder implements OptionsBuilder {
+public class JsonBuilder implements OptionsBuilder<Optional<OptionsResult>> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(JsonBuilder.class);
 
@@ -129,5 +130,9 @@ public class JsonBuilder implements OptionsBuilder {
 				LOGGER.error("Problemas al obtener el controller: " + this.controller, e);
 			}
 		}
+	}
+	@Override
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this);
 	}
 }

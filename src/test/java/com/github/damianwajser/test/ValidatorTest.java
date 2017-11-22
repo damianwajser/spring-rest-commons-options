@@ -1,4 +1,4 @@
-package com.github.damianwajser;
+package com.github.damianwajser.test;
 
 import static org.junit.Assert.assertNotNull;
 

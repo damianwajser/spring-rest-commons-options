@@ -2,6 +2,7 @@ package com.github.damianwajser.model;
 
 import java.lang.reflect.Method;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.springframework.http.HttpMethod;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
@@ -66,9 +67,8 @@ public class Endpoint implements Comparable<Endpoint> {
 		this.relativeUrl = relativeUrl;
 	}
 
-	@Override
 	@JsonGetter("endpoint")
-	public String toString() {
+	public String getEndpoint() {
 		return this.getHttpMethod() + " - " + this.getBaseUrl() + this.getRelativeUrl()
 				+ (queryString.toString().isEmpty() ? "" : "?" + queryString);
 	}
@@ -101,5 +101,10 @@ public class Endpoint implements Comparable<Endpoint> {
 
 	public void setPathVariable(PathVariable pathVariable) {
 		this.pathVariable = pathVariable;
+	}
+
+	@Override
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this);
 	}
 }

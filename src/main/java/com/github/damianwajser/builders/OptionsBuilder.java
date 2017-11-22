@@ -1,5 +1,5 @@
 package com.github.damianwajser.builders;
 
-public interface OptionsBuilder {
-	Object build();
+public interface OptionsBuilder<T> {
+	T build();
 }
