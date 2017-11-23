@@ -2,6 +2,7 @@ package com.github.damianwajser.test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Collections;
@@ -41,6 +42,7 @@ public class PojoControllerTest {
 
 	private DetailField checkAllGet(Endpoint endpoint) {
 		DetailField realField = null;
+		System.out.println("checkeando: " + endpoint.getEndpoint());
 		switch (endpoint.getEndpoint()) {
 		case "GET - /test123/":
 			assertEquals("/", endpoint.getRelativeUrl());
@@ -49,26 +51,43 @@ public class PojoControllerTest {
 					.next();
 			assertEquals("collection", field.getType());
 			realField = field.getCollection().iterator().next();
+			assertEquals(endpoint.getQueryString().getParams(), Collections.EMPTY_LIST);
 			break;
 		case "GET - /test123/{id}":
 			assertEquals("/{id}", endpoint.getRelativeUrl());
 			assertEquals(1, endpoint.getPathVariable().getParams().size());
-			Parameters path = endpoint.getPathVariable().getParams().iterator().next();
-			assertEquals(path.getName(), "id");
-			assertEquals(path.getType(), "Integer");
-			assertTrue(path.isRequired());
+			checkParam(endpoint.getPathVariable().getParams().get(0), "Integer", true,"id");
 			assertEquals(1, endpoint.getBodyResponse().getFields().size());
 			realField = endpoint.getBodyResponse().getFields().iterator().next();
+			assertEquals(endpoint.getQueryString().getParams(), Collections.EMPTY_LIST);
+			break;
+		case "GET - /test123/?arg0={Integer}&arg1={String}":
+			assertEquals("/", endpoint.getRelativeUrl());
+			assertEquals(Collections.EMPTY_LIST, endpoint.getPathVariable().getParams());
+			assertEquals(1, endpoint.getBodyResponse().getFields().size());
+			realField = endpoint.getBodyResponse().getFields().iterator().next();
+			DetailFieldCollection field1 = (DetailFieldCollection) endpoint.getBodyResponse().getFields().iterator()
+					.next();
+			assertEquals("collection", field1.getType());
+			realField = field1.getCollection().iterator().next();
+			assertEquals(endpoint.getQueryString().getParams().size(), 2);
+			checkParam(endpoint.getQueryString().getParams().get(0), "Integer", true,"arg0");
+			checkParam(endpoint.getQueryString().getParams().get(1), "String", true,"arg1");
 			break;
 		}
 		checkRequestBodyEmpty(endpoint);
 		assertEquals("GET", endpoint.getHttpMethod());
 		checkPojoField(realField);
 		assertFalse(realField.isAuditable());
-		assertEquals(endpoint.getQueryString().getParams(), Collections.EMPTY_LIST);
 		return realField;
 	}
 
+	private void checkParam(Parameters p, String type, boolean isRequired, String name) {
+		assertNotNull(p);
+		assertEquals(type, p.getType());
+		assertEquals(p.getName(), name);
+		assertEquals(isRequired, p.isRequired());
+	}
 	private void checkPojoField(DetailField realField) {
 		assertEquals("notBlank", realField.getName());
 		assertEquals("String", realField.getType());

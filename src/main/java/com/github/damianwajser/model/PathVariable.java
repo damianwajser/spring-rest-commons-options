@@ -32,7 +32,7 @@ public class PathVariable {
 		}
 	}
 
-	public Collection<Parameters> getParams() {
+	public List<Parameters> getParams() {
 		return params;
 	}
 }

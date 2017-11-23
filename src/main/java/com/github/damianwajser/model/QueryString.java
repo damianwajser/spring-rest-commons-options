@@ -3,6 +3,7 @@ package com.github.damianwajser.model;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
@@ -11,7 +12,7 @@ import com.github.damianwajser.utils.ReflectionUtils;
 @JsonAutoDetect(fieldVisibility = Visibility.ANY)
 public class QueryString {
 
-	private Collection<Parameters> params = new ArrayList<>();
+	private List<Parameters> params = new ArrayList<>();
 
 	public QueryString(Method m) {
 		this.params = ReflectionUtils.getQueryString(m);
@@ -24,12 +25,12 @@ public class QueryString {
 				pathVariable.append("&");
 			}
 
-			pathVariable.append(r.getName() + "={" + r.getName() + "}");
+			pathVariable.append(r.getName() + "={" + r.getType() + "}");
 		});
 		return pathVariable.toString();
 	}
 
-	public Collection<Parameters> getParams() {
+	public List<Parameters> getParams() {
 		return this.params;
 	}
 }

@@ -5,6 +5,7 @@ import java.util.Collection;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.github.damianwajser.model.Pojo;
 
@@ -17,6 +18,11 @@ public class PojoController {
 
 	@GetMapping("/{id}")
 	public Pojo getById(@PathVariable Integer id) {
+		return null;
+	}
+	
+	@GetMapping("/")
+	public Iterable<Pojo> getByParamenters(@RequestParam Integer cod, @RequestParam String str) {
 		return null;
 	}
 }

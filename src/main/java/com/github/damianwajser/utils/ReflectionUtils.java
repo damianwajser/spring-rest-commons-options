@@ -114,8 +114,8 @@ public final class ReflectionUtils {
 		return t.getTypeName().startsWith("java") || PRIMITIVES.contains(t.getTypeName());
 	}
 
-	public static Collection<Parameters> getQueryString(Method m) {
-		Collection<Parameters> parameters = new ArrayList<>();
+	public static List<Parameters> getQueryString(Method m) {
+		List<Parameters> parameters = new ArrayList<>();
 		Arrays.asList(m.getParameters()).forEach(parameter -> {
 			RequestParam a = parameter.getAnnotation(RequestParam.class);
 			collectParameters(parameters, parameter, a);
@@ -131,7 +131,7 @@ public final class ReflectionUtils {
 				typeStr = ((Class<?>) ((ParameterizedType) type).getActualTypeArguments()[0]).getSimpleName();
 			}
 			parameters.add(new Parameters((boolean) AnnotationUtils.getValue(a, "required"),
-					(String) AnnotationUtils.getValue(a), typeStr));
+					(String) (AnnotationUtils.getValue(a).equals("")?parameter.getName():AnnotationUtils.getValue(a)), typeStr));
 		}
 	}
 
