@@ -3,6 +3,7 @@ package com.github.damianwajser.model;
 import java.lang.reflect.Method;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.springframework.http.HttpMethod;
 
@@ -107,6 +108,10 @@ public class Endpoint implements Comparable<Endpoint> {
 
 	@Override
 	public boolean equals(Object obj) {
-		return EqualsBuilder.reflectionEquals(this, this, true);
+		return EqualsBuilder.reflectionEquals(this, obj, true);
+	}
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this, true);
 	}
 }
