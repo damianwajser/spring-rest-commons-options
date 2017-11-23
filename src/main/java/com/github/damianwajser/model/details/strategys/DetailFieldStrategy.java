@@ -5,6 +5,8 @@ import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.Optional;
 
+import javax.persistence.Version;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -24,7 +26,7 @@ public abstract class DetailFieldStrategy {
 
 	protected Optional<DetailField> createDetail(Field field, boolean isRequest) {
 		Optional<DetailField> detailField = Optional.empty();
-		if (!field.isAnnotationPresent(Autowired.class)) {
+		if (!field.isAnnotationPresent(Autowired.class) && !field.isAnnotationPresent(Version.class)) {
 			if (isRequest) {
 				detailField = Optional.ofNullable(
 						new DetailFieldWithValidations(ValidatorFactory.getValidations(field).orElse(null)));

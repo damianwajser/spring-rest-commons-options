@@ -41,8 +41,7 @@ public class ModelStrategy extends DetailFieldStrategy {
 				}
 			}
 		} else {
-			detailFields = DetailFieldCreatedStrategyFactory
-					.getCreationStrategy(this.getType(), Optional.empty())
+			detailFields = DetailFieldCreatedStrategyFactory.getCreationStrategy(this.getType(), Optional.empty())
 					.createDetailField(isRequest);
 		}
 		return detailFields;
