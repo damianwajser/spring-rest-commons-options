@@ -55,7 +55,7 @@ public class OptionsController implements ApplicationListener<ApplicationReadyEv
 	}
 
 	@RequestMapping(value = "/**", method = RequestMethod.OPTIONS, consumes = "application/x-yaml", produces = "application/x-yaml")
-	public Object handleResultsYML(HttpServletRequest request) throws HttpRequestMethodNotSupportedException {
+	public Object handleResultsYML(HttpServletRequest request) {
 		String path = StringUtils.deleteIfEnd(request.getServletPath(), "/");
 		LOGGER.info("solicitando RAML: {}", path);
 		return new RamlBuilder(controllers.get(path)).build();

@@ -2,7 +2,6 @@ package com.github.damianwajser.model;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;

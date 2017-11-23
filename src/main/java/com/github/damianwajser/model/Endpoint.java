@@ -2,6 +2,7 @@ package com.github.damianwajser.model;
 
 import java.lang.reflect.Method;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.springframework.http.HttpMethod;
 
@@ -69,12 +70,6 @@ public class Endpoint implements Comparable<Endpoint> {
 				+ (queryString.toString().isEmpty() ? "" : "?" + queryString);
 	}
 
-	@Override
-	public int compareTo(Endpoint o) {
-		boolean isGet = this.getHttpMethod().equals(HttpMethod.GET.toString());
-		return isGet ? 1 : this.getHttpMethod().compareTo(o.getHttpMethod());
-	}
-
 	public Body getBodyRequest() {
 		return bodyRequest;
 	}
@@ -102,5 +97,16 @@ public class Endpoint implements Comparable<Endpoint> {
 	@Override
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this);
+	}
+
+	@Override
+	public int compareTo(Endpoint o) {
+		boolean isGet = this.getHttpMethod().equals(HttpMethod.GET.toString());
+		return isGet ? 1 : this.getHttpMethod().compareTo(o.getHttpMethod());
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		return EqualsBuilder.reflectionEquals(this, this, true);
 	}
 }

@@ -76,7 +76,7 @@ public final class ReflectionUtils {
 	}
 
 	public static Optional<Type> getRealType(Type type, Optional<Class<?>> parametrizedClass){
-		Optional<Type> optType = Optional.empty();
+		Optional<Type> optType;
 		if(parametrizedClass.isPresent()) {
 			optType = getRealType(type, parametrizedClass.get());
 		} else {
@@ -86,7 +86,7 @@ public final class ReflectionUtils {
 		
 	}
 	public static Optional<Type> getRealType(Type type, Class<?> parametrizedClass){
-		Optional<Type> optType = Optional.empty();
+		Optional<Type> optType;
 		if(isParametrizedClass(parametrizedClass) && !Void.TYPE.equals(type)) {
 			optType = getRealType(((ParameterizedType)parametrizedClass.getGenericSuperclass()).getActualTypeArguments()[0]);
 		}else {

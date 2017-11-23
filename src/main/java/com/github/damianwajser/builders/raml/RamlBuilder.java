@@ -14,7 +14,9 @@ import com.github.damianwajser.model.Parameters;
 import com.github.damianwajser.model.QueryString;
 
 public class RamlBuilder implements OptionsBuilder<Map<String, Object>> {
-	private static Logger LOGGER = LoggerFactory.getLogger(RamlBuilder.class);
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(RamlBuilder.class);
+
 	private OptionsResult controller;
 
 	public RamlBuilder(OptionsResult controller) {

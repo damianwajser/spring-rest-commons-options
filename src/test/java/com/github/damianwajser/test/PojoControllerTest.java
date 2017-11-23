@@ -3,7 +3,6 @@ package com.github.damianwajser.test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 import java.util.Collections;
 import java.util.List;
@@ -46,12 +45,12 @@ public class PojoControllerTest {
 		switch (endpoint.getEndpoint()) {
 		case "GET - /test123/":
 			assertEquals("/", endpoint.getRelativeUrl());
-			assertEquals(endpoint.getPathVariable().getParams(), Collections.EMPTY_LIST);
+			assertEquals(Collections.EMPTY_LIST, endpoint.getPathVariable().getParams());
 			DetailFieldCollection field = (DetailFieldCollection) endpoint.getBodyResponse().getFields().iterator()
 					.next();
 			assertEquals("collection", field.getType());
 			realField = field.getCollection().iterator().next();
-			assertEquals(endpoint.getQueryString().getParams(), Collections.EMPTY_LIST);
+			assertEquals (Collections.EMPTY_LIST, endpoint.getQueryString().getParams());
 			break;
 		case "GET - /test123/{id}":
 			assertEquals("/{id}", endpoint.getRelativeUrl());
@@ -59,7 +58,7 @@ public class PojoControllerTest {
 			checkParam(endpoint.getPathVariable().getParams().get(0), "Integer", true,"id");
 			assertEquals(1, endpoint.getBodyResponse().getFields().size());
 			realField = endpoint.getBodyResponse().getFields().iterator().next();
-			assertEquals(endpoint.getQueryString().getParams(), Collections.EMPTY_LIST);
+			assertEquals(Collections.EMPTY_LIST, endpoint.getQueryString().getParams());
 			break;
 		case "GET - /test123/?arg0={Integer}&arg1={String}":
 			assertEquals("/", endpoint.getRelativeUrl());

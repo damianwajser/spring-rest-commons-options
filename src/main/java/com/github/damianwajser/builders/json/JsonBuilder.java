@@ -72,7 +72,7 @@ public class JsonBuilder implements OptionsBuilder<Optional<OptionsResult>> {
 		if (result.getBaseUrl().equals("/") && !result.getEnpoints().isEmpty()) {
 			Map<String, Integer> count = new HashMap<>();
 			result.getEnpoints().forEach(e -> {
-				LOGGER.info("fixeando relative url: " + e.getRelativeUrl());
+				LOGGER.info("fixeando relative url: {}", e.getRelativeUrl());
 				String[] relatives = e.getRelativeUrl().split("/");
 
 				for (int i = 0; i < relatives.length; i++) {
@@ -86,7 +86,7 @@ public class JsonBuilder implements OptionsBuilder<Optional<OptionsResult>> {
 			if (!count.isEmpty()) {
 				String realBaseUrl = "/" + Collections
 						.max(count.entrySet(), (entry1, entry2) -> entry1.getValue() - entry2.getValue()).getKey();
-				LOGGER.info("real url for: " + realBaseUrl);
+				LOGGER.info("real url for: {}", realBaseUrl);
 				result.setBaseUrl(realBaseUrl);
 				result.getEnpoints().forEach(e -> e.setBaseUrl(realBaseUrl));
 			}
@@ -123,7 +123,7 @@ public class JsonBuilder implements OptionsBuilder<Optional<OptionsResult>> {
 	private void getRealController() {
 		if (AopUtils.isAopProxy(this.controller)) {
 			try {
-				LOGGER.debug(this.controller + " spring proxy, get real object");
+				LOGGER.debug("{} spring proxy, get real object", this.controller);
 				this.controller = ((Advised) this.controller).getTargetSource().getTarget();
 				LOGGER.debug("Real Object: " + this.controller);
 			} catch (Exception e) {
@@ -131,6 +131,7 @@ public class JsonBuilder implements OptionsBuilder<Optional<OptionsResult>> {
 			}
 		}
 	}
+
 	@Override
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this);
