@@ -17,8 +17,8 @@ Consult the proyect for details on the current [spring-rest-commons-options road
 
 ## Get it!
 
-### Maven
-
+### Install
+#### Maven
 Functionality of this package is contained in Java package `com.github.damianwajser`, and can be used using following Maven dependency:
 
 ```xml
@@ -39,7 +39,11 @@ Functionality of this package is contained in Java package `com.github.damianwaj
   ...
 </dependencies>
 ```
+#### Gradle
 
+```xml
+compile 'com.github.damianwajser:spring-rest-commons-options:0.0.17'
+```
 ## Usage
 
 Create a spring-boot application.
