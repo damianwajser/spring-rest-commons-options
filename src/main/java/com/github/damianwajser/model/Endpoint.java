@@ -47,10 +47,6 @@ public class Endpoint implements Comparable<Endpoint> {
 		return queryString;
 	}
 
-	public void setQueryString(QueryString queryString) {
-		this.queryString = queryString;
-	}
-
 	public String getBaseUrl() {
 		return baseUrl;
 	}

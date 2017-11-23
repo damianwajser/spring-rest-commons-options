@@ -35,8 +35,4 @@ public class PathVariable {
 	public Collection<Parameters> getParams() {
 		return params;
 	}
-
-	public void setParams(List<Parameters> params) {
-		this.params = params;
-	}
 }

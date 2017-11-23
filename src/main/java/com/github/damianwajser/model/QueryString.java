@@ -32,8 +32,4 @@ public class QueryString {
 	public Collection<Parameters> getParams() {
 		return this.params;
 	}
-
-	public void add(Parameters requestParam) {
-		this.params.add(requestParam);
-	}
 }

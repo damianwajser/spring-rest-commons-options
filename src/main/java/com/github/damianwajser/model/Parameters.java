@@ -20,10 +20,6 @@ public class Parameters {
 		return required;
 	}
 
-	public void setRequired(boolean required) {
-		this.required = required;
-	}
-
 	public String getName() {
 		return name;
 	}

@@ -22,10 +22,6 @@ public class RequestHttpMethod {
 		return httpMethod;
 	}
 
-	public void setHttpMethod(RequestMethod[] httpMethod) {
-		this.httpMethod = httpMethod;
-	}
-
 	private Annotation getRequestMqpping(Annotation annotation) {
 		if (AnnotationUtils.getValue(annotation, "method") == null) {
 			annotation = annotation.annotationType().getDeclaredAnnotation(RequestMapping.class);
