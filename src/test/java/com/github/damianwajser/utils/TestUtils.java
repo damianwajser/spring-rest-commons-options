@@ -7,11 +7,6 @@ import static org.junit.Assert.assertNotNull;
 import java.util.Collections;
 import java.util.List;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
-
-import org.hibernate.validator.constraints.NotEmpty;
-
 import com.github.damianwajser.model.Endpoint;
 import com.github.damianwajser.model.Parameters;
 import com.github.damianwajser.model.details.DetailField;

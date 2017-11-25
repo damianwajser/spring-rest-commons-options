@@ -13,7 +13,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import com.github.damianwajser.builders.json.JsonBuilder;
 import com.github.damianwajser.config.WebMvcConfiguration;
 import com.github.damianwajser.controllers.generics.OtherParameterController;
-import com.github.damianwajser.controllers.simple.GetPojoController;
 import com.github.damianwajser.model.Endpoint;
 import com.github.damianwajser.model.OptionsResult;
 import com.github.damianwajser.model.details.DetailField;
