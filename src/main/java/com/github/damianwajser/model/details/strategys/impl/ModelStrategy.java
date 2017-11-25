@@ -29,30 +29,28 @@ public class ModelStrategy extends DetailFieldStrategy {
 	public List<DetailField> createDetailField(boolean isRequest) {
 		List<DetailField> detailFields = new ArrayList<>();
 		Optional<Class<?>> clazz = ReflectionUtils.getClass(this.getType());
-		detailFields = createDetail(clazz.get(), isRequest);
+		clazz.ifPresent(c -> detailFields.addAll(createDetail(c, isRequest)));
 		return detailFields;
 	}
 
-	private List<DetailField> createDetail(Class<?> clazz, boolean isRequest) {
-		clazz = ReflectionUtils.getGenericClass(clazz).get();
+	private List<DetailField> createDetail(Class<?> c, boolean isRequest) {
 		List<DetailField> detailFields = new ArrayList<>();
-		try {
-			for (PropertyDescriptor propertyDescriptor : Introspector.getBeanInfo(clazz, Object.class)
-					.getPropertyDescriptors()) {
-				if (!propertyDescriptor.getReadMethod().getDeclaringClass().equals(Object.class)) {
-					Optional<Field> field = getField(clazz, propertyDescriptor);
-					if (checkIfAddField(propertyDescriptor, field)) {
-						Optional<DetailField> detail = super.createDetail(propertyDescriptor, field, isRequest);
-						if (detail.isPresent()) {
-							detailFields.add(detail.get());
+		ReflectionUtils.getGenericClass(c).ifPresent(clazz -> {
+			try {
+				for (PropertyDescriptor propertyDescriptor : Introspector.getBeanInfo(clazz, Object.class)
+						.getPropertyDescriptors()) {
+					if (!propertyDescriptor.getReadMethod().getDeclaringClass().equals(Object.class)) {
+						Optional<Field> field = getField(clazz, propertyDescriptor);
+						if (checkIfAddField(propertyDescriptor, field)) {
+							Optional<DetailField> detail = super.createDetail(propertyDescriptor, field, isRequest);
+							detail.ifPresent(d -> detailFields.add(d));
 						}
 					}
 				}
+			} catch (Exception e) {
+				LOGGER.error("Error al inspeccionar la clase {}", clazz, e);
 			}
-		} catch (Exception e) {
-			LOGGER.error("Error al inspeccionar la clase {}", clazz, e);
-		}
-
+		});
 		return detailFields;
 	}
 
