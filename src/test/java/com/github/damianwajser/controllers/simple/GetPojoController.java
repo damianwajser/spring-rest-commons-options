@@ -1,4 +1,4 @@
-package com.github.damianwajser.controllers;
+package com.github.damianwajser.controllers.simple;
 
 import java.util.Collection;
 
@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.github.damianwajser.model.Pojo;
 
 @RequestMapping("/test123")
-public class PojoController {
-	@GetMapping("/")
+public class GetPojoController {
+	@GetMapping
 	public Collection<Pojo> getAll() {
 		return null;
 	}
@@ -20,9 +20,10 @@ public class PojoController {
 	public Pojo getById(@PathVariable Integer id) {
 		return null;
 	}
-	
-	@GetMapping("/")
+
+	@GetMapping
 	public Iterable<Pojo> getByParamenters(@RequestParam Integer cod, @RequestParam String str) {
 		return null;
 	}
+
 }

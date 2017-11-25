@@ -2,7 +2,7 @@ package com.github.damianwajser.model.body;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 
 import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
 import com.github.damianwajser.model.details.DetailField;
@@ -17,8 +17,8 @@ public class BodyRequest extends Body {
 	}
 
 	@Override
-	protected Collection<DetailField> buildFields() {
-		Collection<DetailField> detailFields = new ArrayList<>();
+	protected List<DetailField> buildFields() {
+		List<DetailField> detailFields = new ArrayList<>();
 		ReflectionUtils.getParameters(this.getMethod())
 				.forEach(p -> detailFields.addAll(DetailFieldRequestFactory
 						.getCreationStrategy(p, super.getParametrizedClass()).createDetailField(true)));

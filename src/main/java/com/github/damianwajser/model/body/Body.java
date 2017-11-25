@@ -2,7 +2,7 @@ package com.github.damianwajser.model.body;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
@@ -17,7 +17,7 @@ public abstract class Body {
 	private Class<?> parametrizedClass;
 
 	@JsonUnwrapped
-	private Collection<DetailField> fields = new ArrayList<>();
+	private List<DetailField> fields = new ArrayList<>();
 	
 	private JsonSchema jsonSchema;
 	
@@ -30,9 +30,9 @@ public abstract class Body {
 
 	protected abstract JsonSchema fillJsonSchema();
 
-	protected abstract Collection<DetailField> buildFields();
+	protected abstract List<DetailField> buildFields();
 
-	public Collection<DetailField> getFields() {
+	public List<DetailField> getFields() {
 		return fields;
 	}
 

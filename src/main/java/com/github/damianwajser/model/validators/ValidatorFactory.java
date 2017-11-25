@@ -1,5 +1,6 @@
 package com.github.damianwajser.model.validators;
 
+import java.beans.PropertyDescriptor;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -23,12 +24,23 @@ public final class ValidatorFactory {
 	private static List<String> validatorsPackage = Arrays.asList("javax.validation.constraints",
 			"hibernate-validator");
 
-	public static Optional<List<Validator>> getValidations(Field field) {
+	public static Optional<List<Validator>> getValidations(PropertyDescriptor fieldDescriptor, Optional<Field> field) {
 		Optional<List<Validator>> validations = Optional.empty();
-		Annotation[] annotations = field.getDeclaredAnnotations();
+		Annotation[] annotations = fieldDescriptor.getWriteMethod().getDeclaredAnnotations();
 		if (annotations.length > 0) {
 			validations = Optional.ofNullable(getValidators(annotations));
 		}
+		if(field.isPresent()) {
+			Annotation[] annotationField = field.get().getAnnotations();
+			if (annotationField.length > 0) {
+				List<Validator> validatorsField = getValidators(annotationField);
+				if (validations.isPresent()) {
+					validations.get().addAll(validatorsField);
+				} else {
+					validations = Optional.ofNullable(validatorsField);
+				}
+			}
+		};
 		return validations;
 	}
 
@@ -46,7 +58,7 @@ public final class ValidatorFactory {
 		if (isValidable(annotation)) {
 			if (annotation instanceof Range || annotation instanceof Length) {
 				validator = new RangeValidator(annotation);
-			} else if (annotation instanceof Pattern){
+			} else if (annotation instanceof Pattern) {
 				validator = new PatternValidator(annotation);
 			} else {
 				validator = new DefaultValidator(annotation);

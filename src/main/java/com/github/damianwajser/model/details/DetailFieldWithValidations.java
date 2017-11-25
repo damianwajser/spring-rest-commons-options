@@ -1,23 +1,23 @@
 package com.github.damianwajser.model.details;
 
-import java.util.Collection;
+import java.util.List;
 
 import com.github.damianwajser.model.validators.Validator;
 
 public class DetailFieldWithValidations extends DetailField {
 
-	private Collection<Validator> validation;
+	private List<Validator> validation;
 
-	public DetailFieldWithValidations(Collection<Validator> validation) {
+	public DetailFieldWithValidations(List<Validator> validation) {
 		super();
 		this.setValidation(validation);
 	}
 
-	public Collection<Validator> getValidation() {
+	public List<Validator> getValidation() {
 		return validation;
 	}
 
-	public void setValidation(Collection<Validator> validation) {
+	public void setValidation(List<Validator> validation) {
 		this.validation = validation;
 	}
 

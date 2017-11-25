@@ -1,8 +1,8 @@
 package com.github.damianwajser.model.details.strategys.impl;
 
 import java.lang.reflect.Type;
-import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 import com.github.damianwajser.model.details.DetailField;
 import com.github.damianwajser.model.details.strategys.DetailFieldStrategy;
@@ -14,8 +14,8 @@ public class PrimitiveStrategy extends DetailFieldStrategy {
 	}
 
 	@Override
-	public Collection<DetailField> createDetailField(boolean isRequest) {
-		
+	public List<DetailField> createDetailField(boolean isRequest) {
+
 		return Collections.emptyList();
 	}
 

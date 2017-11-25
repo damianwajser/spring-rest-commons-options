@@ -2,7 +2,7 @@ package com.github.damianwajser.model.body;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
-import java.util.Collection;
+import java.util.List;
 
 import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
 import com.github.damianwajser.model.details.DetailField;
@@ -17,7 +17,7 @@ public class BodyResponse extends Body {
 	}
 
 	@Override
-	protected Collection<DetailField> buildFields() {
+	protected List<DetailField> buildFields() {
 		Type returnType = this.getMethod().getGenericReturnType();
 		DetailFieldStrategy strategy = null;
 		strategy = DetailFieldResponseFactory.getCreationStrategy(returnType, this.getParametrizedClass());

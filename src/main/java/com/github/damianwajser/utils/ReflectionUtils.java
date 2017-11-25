@@ -51,10 +51,14 @@ public final class ReflectionUtils {
 	}
 
 	public static Optional<Type> getGenericType(Class<?> clazz) {
+		LOGGER.debug("metodo getGenericType({})", clazz);
 		Optional<Type> t = Optional.empty();
-		if (clazz != null && clazz.getGenericSuperclass() != null
-				&& clazz.getGenericSuperclass() instanceof ParameterizedType)
-			t = Optional.ofNullable(((ParameterizedType) clazz.getGenericSuperclass()).getActualTypeArguments()[0]);
+		if (clazz != null) {
+			if (clazz.getGenericSuperclass() != null && clazz.getGenericSuperclass() instanceof ParameterizedType) {
+				t = Optional.ofNullable(((ParameterizedType) clazz.getGenericSuperclass()).getActualTypeArguments()[0]);
+			}
+		}
+
 		return t;
 	}
 
@@ -75,36 +79,45 @@ public final class ReflectionUtils {
 		}).collect(Collectors.toList());
 	}
 
-	public static Optional<Type> getRealType(Type type, Optional<Class<?>> parametrizedClass){
+	public static Optional<Type> getRealType(Type type, Optional<Class<?>> parametrizedClass) {
 		Optional<Type> optType;
-		if(parametrizedClass.isPresent()) {
+		if (parametrizedClass.isPresent()) {
 			optType = getRealType(type, parametrizedClass.get());
 		} else {
 			optType = getRealType(type);
 		}
 		return optType;
-		
+
 	}
-	public static Optional<Type> getRealType(Type type, Class<?> parametrizedClass){
+
+	public static Optional<Type> getRealType(Type type, Class<?> parametrizedClass) {
+		LOGGER.debug("metodo getRealType({},{})", type, parametrizedClass);
 		Optional<Type> optType;
-		if(isParametrizedClass(parametrizedClass) && !Void.TYPE.equals(type)) {
-			optType = getRealType(((ParameterizedType)parametrizedClass.getGenericSuperclass()).getActualTypeArguments()[0]);
-		}else {
+		if (isParametrizedClass(parametrizedClass) && !Void.TYPE.equals(type)) {
+			LOGGER.debug("Es parametrizada y no es void");
+			optType = getRealType(
+					((ParameterizedType) parametrizedClass.getGenericSuperclass()).getActualTypeArguments()[0]);
+		} else {
 			optType = getRealType(type);
 		}
 		return optType;
-		
+
 	}
 
 	public static boolean isParametrizedClass(Class<?> parametrizedClass) {
 		return ParameterizedType.class.isAssignableFrom(parametrizedClass.getGenericSuperclass().getClass());
 	}
-	
+
 	public static Optional<Type> getRealType(Type type) {
+		LOGGER.debug("metodo getRealType({})", type);
 		Optional<Type> t = Optional.ofNullable(type);
 		if (ParameterizedType.class.isAssignableFrom(type.getClass())) {
 			t = ReflectionUtils.getGenericType(type.getClass());
+			if(!t.isPresent()) {
+				t = getGenericType((ParameterizedType)type);
+			}
 		} else {
+			LOGGER.error("por aca no deberia pasar, el type es: {}", type);
 			// type = ReflectionUtils.getGenericType(type).get();
 		}
 		return t;
@@ -131,7 +144,9 @@ public final class ReflectionUtils {
 				typeStr = ((Class<?>) ((ParameterizedType) type).getActualTypeArguments()[0]).getSimpleName();
 			}
 			parameters.add(new Parameters((boolean) AnnotationUtils.getValue(a, "required"),
-					(String) (AnnotationUtils.getValue(a).equals("")?parameter.getName():AnnotationUtils.getValue(a)), typeStr));
+					(String) (AnnotationUtils.getValue(a).equals("") ? parameter.getName()
+							: AnnotationUtils.getValue(a)),
+					typeStr));
 		}
 	}
 
@@ -151,8 +166,8 @@ public final class ReflectionUtils {
 				clazz = Optional.of((Class<?>) type);
 			} else if (type instanceof ParameterizedType) {
 				clazz = getClass(((ParameterizedType) type).getRawType());
-			}else if (TypeVariable.class.isAssignableFrom(type.getClass())) {
-				clazz = getClass(((TypeVariable<?>)type).getClass());
+			} else if (TypeVariable.class.isAssignableFrom(type.getClass())) {
+				clazz = getClass(((TypeVariable<?>) type).getClass());
 			}
 		}
 		return clazz;
