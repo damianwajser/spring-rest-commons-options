@@ -29,7 +29,7 @@ public final class DetailFieldCreatedStrategyFactory {
 			} else {
 				if (!ReflectionUtils.isJDKClass(type)) {
 					LOGGER.debug("Es una clase de modelo {}", type);
-					strategy = new ModelStrategy(ReflectionUtils.getRealType(type, parametrizedClass).get());
+					strategy = new ModelStrategy(ReflectionUtils.getRealType(type, parametrizedClass).orElse(null));
 				} else {
 					LOGGER.debug("Es una clase primitiva {}", type);
 					strategy = new PrimitiveStrategy(type);
@@ -42,16 +42,16 @@ public final class DetailFieldCreatedStrategyFactory {
 
 	private static DetailFieldStrategy getGenericParameterStrategy(Type type, Optional<Class<?>> parametrizableClass) {
 		DetailFieldStrategy strategy = null;
-		// es un tipo generico y tengo que obtener la info de la clas
+		// es un tipo generico y tengo que obtener la info de la clase
 		Optional<Type> genericType = ReflectionUtils.getRealType(type, parametrizableClass.get());
 		LOGGER.debug("Clase generica : {}, para la clase:{}, del tipo: {}", parametrizableClass.orElse(null),
 				genericType, ((ParameterizedType) type).getActualTypeArguments()[0].getClass());
 		// si la clase contenedora del parametro es collection
 		if (Iterable.class.isAssignableFrom(ReflectionUtils.getClass(type).get())) {
 			if (parametrizableClass.isPresent()) {
-				strategy = new CollectionStrategy(genericType.get());
+				strategy = new CollectionStrategy(genericType.orElse(null));
 			} else {
-				strategy = new ModelStrategy(genericType.get());
+				strategy = new ModelStrategy(genericType.orElse(null));
 			}
 		}
 		return strategy;

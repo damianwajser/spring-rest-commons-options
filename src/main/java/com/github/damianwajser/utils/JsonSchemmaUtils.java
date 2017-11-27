@@ -92,7 +92,7 @@ public final class JsonSchemmaUtils {
 					schemma = getSchemma(t.getClass());
 				}
 			} else {
-				schemma = getSchemma(ReflectionUtils.getClass(p.get(0).getParameterizedType()).get());
+				schemma = getSchemma(ReflectionUtils.getClass(p.get(0).getParameterizedType()).orElse(null));
 			}
 		}
 		return schemma;

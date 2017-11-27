@@ -114,9 +114,10 @@ public class JsonBuilder implements OptionsBuilder<Optional<OptionsResult>> {
 	private String getRelativeUrl(Method m) {
 		StringBuilder relativeUrl = new StringBuilder();
 		// me quedo con la annotation (alguna de la lista)
-		Annotation annotation = ReflectionUtils.filterRequestMappingAnnontations(m).findFirst().get();
-		Optional<Object> value = Optional.ofNullable(AnnotationUtils.getValue(annotation));
-		value.ifPresent(v -> relativeUrl.append(Arrays.asList((String[]) v).stream().findFirst().orElse("")));
+		ReflectionUtils.filterRequestMappingAnnontations(m).findFirst().ifPresent(annotation -> {
+			Optional<Object> value = Optional.ofNullable(AnnotationUtils.getValue(annotation));
+			value.ifPresent(v -> relativeUrl.append(Arrays.asList((String[]) v).stream().findFirst().orElse("")));
+		});
 		return relativeUrl.toString();
 	}
 

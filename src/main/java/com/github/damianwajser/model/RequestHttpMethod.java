@@ -14,8 +14,8 @@ public class RequestHttpMethod {
 	private RequestMethod[] httpMethod;
 
 	public RequestHttpMethod(Method m) {
-		Annotation a = ReflectionUtils.filterRequestMappingAnnontations(m).findFirst().get();
-		this.httpMethod = (RequestMethod[]) AnnotationUtils.getValue(getRequestMqpping(a), "method");
+		ReflectionUtils.filterRequestMappingAnnontations(m).findFirst().ifPresent(
+				a -> this.httpMethod = (RequestMethod[]) AnnotationUtils.getValue(getRequestMqpping(a), "method"));
 	}
 
 	public RequestMethod[] getHttpMethod() {
