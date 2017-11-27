@@ -50,7 +50,7 @@ public final class DetailFieldCreatedStrategyFactory {
 		LOGGER.debug("Clase generica : {}, para la clase:{}, del tipo: {}", parametrizableClass.orElse(null),
 				genericType, ((ParameterizedType) type).getActualTypeArguments()[0].getClass());
 		// si la clase contenedora del parametro es collection
-		if (Iterable.class.isAssignableFrom(ReflectionUtils.getClass(type).get())) {
+		if (Iterable.class.isAssignableFrom(ReflectionUtils.getClass(type).orElse(null))) {
 			if (parametrizableClass.isPresent()) {
 				strategy = new CollectionStrategy(genericType.orElse(null));
 			} else {
