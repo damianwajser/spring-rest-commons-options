@@ -22,6 +22,13 @@ public final class JsonSchemmaUtils {
 	private JsonSchemmaUtils() {
 	}
 
+	private static Optional<JsonSchema> getSchemma(Optional<Class<?>> clazz) {
+		Optional<JsonSchema> opt = Optional.empty();
+		if(clazz.isPresent()) {
+			opt = getSchemma(clazz.get());
+		}
+		return opt;
+	}
 	private static Optional<JsonSchema> getSchemma(Class<?> clazz) {
 		ObjectMapper mapper = new ObjectMapper();
 		Optional<JsonSchema> schema = Optional.empty();
@@ -92,7 +99,7 @@ public final class JsonSchemmaUtils {
 					schemma = getSchemma(t.getClass());
 				}
 			} else {
-				schemma = getSchemma(ReflectionUtils.getClass(p.get(0).getParameterizedType()).orElse(null));
+				schemma = getSchemma(ReflectionUtils.getClass(p.get(0).getParameterizedType()));
 			}
 		}
 		return schemma;

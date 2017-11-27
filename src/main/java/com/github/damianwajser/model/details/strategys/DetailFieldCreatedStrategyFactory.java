@@ -42,8 +42,11 @@ public final class DetailFieldCreatedStrategyFactory {
 
 	private static DetailFieldStrategy getGenericParameterStrategy(Type type, Optional<Class<?>> parametrizableClass) {
 		DetailFieldStrategy strategy = null;
-		// es un tipo generico y tengo que obtener la info de la clase
-		Optional<Type> genericType = ReflectionUtils.getRealType(type, parametrizableClass.get());
+		// es un tipo generico y tengo que obtener la info de la clasex
+		Optional<Type> genericType = Optional.empty();
+		if(parametrizableClass.isPresent())
+			genericType = ReflectionUtils.getRealType(type, parametrizableClass.get());
+		
 		LOGGER.debug("Clase generica : {}, para la clase:{}, del tipo: {}", parametrizableClass.orElse(null),
 				genericType, ((ParameterizedType) type).getActualTypeArguments()[0].getClass());
 		// si la clase contenedora del parametro es collection
