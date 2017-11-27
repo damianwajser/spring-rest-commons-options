@@ -3,8 +3,10 @@ package com.github.damianwajser.model.validators;
 import java.beans.PropertyDescriptor;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,13 +28,21 @@ public final class ValidatorFactory {
 
 	public static Optional<List<Validator>> getValidations(PropertyDescriptor fieldDescriptor, Optional<Field> field) {
 		Optional<List<Validator>> validations = Optional.empty();
-		Annotation[] annotations = fieldDescriptor.getWriteMethod().getDeclaredAnnotations();
-		if (annotations.length > 0) {
+		List<Annotation> annotations = Collections.EMPTY_LIST;
+		Method setter = fieldDescriptor.getWriteMethod();
+		Method getter = fieldDescriptor.getReadMethod();
+		if (setter != null) {
+			annotations.addAll(Arrays.asList(setter.getAnnotations()));
+		}
+		if (getter != null) {
+			annotations.addAll(Arrays.asList(getter.getAnnotations()));
+		}
+		if (!annotations.isEmpty()) {
 			validations = Optional.ofNullable(getValidators(annotations));
 		}
-		if(field.isPresent()) {
-			Annotation[] annotationField = field.get().getAnnotations();
-			if (annotationField.length > 0) {
+		if (field.isPresent()) {
+			List<Annotation> annotationField = Arrays.asList(field.get().getAnnotations());
+			if (!annotationField.isEmpty()) {
 				List<Validator> validatorsField = getValidators(annotationField);
 				if (validations.isPresent()) {
 					validations.get().addAll(validatorsField);
@@ -40,11 +50,12 @@ public final class ValidatorFactory {
 					validations = Optional.ofNullable(validatorsField);
 				}
 			}
-		};
+		}
+		;
 		return validations;
 	}
 
-	private static List<Validator> getValidators(Annotation[] annotations) {
+	private static List<Validator> getValidators(List<Annotation> annotations) {
 		List<Validator> validations = new ArrayList<>();
 		for (Annotation annotation : annotations) {
 			getValidator(annotation).ifPresent(v -> validations.add(v));

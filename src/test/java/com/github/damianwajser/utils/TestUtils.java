@@ -3,10 +3,13 @@ package com.github.damianwajser.utils;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+
+import javax.validation.constraints.AssertTrue;
 
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -75,5 +78,24 @@ public class TestUtils {
 		assertEquals(1, notBlank.getValidation().size());
 		assertEquals("validacion", notBlank.getValidation().get(0).getMessageStr());
 
+	}
+
+	public static void checkOtherParameterWithValidation(List<DetailField> requestField) {
+		checkOtherParameter(requestField);
+		int i=0;
+		assertEquals(DetailField.class, requestField.get(i++).getClass());
+//		checkField(realField.get(i++), "active", "boolean");
+//		checkField(realField.get(i++), "code", "String");
+//		checkField(realField.get(i++), "createDate", "Date", true);
+//		checkField(realField.get(i++), "createDateStr", "String");
+//		checkField(realField.get(i++), "createUser", "String", true);
+//		checkField(realField.get(i++), "dateStr", "String");
+//		checkField(realField.get(i++), "id", "Integer");
+//		checkField(realField.get(i++), "messageType", "String");
+//		checkField(realField.get(i++), "modifyDate", "Date");
+//		checkField(realField.get(i++), "modifyUser", "String", true);
+//		checkField(realField.get(i++), "msName", "String");
+//		checkField(realField.get(i++), "processingCode", "String");
+//		checkField(realField.get(i++), "transactionType", "Integer");
 	}
 }

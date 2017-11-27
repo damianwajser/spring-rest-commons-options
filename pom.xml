@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github.damianwajser</groupId>
 	<artifactId>spring-rest-commons-options</artifactId>
-	<version>0.0.19</version>
+	<version>0.0.20-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>spring-rest-commons-options</name>
@@ -102,6 +102,7 @@
 			<groupId>javax.validation</groupId>
 			<artifactId>validation-api</artifactId>
 			<version>1.1.0.Final</version>
+			<scope>provided</scope>
 		</dependency>
 
 		<!-- TESTS -->

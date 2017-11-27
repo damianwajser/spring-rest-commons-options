@@ -5,7 +5,6 @@ import java.lang.reflect.Method;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.springframework.http.HttpMethod;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
@@ -18,7 +17,7 @@ import com.github.damianwajser.model.body.BodyResponse;
 
 @JsonAutoDetect(fieldVisibility = Visibility.ANY)
 @JsonPropertyOrder({ "endpoint", "httpMethod", "baseUrl", "relativeUrl" })
-public class Endpoint implements Comparable<Endpoint> {
+public class Endpoint implements Comparable<Endpoint>{
 
 	private QueryString queryString;
 
@@ -101,17 +100,17 @@ public class Endpoint implements Comparable<Endpoint> {
 	}
 
 	@Override
-	public int compareTo(Endpoint o) {
-		boolean isGet = this.getHttpMethod().equals(HttpMethod.GET.toString());
-		return isGet ? 1 : this.getHttpMethod().compareTo(o.getHttpMethod());
-	}
-
-	@Override
 	public boolean equals(Object obj) {
 		return EqualsBuilder.reflectionEquals(this, obj, true);
 	}
+
 	@Override
 	public int hashCode() {
 		return HashCodeBuilder.reflectionHashCode(this, true);
+	}
+
+	@Override
+	public int compareTo(Endpoint o) {
+		return this.getEndpoint().compareTo(o.getEndpoint());
 	}
 }
