@@ -1,16 +1,20 @@
 package com.github.damianwajser.controllers.generics;
 
+import java.util.Optional;
+
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.github.damianwajser.model.generic.GenericParameter;
 
 public class AbstractController<E extends GenericParameter> {
 
-//	@GetMapping("/{id}")
-//	public E findById(@PathVariable("id") Integer id) {
-//		return null;
-//
-//	}
+	@GetMapping("/{id}")
+	public E findById(@PathVariable("id") Integer id) {
+		return null;
+
+	}
 
 	@GetMapping("/")
 	public Iterable<E> findAll() {
@@ -18,22 +22,22 @@ public class AbstractController<E extends GenericParameter> {
 
 	}
 
-//	@GetMapping("/active")
-//	public Iterable<E> findActive() {
-//		return null;
-//
-//	}
-//
-//	@GetMapping("/inactive")
-//	public Iterable<E> findInActive() {
-//		return null;
-//
-//	}
-//
-//	@GetMapping
-//	public Iterable<E> getByCode(@RequestParam("code") Optional<String> code) {
-//		return null;
-//	}
+	@GetMapping("/active")
+	public Iterable<E> findActive() {
+		return null;
+
+	}
+
+	@GetMapping("/inactive")
+	public Iterable<E> findInActive() {
+		return null;
+
+	}
+
+	@GetMapping
+	public Iterable<E> getByCode(@RequestParam("code") Optional<String> code) {
+		return null;
+	}
 //
 //	@PostMapping
 //	public E post(@RequestBody @Valid E e) {

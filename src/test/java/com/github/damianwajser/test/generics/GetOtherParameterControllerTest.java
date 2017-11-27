@@ -41,17 +41,17 @@ public class GetOtherParameterControllerTest {
 		List<DetailField> realField = null;
 		System.out.println("checkeando: " + endpoint.getEndpoint());
 		switch (endpoint.getEndpoint()) {
-		case "GET - /test123/{id}":
+		case "GET - /other/parameter/{id}":
 			TestUtils.checkTestPathId(endpoint);
 			realField = endpoint.getBodyResponse().getFields();
 			assertEquals(Collections.EMPTY_LIST, endpoint.getQueryString().getParams());
 			break;
-		case "GET - /test123?arg0={Integer}&arg1={String}":
-			assertEquals(endpoint.getQueryString().getParams().size(), 2);
-			TestUtils.checkParam(endpoint.getQueryString().getParams().get(0), "Integer", true, "arg0");
-			TestUtils.checkParam(endpoint.getQueryString().getParams().get(1), "String", true, "arg1");
+		case "GET - /other/parameter?code={String}":
+			assertEquals(endpoint.getQueryString().getParams().size(), 1);
+			TestUtils.checkParam(endpoint.getQueryString().getParams().get(0), "String", true, "code");
 		case "GET - /other/parameter/":
-			assertEquals("/", endpoint.getRelativeUrl());
+		case "GET - /other/parameter/active":
+		case "GET - /other/parameter/inactive":
 			assertEquals(Collections.EMPTY_LIST, endpoint.getPathVariable().getParams());
 			assertEquals(1, endpoint.getBodyResponse().getFields().size());
 			realField = endpoint.getBodyResponse().getFields();

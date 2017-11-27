@@ -5,7 +5,10 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+
+import org.hibernate.validator.constraints.NotBlank;
 
 import com.github.damianwajser.model.Endpoint;
 import com.github.damianwajser.model.Parameters;
@@ -21,9 +24,13 @@ public class TestUtils {
 	}
 
 	public static void checkField(DetailField realField, String name, String type) {
+		checkField(realField, name, type, false);
+	}
+	
+	public static void checkField(DetailField realField, String name, String type, boolean auditable) {
 		assertEquals(name, realField.getName());
 		assertEquals(type, realField.getType());
-		assertFalse(realField.isAuditable());
+		assertEquals(realField.isAuditable(), auditable);
 	}
 
 	public static void checkRequestBodyEmpty(Endpoint endpoint) {
@@ -38,10 +45,21 @@ public class TestUtils {
 
 	public static void checkOtherParameter(List<DetailField> realField) {
 		assertEquals(13, realField.size());
-		checkField(realField.get(0), "active", "boolean");
-//		checkField(realField.get(1), "processingCode", "String");
-//		checkField(realField.get(2), "transactionType", "Integer");
-//		checkField(realField.get(3), "msName", "Integer");
+		int i=0;
+		checkField(realField.get(i++), "active", "boolean");
+		checkField(realField.get(i++), "code", "String");
+		checkField(realField.get(i++), "createDate", "Date", true);
+		checkField(realField.get(i++), "createDateStr", "String");
+		checkField(realField.get(i++), "createUser", "String", true);
+		checkField(realField.get(i++), "dateStr", "String");
+		checkField(realField.get(i++), "id", "Integer");
+		checkField(realField.get(i++), "messageType", "String");
+		checkField(realField.get(i++), "modifyDate", "Date");
+		checkField(realField.get(i++), "modifyUser", "String", true);
+		checkField(realField.get(i++), "msName", "String");
+		checkField(realField.get(i++), "processingCode", "String");
+		checkField(realField.get(i++), "transactionType", "Integer");
+//		checkField(realField.get(i++), "version", "Long");
 	}
 	
 	public static void checkPojoFields(List<DetailField> realField) {
