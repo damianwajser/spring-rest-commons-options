@@ -41,7 +41,7 @@ public class ModelStrategy extends DetailFieldStrategy {
 						.getPropertyDescriptors()) {
 					if (!propertyDescriptor.getReadMethod().getDeclaringClass().equals(Object.class)) {
 						Optional<Field> field = getField(clazz, propertyDescriptor);
-						if (checkIfAddField(propertyDescriptor, field)) {
+						if (checkIfAddField(field)) {
 							Optional<DetailField> detail = super.createDetail(propertyDescriptor, field, isRequest);
 							detail.ifPresent(d -> detailFields.add(d));
 						}
@@ -78,7 +78,7 @@ public class ModelStrategy extends DetailFieldStrategy {
 		return res;
 	}
 
-	private boolean checkIfAddField(PropertyDescriptor propertyDescriptor, Optional<Field> field) {
+	private boolean checkIfAddField(Optional<Field> field) {
 		boolean res = true;
 		if (field.isPresent()) {
 			res = res && !field.get().isAnnotationPresent(JsonIgnore.class);

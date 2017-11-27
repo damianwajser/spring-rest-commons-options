@@ -23,7 +23,7 @@ public abstract class DetailFieldStrategy {
 	}
 
 	protected Optional<DetailField> createDetail(PropertyDescriptor descriptor, Optional<Field> f, boolean isRequest) {
-		Optional<DetailField> detailField = Optional.empty();
+		Optional<DetailField> detailField;
 		if (isRequest) {
 			detailField = Optional.ofNullable(
 					new DetailFieldWithValidations(ValidatorFactory.getValidations(descriptor, f).orElse(null)));

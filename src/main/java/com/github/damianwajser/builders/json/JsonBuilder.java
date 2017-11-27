@@ -1,6 +1,5 @@
 package com.github.damianwajser.builders.json;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collection;
@@ -36,7 +35,7 @@ public class JsonBuilder implements OptionsBuilder<Optional<OptionsResult>> {
 	private Collection<Method> methods;
 
 	public JsonBuilder(Object obj) {
-		LOGGER.info("create options to: " + obj.getClass().getSimpleName());
+		LOGGER.info("create options to: {}", obj.getClass().getSimpleName());
 		this.controller = obj;
 	}
 
@@ -72,23 +71,27 @@ public class JsonBuilder implements OptionsBuilder<Optional<OptionsResult>> {
 		if (result.getBaseUrl().equals("/") && !result.getEnpoints().isEmpty()) {
 			Map<String, Integer> count = new HashMap<>();
 			result.getEnpoints().forEach(e -> {
-				LOGGER.info("fixeando relative url: {}", e.getRelativeUrl());
-				String[] relatives = e.getRelativeUrl().split("/");
-
-				for (int i = 0; i < relatives.length; i++) {
-					if (!StringUtils.isEmpty(relatives[i])) {
-						Integer num = count.get(relatives[i]) == null ? 1 : count.get(relatives[i]) + 1;
-						count.put(relatives[i], num);
-					}
-				}
+				fixEndpoint(count, e);
 			});
-			LOGGER.info("Contador de arbol: " + count);
+			LOGGER.info("Contador de arbol: {}", count);
 			if (!count.isEmpty()) {
 				String realBaseUrl = "/" + Collections
 						.max(count.entrySet(), (entry1, entry2) -> entry1.getValue() - entry2.getValue()).getKey();
 				LOGGER.info("real url for: {}", realBaseUrl);
 				result.setBaseUrl(realBaseUrl);
 				result.getEnpoints().forEach(e -> e.setBaseUrl(realBaseUrl));
+			}
+		}
+	}
+
+	private void fixEndpoint(Map<String, Integer> count, Endpoint e) {
+		LOGGER.info("fixeando relative url: {}", e.getRelativeUrl());
+		String[] relatives = e.getRelativeUrl().split("/");
+
+		for (int i = 0; i < relatives.length; i++) {
+			if (!StringUtils.isEmpty(relatives[i])) {
+				Integer num = count.get(relatives[i]) == null ? 1 : count.get(relatives[i]) + 1;
+				count.put(relatives[i], num);
 			}
 		}
 	}
@@ -126,9 +129,9 @@ public class JsonBuilder implements OptionsBuilder<Optional<OptionsResult>> {
 			try {
 				LOGGER.debug("{} spring proxy, get real object", this.controller);
 				this.controller = ((Advised) this.controller).getTargetSource().getTarget();
-				LOGGER.debug("Real Object: " + this.controller);
+				LOGGER.debug("Real Object: {}", this.controller);
 			} catch (Exception e) {
-				LOGGER.error("Problemas al obtener el controller: " + this.controller, e);
+				LOGGER.error("Problemas al obtener el controller: {}", this.controller, e);
 			}
 		}
 	}
