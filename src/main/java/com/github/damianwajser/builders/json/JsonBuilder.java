@@ -70,9 +70,7 @@ public class JsonBuilder implements OptionsBuilder<Optional<OptionsResult>> {
 	private void fixEndpoints(OptionsResult result) {
 		if (result.getBaseUrl().equals("/") && !result.getEnpoints().isEmpty()) {
 			Map<String, Integer> count = new HashMap<>();
-			result.getEnpoints().forEach(e -> {
-				fixEndpoint(count, e);
-			});
+			result.getEnpoints().forEach(e -> fixEndpoint(count, e));
 			LOGGER.info("Contador de arbol: {}", count);
 			if (!count.isEmpty()) {
 				String realBaseUrl = "/" + Collections

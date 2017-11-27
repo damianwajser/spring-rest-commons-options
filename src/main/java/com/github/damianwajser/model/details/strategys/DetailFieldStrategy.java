@@ -39,7 +39,9 @@ public abstract class DetailFieldStrategy {
 		detailField.setType(field.getPropertyType().getSimpleName());
 		optField.ifPresent(f -> detailField.setAuditable(
 				field.getWriteMethod() != null ? field.getWriteMethod().isAnnotationPresent(Auditable.class)
-						: false || field.getReadMethod()!=null?field.getReadMethod().isAnnotationPresent(Auditable.class):false));
+						: false || field.getReadMethod() != null
+								? field.getReadMethod().isAnnotationPresent(Auditable.class)
+								: false));
 	}
 
 	protected Type getType() {

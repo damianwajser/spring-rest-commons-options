@@ -47,7 +47,7 @@ public class GetOtherParameterControllerTest {
 			assertEquals(Collections.EMPTY_LIST, endpoint.getQueryString().getParams());
 			break;
 		case "GET - /other/parameter?code={String}":
-			assertEquals(endpoint.getQueryString().getParams().size(), 1);
+			assertEquals(1, endpoint.getQueryString().getParams().size());
 			TestUtils.checkParam(endpoint.getQueryString().getParams().get(0), "String", true, "code");
 		case "GET - /other/parameter/":
 		case "GET - /other/parameter/active":
