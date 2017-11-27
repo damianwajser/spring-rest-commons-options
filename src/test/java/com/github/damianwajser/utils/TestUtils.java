@@ -17,6 +17,7 @@ import com.github.damianwajser.model.Endpoint;
 import com.github.damianwajser.model.Parameters;
 import com.github.damianwajser.model.details.DetailField;
 import com.github.damianwajser.model.details.DetailFieldWithValidations;
+import com.github.damianwajser.model.validators.impl.PatternValidator;
 
 public class TestUtils {
 	public static void checkParam(Parameters p, String type, boolean isRequired, String name) {
@@ -29,7 +30,7 @@ public class TestUtils {
 	public static void checkField(DetailField realField, String name, String type) {
 		checkField(realField, name, type, false);
 	}
-	
+
 	public static void checkField(DetailField realField, String name, String type, boolean auditable) {
 		assertEquals(name, realField.getName());
 		assertEquals(type, realField.getType());
@@ -46,9 +47,9 @@ public class TestUtils {
 		TestUtils.checkParam(endpoint.getPathVariable().getParams().get(0), "Integer", true, "id");
 	}
 
-	public static void checkOtherParameter(List<DetailField> realField) {
+	public static void checkOtherParameterResponse(List<DetailField> realField) {
 		assertEquals(13, realField.size());
-		int i=0;
+		int i = 0;
 		checkField(realField.get(i++), "active", "boolean");
 		checkField(realField.get(i++), "code", "String");
 		checkField(realField.get(i++), "createDate", "Date", true);
@@ -62,9 +63,44 @@ public class TestUtils {
 		checkField(realField.get(i++), "msName", "String");
 		checkField(realField.get(i++), "processingCode", "String");
 		checkField(realField.get(i++), "transactionType", "Integer");
-//		checkField(realField.get(i++), "version", "Long");
+		// checkField(realField.get(i++), "version", "Long");
 	}
-	
+
+	public static void checkOtherParameterRequest(List<DetailField> realField) {
+		assertEquals(10, realField.size());
+		int i = 0;
+		System.out.println(realField.get(i).getName());
+		checkField(realField.get(i), "active", "boolean");
+		i++;
+		System.out.println(realField.get(i).getName());
+		checkField(realField.get(i), "code", "String");
+		i++;
+		System.out.println(realField.get(i).getName());
+		checkField(realField.get(i), "createDateStr", "String");
+		i++;
+		System.out.println(realField.get(i).getName());
+		checkField(realField.get(i), "dateStr", "String");
+		i++;
+		System.out.println(realField.get(i).getName());
+		checkField(realField.get(i), "id", "Integer");
+		i++;
+		System.out.println(realField.get(i).getName());
+		checkField(realField.get(i), "messageType", "String");
+		i++;
+		System.out.println(realField.get(i).getName());
+		checkField(realField.get(i), "modifyDate", "Date");
+		i++;
+		System.out.println(realField.get(i).getName());
+		checkField(realField.get(i), "msName", "String");
+		i++;
+		System.out.println(realField.get(i).getName());
+		checkField(realField.get(i), "processingCode", "String");
+		i++;
+		System.out.println(realField.get(i).getName());
+		checkField(realField.get(i), "transactionType", "Integer");
+		i++;
+	}
+
 	public static void checkPojoFields(List<DetailField> realField) {
 		assertEquals(2, realField.size());
 		checkField(realField.get(0), "notBlank", "String");
@@ -81,21 +117,38 @@ public class TestUtils {
 	}
 
 	public static void checkOtherParameterWithValidation(List<DetailField> requestField) {
-		checkOtherParameter(requestField);
-		int i=0;
-		assertEquals(DetailField.class, requestField.get(i++).getClass());
-//		checkField(realField.get(i++), "active", "boolean");
-//		checkField(realField.get(i++), "code", "String");
-//		checkField(realField.get(i++), "createDate", "Date", true);
-//		checkField(realField.get(i++), "createDateStr", "String");
-//		checkField(realField.get(i++), "createUser", "String", true);
-//		checkField(realField.get(i++), "dateStr", "String");
-//		checkField(realField.get(i++), "id", "Integer");
-//		checkField(realField.get(i++), "messageType", "String");
-//		checkField(realField.get(i++), "modifyDate", "Date");
-//		checkField(realField.get(i++), "modifyUser", "String", true);
-//		checkField(realField.get(i++), "msName", "String");
-//		checkField(realField.get(i++), "processingCode", "String");
-//		checkField(realField.get(i++), "transactionType", "Integer");
+		checkOtherParameterRequest(requestField);
+		int i = 0;
+		DetailField active = requestField.get(i++);
+		assertEquals(DetailField.class, active.getClass());
+		
+		DetailFieldWithValidations code = (DetailFieldWithValidations) requestField.get(i++);
+		assertEquals(1, code.getValidation().size());
+		assertEquals("El campo code es obligatorio", code.getValidation().get(0).getMessageStr());
+
+		DetailField createDateStr = requestField.get(i++);
+		assertEquals(DetailField.class, createDateStr.getClass());
+
+		DetailField dateStr = requestField.get(i++);
+		assertEquals(DetailField.class, dateStr.getClass());
+
+		DetailField id = requestField.get(i++);
+		assertEquals(DetailField.class, id.getClass());
+		
+		DetailFieldWithValidations messageType = (DetailFieldWithValidations) requestField.get(i++);
+		assertEquals(2, messageType.getValidation().size());
+		assertEquals("El campo messageType es obligatorio", messageType.getValidation().get(0).getMessageStr());
+		PatternValidator messageTypeValidator = (PatternValidator)messageType.getValidation().get(1);
+		assertEquals("Valor invalido de messageType", messageTypeValidator.getMessageStr());
+		assertEquals("(200)|(400)", messageTypeValidator.getRegularExpression());
+		
+		// checkField(realField.get(i++), "dateStr", "String");
+		// checkField(realField.get(i++), "id", "Integer");
+		// checkField(realField.get(i++), "messageType", "String");
+		// checkField(realField.get(i++), "modifyDate", "Date");
+		// checkField(realField.get(i++), "modifyUser", "String", true);
+		// checkField(realField.get(i++), "msName", "String");
+		// checkField(realField.get(i++), "processingCode", "String");
+		// checkField(realField.get(i++), "transactionType", "Integer");
 	}
 }

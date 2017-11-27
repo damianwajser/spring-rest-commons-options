@@ -118,30 +118,30 @@ public class GetOtherParameterControllerTest {
 	}
 
 	@Test
-//	@org.junit.jupiter.api.Test
-//	public void testPost() throws Exception {
-//		Endpoint endpoint = endpoints.get(POST);
-//		System.out.println("checkeando: " + endpoint.getEndpoint());
-//		assertEquals("POST", endpoint.getHttpMethod());
-//		assertEquals("/other/parameter", endpoint.getBaseUrl());
-//		assertEquals("", endpoint.getRelativeUrl());
-//		assertEquals(Collections.EMPTY_LIST, endpoint.getQueryString().getParams());
-//		checkSingleResponse(endpoint);
-//		TestUtils.checkOtherParameterWithValidation(endpoint.getBodyRequest().getFields());
-//	}
-//
-//	@Test
-//	@org.junit.jupiter.api.Test
-//	public void testPut() throws Exception {
-//		Endpoint endpoint = endpoints.get(PUT);
-//		System.out.println("checkeando: " + endpoint.getEndpoint());
-//		TestUtils.checkTestPathId(endpoint);
-//		assertEquals("PUT", endpoint.getHttpMethod());
-//		assertEquals("/other/parameter", endpoint.getBaseUrl());
-//		assertEquals(Collections.EMPTY_LIST, endpoint.getQueryString().getParams());
-//		checkSingleResponse(endpoint);
-//		TestUtils.checkOtherParameter(endpoint.getBodyRequest().getFields());
-//	}
+	@org.junit.jupiter.api.Test
+	public void testPost() throws Exception {
+		Endpoint endpoint = endpoints.get(POST);
+		System.out.println("checkeando: " + endpoint.getEndpoint());
+		assertEquals("POST", endpoint.getHttpMethod());
+		assertEquals("/other/parameter", endpoint.getBaseUrl());
+		assertEquals("", endpoint.getRelativeUrl());
+		assertEquals(Collections.EMPTY_LIST, endpoint.getQueryString().getParams());
+		checkSingleResponse(endpoint);
+		TestUtils.checkOtherParameterWithValidation(endpoint.getBodyRequest().getFields());
+	}
+
+	@Test
+	@org.junit.jupiter.api.Test
+	public void testPut() throws Exception {
+		Endpoint endpoint = endpoints.get(PUT);
+		System.out.println("checkeando: " + endpoint.getEndpoint());
+		TestUtils.checkTestPathId(endpoint);
+		assertEquals("PUT", endpoint.getHttpMethod());
+		assertEquals("/other/parameter", endpoint.getBaseUrl());
+		assertEquals(Collections.EMPTY_LIST, endpoint.getQueryString().getParams());
+		checkSingleResponse(endpoint);
+		TestUtils.checkOtherParameterWithValidation(endpoint.getBodyRequest().getFields());
+	}
 
 	private void getAllTest() {
 		Endpoint endpoint = endpoints.get(0);
@@ -160,14 +160,14 @@ public class GetOtherParameterControllerTest {
 			TestUtils.checkOtherParameterWithValidation(requestField);
 			break;
 		}
-		TestUtils.checkOtherParameter(responseField);
+		TestUtils.checkOtherParameterResponse(responseField);
 		assertEquals("GET", endpoint.getHttpMethod());
 	}
 
 	private void checkSingleResponse(Endpoint endpoint) {
 		assertEquals(Collections.EMPTY_LIST, endpoint.getQueryString().getParams());
 		List<DetailField> responseField = endpoint.getBodyResponse().getFields();
-		TestUtils.checkOtherParameter(responseField);
+		TestUtils.checkOtherParameterResponse(responseField);
 	}
 
 	private void checkCollectionResponse(Endpoint endpoint) {
@@ -175,6 +175,6 @@ public class GetOtherParameterControllerTest {
 		assertEquals(1, endpoint.getBodyResponse().getFields().size());
 		DetailFieldCollection field1 = (DetailFieldCollection) endpoint.getBodyResponse().getFields().iterator().next();
 		assertEquals("collection", field1.getType());
-		TestUtils.checkOtherParameter(field1.getCollection());
+		TestUtils.checkOtherParameterResponse(field1.getCollection());
 	}
 }

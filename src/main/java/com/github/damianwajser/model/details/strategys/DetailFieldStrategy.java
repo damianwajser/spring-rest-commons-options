@@ -7,13 +7,19 @@ import java.util.List;
 import java.util.Optional;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.github.damianwajser.annotations.Auditable;
 import com.github.damianwajser.model.details.DetailField;
 import com.github.damianwajser.model.details.DetailFieldWithValidations;
+import com.github.damianwajser.model.validators.Validator;
 import com.github.damianwajser.model.validators.ValidatorFactory;
 
 public abstract class DetailFieldStrategy {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(DetailFieldStrategy.class);
+
 	private Type type;
 
 	public abstract List<DetailField> createDetailField(boolean isRequest);
@@ -23,12 +29,20 @@ public abstract class DetailFieldStrategy {
 	}
 
 	protected Optional<DetailField> createDetail(PropertyDescriptor descriptor, Optional<Field> f, boolean isRequest) {
-		Optional<DetailField> detailField;
+		Optional<DetailField> detailField = Optional.empty();
+		LOGGER.debug("creando property: {}, field: {}, isRequest: {}", descriptor, f, isRequest);
 		if (isRequest) {
-			detailField = Optional.ofNullable(
-					new DetailFieldWithValidations(ValidatorFactory.getValidations(descriptor, f).orElse(null)));
+			Optional<List<Validator>> validators = ValidatorFactory.getValidations(descriptor, f);
+			if (validators.isPresent()&&!validators.get().isEmpty()) {
+				LOGGER.debug("se crea DetailFieldWithValidations, con las validaciones: {}", validators);
+				detailField = Optional.ofNullable(new DetailFieldWithValidations(validators.get()));
+			} else {
+				detailField = Optional.ofNullable(new DetailField());
+				LOGGER.debug("se crea Request DetailField : {}", descriptor.getName());
+			}
 		} else {
 			detailField = Optional.ofNullable(new DetailField());
+			LOGGER.debug("se crea Response DetailField : {}", descriptor.getName());
 		}
 		detailField.ifPresent(d -> fillDetails(descriptor, f, d));
 		return detailField;

@@ -3,6 +3,7 @@ package com.github.damianwajser.model.details.strategys.impl;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.github.damianwajser.annotations.Auditable;
 import com.github.damianwajser.model.details.DetailField;
 import com.github.damianwajser.model.details.strategys.DetailFieldStrategy;
 import com.github.damianwajser.utils.ReflectionUtils;
@@ -41,7 +43,7 @@ public class ModelStrategy extends DetailFieldStrategy {
 						.getPropertyDescriptors()) {
 					if (!propertyDescriptor.getReadMethod().getDeclaringClass().equals(Object.class)) {
 						Optional<Field> field = getField(clazz, propertyDescriptor);
-						if (checkIfAddField(field)) {
+						if (checkIfAddField(field, propertyDescriptor, isRequest)) {
 							Optional<DetailField> detail = super.createDetail(propertyDescriptor, field, isRequest);
 							detail.ifPresent(d -> detailFields.add(d));
 						}
@@ -66,11 +68,11 @@ public class ModelStrategy extends DetailFieldStrategy {
 					try {
 						res = Optional.ofNullable(clazz.getDeclaredField(typeName));
 					} catch (NoSuchFieldException | SecurityException e1) {
-						LOGGER.warn("error al obtener el campo: {}, de la clase {}", p.getName(), clazz, e);
+						LOGGER.error("error al obtener el campo: {}, de la clase {}", p.getName(), clazz);
 						res = getField(clazz.getSuperclass(), p);
 					}
 				} else {
-					LOGGER.debug("error al obtener el campo: {}, de la clase {}", p.getName(), clazz, e);
+					LOGGER.error("error al obtener el campo: {}, de la clase {}", p.getName(), clazz);
 					res = getField(clazz.getSuperclass(), p);
 				}
 			}
@@ -78,10 +80,18 @@ public class ModelStrategy extends DetailFieldStrategy {
 		return res;
 	}
 
-	private boolean checkIfAddField(Optional<Field> field) {
+	private boolean checkIfAddField(Optional<Field> field, PropertyDescriptor propertyDescriptor, boolean isRequest) {
 		boolean res = true;
 		if (field.isPresent()) {
 			res = res && !field.get().isAnnotationPresent(JsonIgnore.class);
+			if (isRequest) {
+				res = res && !field.get().isAnnotationPresent(Auditable.class);
+				res = res && propertyDescriptor.getReadMethod() != null;
+				res = res && !propertyDescriptor.getReadMethod().isAnnotationPresent(Auditable.class);
+				Method setter = propertyDescriptor.getWriteMethod();
+				if (setter != null)
+					res = res && !setter.isAnnotationPresent(Auditable.class);
+			}
 		}
 		return res;
 	}

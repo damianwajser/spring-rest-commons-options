@@ -6,7 +6,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,7 +27,30 @@ public final class ValidatorFactory {
 
 	public static Optional<List<Validator>> getValidations(PropertyDescriptor fieldDescriptor, Optional<Field> field) {
 		Optional<List<Validator>> validations = Optional.empty();
-		List<Annotation> annotations = Collections.EMPTY_LIST;
+		validations = fillValidations(fieldDescriptor, validations);
+		if (field.isPresent()) {
+			List<Annotation> annotationField = Arrays.asList(field.get().getAnnotations());
+			if (!annotationField.isEmpty()) {
+				validations = completeValidations(validations, annotationField);
+			}
+		}
+		return validations;
+	}
+
+	private static Optional<List<Validator>> completeValidations(Optional<List<Validator>> validations,
+			List<Annotation> annotationField) {
+		List<Validator> validatorsField = getValidators(annotationField);
+		if (validations.isPresent()) {
+			validations.get().addAll(validatorsField);
+		} else {
+			validations = Optional.ofNullable(validatorsField);
+		}
+		return validations.isPresent() && validations.get().isEmpty() ? Optional.empty() : validations;
+	}
+
+	private static Optional<List<Validator>> fillValidations(PropertyDescriptor fieldDescriptor,
+			Optional<List<Validator>> validations) {
+		List<Annotation> annotations = new ArrayList<>();
 		Method setter = fieldDescriptor.getWriteMethod();
 		Method getter = fieldDescriptor.getReadMethod();
 		if (setter != null) {
@@ -40,18 +62,6 @@ public final class ValidatorFactory {
 		if (!annotations.isEmpty()) {
 			validations = Optional.ofNullable(getValidators(annotations));
 		}
-		if (field.isPresent()) {
-			List<Annotation> annotationField = Arrays.asList(field.get().getAnnotations());
-			if (!annotationField.isEmpty()) {
-				List<Validator> validatorsField = getValidators(annotationField);
-				if (validations.isPresent()) {
-					validations.get().addAll(validatorsField);
-				} else {
-					validations = Optional.ofNullable(validatorsField);
-				}
-			}
-		}
-		;
 		return validations;
 	}
 
