@@ -103,6 +103,8 @@ public class ExapmleResource {
 }
 ```
 
+Full example: https://github.com/damianwajser/spring-rest-commons-options-example
+
 ### Test It!!
 
 The firts enpooint created:
