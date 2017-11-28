@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -73,11 +74,13 @@ public class JsonBuilder implements OptionsBuilder<Optional<OptionsResult>> {
 			result.getEnpoints().forEach(e -> fixEndpoint(count, e));
 			LOGGER.info("Contador de arbol: {}", count);
 			if (!count.isEmpty()) {
-				String realBaseUrl = Collections
-						.max(count.entrySet(), (entry1, entry2) -> entry1.getValue() - entry2.getValue()).getKey();
-				LOGGER.info("real url for: {}", realBaseUrl);
-				result.setBaseUrl(realBaseUrl);
-				result.getEnpoints().forEach(e -> e.setBaseUrl(realBaseUrl));
+				Entry<String, Integer> realBaseUrl = Collections.max(count.entrySet(),
+						(entry1, entry2) -> entry1.getValue() - entry2.getValue());
+				if (realBaseUrl.getValue() > 1) {
+					LOGGER.info("real url for: {}", realBaseUrl.getKey());
+					result.setBaseUrl(realBaseUrl.getKey());
+					result.getEnpoints().forEach(e -> e.setBaseUrl(realBaseUrl.getKey()));
+				}
 			}
 		}
 	}
