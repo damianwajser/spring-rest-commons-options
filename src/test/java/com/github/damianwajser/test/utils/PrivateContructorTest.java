@@ -1,5 +1,6 @@
 package com.github.damianwajser.test.utils;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertTrue;
 
 import java.lang.reflect.Constructor;
@@ -19,13 +20,13 @@ import com.github.damianwajser.utils.JsonSchemmaUtils;
 @RunWith(SpringJUnit4ClassRunner.class)
 public class PrivateContructorTest {
 
-	@Test(expected = IllegalAccessException.class)
+	@Test
 	@org.junit.jupiter.api.Test
 	public void detailFieldResponseFactoryTest() throws Exception {
 		privateConstructor(DetailFieldResponseFactory.class);
 	}
 
-	@Test(expected = IllegalAccessException.class)
+	@Test
 	@org.junit.jupiter.api.Test
 	public void jsonSchemmaUtilsTest() throws Exception {
 		privateConstructor(JsonSchemmaUtils.class);
@@ -34,6 +35,6 @@ public class PrivateContructorTest {
 	private void privateConstructor(Class<?> clazz) throws Exception {
 		Constructor<?> constructor = clazz.getDeclaredConstructor();
 		assertTrue(Modifier.isPrivate(constructor.getModifiers()));
-		constructor.newInstance();
+		assertThatThrownBy(()->constructor.newInstance()).isInstanceOf(IllegalAccessException.class);
 	}
 }
