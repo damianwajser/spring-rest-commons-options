@@ -83,7 +83,7 @@ public class ModelStrategy extends DetailFieldStrategy {
 	private boolean checkIfAddField(Optional<Field> field, PropertyDescriptor propertyDescriptor, boolean isRequest) {
 		boolean res = true;
 		if (field.isPresent()) {
-			res = res && !field.get().isAnnotationPresent(JsonIgnore.class);
+			res = !field.get().isAnnotationPresent(JsonIgnore.class);
 			if (isRequest) {
 				res = res && !field.get().isAnnotationPresent(Auditable.class);
 				res = res && propertyDescriptor.getReadMethod() != null;

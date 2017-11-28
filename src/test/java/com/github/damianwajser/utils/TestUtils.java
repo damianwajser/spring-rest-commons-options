@@ -58,7 +58,7 @@ public class TestUtils {
 		checkField(realField.get(i++), "dateStr", "String");
 		checkField(realField.get(i++), "id", "Integer");
 		checkField(realField.get(i++), "messageType", "String");
-		checkField(realField.get(i++), "modifyDate", "Date");
+		checkField(realField.get(i++), "modifyDate", "Date", true);
 		checkField(realField.get(i++), "modifyUser", "String", true);
 		checkField(realField.get(i++), "msName", "String");
 		checkField(realField.get(i++), "processingCode", "String");
@@ -67,7 +67,7 @@ public class TestUtils {
 	}
 
 	public static void checkOtherParameterRequest(List<DetailField> realField) {
-		assertEquals(10, realField.size());
+		assertEquals(9, realField.size());
 		int i = 0;
 		System.out.println(realField.get(i).getName());
 		checkField(realField.get(i), "active", "boolean");
@@ -86,9 +86,7 @@ public class TestUtils {
 		i++;
 		System.out.println(realField.get(i).getName());
 		checkField(realField.get(i), "messageType", "String");
-		i++;
-		System.out.println(realField.get(i).getName());
-		checkField(realField.get(i), "modifyDate", "Date");
+
 		i++;
 		System.out.println(realField.get(i).getName());
 		checkField(realField.get(i), "msName", "String");
@@ -98,7 +96,7 @@ public class TestUtils {
 		i++;
 		System.out.println(realField.get(i).getName());
 		checkField(realField.get(i), "transactionType", "Integer");
-		i++;
+		assertEquals(8, i);
 	}
 
 	public static void checkPojoFields(List<DetailField> realField) {
@@ -121,7 +119,7 @@ public class TestUtils {
 		int i = 0;
 		DetailField active = requestField.get(i++);
 		assertEquals(DetailField.class, active.getClass());
-		
+
 		DetailFieldWithValidations code = (DetailFieldWithValidations) requestField.get(i++);
 		assertEquals(1, code.getValidation().size());
 		assertEquals("El campo code es obligatorio", code.getValidation().get(0).getMessageStr());
@@ -134,21 +132,28 @@ public class TestUtils {
 
 		DetailField id = requestField.get(i++);
 		assertEquals(DetailField.class, id.getClass());
-		
+
 		DetailFieldWithValidations messageType = (DetailFieldWithValidations) requestField.get(i++);
 		assertEquals(2, messageType.getValidation().size());
 		assertEquals("El campo messageType es obligatorio", messageType.getValidation().get(0).getMessageStr());
-		PatternValidator messageTypeValidator = (PatternValidator)messageType.getValidation().get(1);
+		PatternValidator messageTypeValidator = (PatternValidator) messageType.getValidation().get(1);
 		assertEquals("Valor invalido de messageType", messageTypeValidator.getMessageStr());
 		assertEquals("(200)|(400)", messageTypeValidator.getRegularExpression());
+
+		DetailFieldWithValidations msName = (DetailFieldWithValidations) requestField.get(i++);
+		assertEquals(1, msName.getValidation().size());
+		assertEquals("El campo msName es obligatorio", msName.getValidation().get(0).getMessageStr());
+
+		DetailFieldWithValidations processingCode = (DetailFieldWithValidations) requestField.get(i++);
+		assertEquals(2, processingCode.getValidation().size());
+		assertEquals("El campo processingCode es obligatorio", processingCode.getValidation().get(0).getMessageStr());
+		PatternValidator processingCodeValidator = (PatternValidator) processingCode.getValidation().get(1);
+		assertEquals("Valor invalido de processingCode", processingCodeValidator.getMessageStr());
+		assertEquals("(000000)|(020000)|(200000)|(220000)", processingCodeValidator.getRegularExpression());
 		
-		// checkField(realField.get(i++), "dateStr", "String");
-		// checkField(realField.get(i++), "id", "Integer");
-		// checkField(realField.get(i++), "messageType", "String");
-		// checkField(realField.get(i++), "modifyDate", "Date");
-		// checkField(realField.get(i++), "modifyUser", "String", true);
-		// checkField(realField.get(i++), "msName", "String");
-		// checkField(realField.get(i++), "processingCode", "String");
-		// checkField(realField.get(i++), "transactionType", "Integer");
+		DetailFieldWithValidations transactionType = (DetailFieldWithValidations) requestField.get(i);
+		assertEquals(1, transactionType.getValidation().size());
+		assertEquals("El campo transactionType es obligatorio", transactionType.getValidation().get(0).getMessageStr());
+		assertEquals(8, i);
 	}
 }

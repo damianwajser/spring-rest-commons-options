@@ -37,6 +37,7 @@ public abstract class GenericParameter implements Serializable {
 		return createDate;
 	}
 
+	@Auditable
 	public Date getModifyDate() {
 		return modifyDate;
 	}

@@ -67,6 +67,18 @@ public class GetOtherParameterControllerTest {
 		TestUtils.checkTestPathId(endpoint);
 		checkSingleResponse(endpoint);
 	}
+	@Test
+	@org.junit.jupiter.api.Test
+	public void deleta() throws Exception {
+		Endpoint endpoint = endpoints.get(DELETE);
+		assertEquals("DELETE", endpoint.getHttpMethod());
+		assertEquals("/other/parameter", endpoint.getBaseUrl());
+		System.out.println("checkeando: " + endpoint.getEndpoint());
+		TestUtils.checkTestPathId(endpoint);
+		assertEquals(Collections.EMPTY_LIST, endpoint.getQueryString().getParams());
+		assertEquals(Collections.EMPTY_LIST, endpoint.getBodyRequest().getFields());
+		assertEquals(Collections.EMPTY_LIST, endpoint.getBodyResponse().getFields());
+	}
 
 	@Test
 	@org.junit.jupiter.api.Test

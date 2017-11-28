@@ -172,8 +172,4 @@ public final class ReflectionUtils {
 		}
 		return clazz;
 	}
-
-	public static Optional<Class<?>> getRealClass(Class<?> type) {
-		return getClass(getRealType(type).orElse(null));
-	}
 }

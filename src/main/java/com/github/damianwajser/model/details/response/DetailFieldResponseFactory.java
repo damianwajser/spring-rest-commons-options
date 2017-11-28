@@ -16,7 +16,8 @@ public final class DetailFieldResponseFactory {
 	}
 
 	public static DetailFieldStrategy getCreationStrategy(Type t, Class<?> parametrizedClass) {
-		LOGGER.info("Seleccionando estrategia para para el parametro del respomnse {}, con la clase parametrica {}", t, parametrizedClass);
+		LOGGER.info("Seleccionando estrategia para para el parametro del respomnse {}, con la clase parametrica {}", t,
+				parametrizedClass);
 		return DetailFieldCreatedStrategyFactory.getCreationStrategy(t, Optional.ofNullable(parametrizedClass));
 
 	}
