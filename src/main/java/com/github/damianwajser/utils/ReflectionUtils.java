@@ -116,9 +116,6 @@ public final class ReflectionUtils {
 			if(!t.isPresent()) {
 				t = getGenericType((ParameterizedType)type);
 			}
-		} else {
-			LOGGER.error("por aca no deberia pasar, el type es: {}", type);
-			// type = ReflectionUtils.getGenericType(type).get();
 		}
 		return t;
 	}

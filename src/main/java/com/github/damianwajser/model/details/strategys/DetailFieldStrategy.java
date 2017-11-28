@@ -29,7 +29,7 @@ public abstract class DetailFieldStrategy {
 	}
 
 	protected Optional<DetailField> createDetail(PropertyDescriptor descriptor, Optional<Field> f, boolean isRequest) {
-		Optional<DetailField> detailField = Optional.empty();
+		Optional<DetailField> detailField;
 		LOGGER.debug("creando property: {}, field: {}, isRequest: {}", descriptor, f, isRequest);
 		if (isRequest) {
 			Optional<List<Validator>> validators = ValidatorFactory.getValidations(descriptor, f);

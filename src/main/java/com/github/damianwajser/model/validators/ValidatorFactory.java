@@ -45,7 +45,7 @@ public final class ValidatorFactory {
 		} else {
 			validations = Optional.ofNullable(validatorsField);
 		}
-		return validations.isPresent() && validations.get().isEmpty() ? Optional.empty() : validations;
+		return validations.get().isEmpty() ? Optional.empty() : validations;
 	}
 
 	private static Optional<List<Validator>> fillValidations(PropertyDescriptor fieldDescriptor,

@@ -73,7 +73,7 @@ public class JsonBuilder implements OptionsBuilder<Optional<OptionsResult>> {
 			result.getEnpoints().forEach(e -> fixEndpoint(count, e));
 			LOGGER.info("Contador de arbol: {}", count);
 			if (!count.isEmpty()) {
-				String realBaseUrl = "/" + Collections
+				String realBaseUrl = Collections
 						.max(count.entrySet(), (entry1, entry2) -> entry1.getValue() - entry2.getValue()).getKey();
 				LOGGER.info("real url for: {}", realBaseUrl);
 				result.setBaseUrl(realBaseUrl);
@@ -85,11 +85,12 @@ public class JsonBuilder implements OptionsBuilder<Optional<OptionsResult>> {
 	private void fixEndpoint(Map<String, Integer> count, Endpoint e) {
 		LOGGER.info("fixeando relative url: {}", e.getRelativeUrl());
 		String[] relatives = e.getRelativeUrl().split("/");
-
+		String url = "";
 		for (int i = 0; i < relatives.length; i++) {
 			if (!StringUtils.isEmpty(relatives[i])) {
-				Integer num = count.get(relatives[i]) == null ? 1 : count.get(relatives[i]) + 1;
-				count.put(relatives[i], num);
+				url = url + "/" + relatives[i];
+				Integer num = count.get(url) == null ? 1 : count.get(url) + 1;
+				count.put(url, num);
 			}
 		}
 	}
