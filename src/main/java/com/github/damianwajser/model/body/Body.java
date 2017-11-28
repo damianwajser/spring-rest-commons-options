@@ -4,13 +4,15 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
 import com.github.damianwajser.model.details.DetailField;
 
 public abstract class Body {
-	
+
 	@JsonIgnore
 	private Method method;
 	@JsonIgnore
@@ -18,9 +20,9 @@ public abstract class Body {
 
 	@JsonUnwrapped
 	private List<DetailField> fields = new ArrayList<>();
-	
+
 	private JsonSchema jsonSchema;
-	
+
 	public Body(Method m, Class<?> controllerClass) {
 		this.method = m;
 		this.parametrizedClass = controllerClass;
@@ -52,4 +54,8 @@ public abstract class Body {
 		this.jsonSchema = jsonSchema;
 	}
 
+	@Override
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this);
+	}
 }

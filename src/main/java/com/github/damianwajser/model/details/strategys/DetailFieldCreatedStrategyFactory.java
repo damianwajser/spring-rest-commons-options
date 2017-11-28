@@ -5,6 +5,7 @@ import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.util.Optional;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,11 +45,11 @@ public final class DetailFieldCreatedStrategyFactory {
 		DetailFieldStrategy strategy = null;
 		// es un tipo generico y tengo que obtener la info de la clasex
 		Optional<Type> genericType = Optional.empty();
-		if(parametrizableClass.isPresent())
+		if (parametrizableClass.isPresent())
 			genericType = ReflectionUtils.getRealType(type, parametrizableClass.get());
-		
+
 		LOGGER.debug("Clase generica : {}, para la clase:{}, del tipo: {}", parametrizableClass.orElse(null),
-				genericType,  type);
+				genericType, type);
 		// si la clase contenedora del parametro es collection
 		if (Iterable.class.isAssignableFrom(ReflectionUtils.getClass(type).orElse(null))) {
 			if (parametrizableClass.isPresent()) {
@@ -56,9 +57,14 @@ public final class DetailFieldCreatedStrategyFactory {
 			} else {
 				strategy = new ModelStrategy(genericType.orElse(null));
 			}
-		}else {
+		} else {
 			strategy = new ModelStrategy(genericType.orElse(null));
 		}
 		return strategy;
+	}
+
+	@Override
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this);
 	}
 }

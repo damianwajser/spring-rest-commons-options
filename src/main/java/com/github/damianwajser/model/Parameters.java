@@ -1,5 +1,7 @@
 package com.github.damianwajser.model;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 
@@ -34,5 +36,10 @@ public class Parameters {
 
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	@Override
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this);
 	}
 }

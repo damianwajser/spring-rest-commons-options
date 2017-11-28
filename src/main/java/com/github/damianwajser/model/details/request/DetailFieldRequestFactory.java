@@ -3,6 +3,7 @@ package com.github.damianwajser.model.details.request;
 import java.lang.reflect.Parameter;
 import java.util.Optional;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,4 +24,8 @@ public final class DetailFieldRequestFactory {
 
 	}
 
+	@Override
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this);
+	}
 }

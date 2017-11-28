@@ -1,10 +1,13 @@
 package com.github.damianwajser.model;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
@@ -14,10 +17,12 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.github.damianwajser.model.body.Body;
 import com.github.damianwajser.model.body.BodyRequest;
 import com.github.damianwajser.model.body.BodyResponse;
+import com.github.damianwajser.model.header.Header;
+import com.github.damianwajser.utils.ReflectionUtils;
 
 @JsonAutoDetect(fieldVisibility = Visibility.ANY)
 @JsonPropertyOrder({ "endpoint", "httpMethod", "baseUrl", "relativeUrl" })
-public class Endpoint implements Comparable<Endpoint>{
+public class Endpoint implements Comparable<Endpoint> {
 
 	private QueryString queryString;
 
@@ -27,8 +32,9 @@ public class Endpoint implements Comparable<Endpoint>{
 	@JsonIgnore
 	private String baseUrl;
 	private String relativeUrl;
-	private Body bodyRequest;
+	private BodyRequest bodyRequest;
 	private Body bodyResponse;
+	private List<Header> headers;
 
 	public Endpoint(String url, String relativeUrl, Method m, Object controller) {
 		this.setBaseUrl(url);
@@ -38,6 +44,11 @@ public class Endpoint implements Comparable<Endpoint>{
 		this.queryString = new QueryString(m);
 		this.setBodyRequest(new BodyRequest(m, controller.getClass()));
 		this.setBodyResponse(new BodyResponse(m, controller.getClass()));
+		headers = new ArrayList<>();
+		ReflectionUtils.getHeaders(m).forEach(h -> {
+			RequestHeader rh = h.getDeclaredAnnotationsByType(RequestHeader.class)[0];
+			headers.add(new Header(rh.value(), h.getType().getSimpleName()));
+		});
 	}
 
 	public String getHttpMethod() {
@@ -70,11 +81,11 @@ public class Endpoint implements Comparable<Endpoint>{
 				+ (queryString.toString().isEmpty() ? "" : "?" + queryString);
 	}
 
-	public Body getBodyRequest() {
+	public BodyRequest getBodyRequest() {
 		return bodyRequest;
 	}
 
-	public void setBodyRequest(Body bodyRequest) {
+	public void setBodyRequest(BodyRequest bodyRequest) {
 		this.bodyRequest = bodyRequest;
 	}
 
@@ -112,5 +123,13 @@ public class Endpoint implements Comparable<Endpoint>{
 	@Override
 	public int compareTo(Endpoint o) {
 		return this.getEndpoint().compareTo(o.getEndpoint());
+	}
+
+	public List<Header> getHeaders() {
+		return headers;
+	}
+
+	public void setHeaders(List<Header> headers) {
+		this.headers = headers;
 	}
 }

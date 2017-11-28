@@ -3,6 +3,7 @@ package com.github.damianwajser.model.validators;
 import java.lang.annotation.Annotation;
 import java.util.Optional;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.springframework.core.annotation.AnnotationUtils;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
@@ -32,5 +33,10 @@ public abstract class Validator {
 	@JsonGetter("message")
 	public String getMessageStr() {
 		return this.getMessage().orElse("");
+	}
+
+	@Override
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this);
 	}
 }

@@ -3,6 +3,7 @@ package com.github.damianwajser.model;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -27,5 +28,10 @@ public class RequestHttpMethod {
 			annotation = annotation.annotationType().getDeclaredAnnotation(RequestMapping.class);
 		}
 		return annotation;
+	}
+
+	@Override
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this);
 	}
 }

@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -94,5 +95,10 @@ public class ModelStrategy extends DetailFieldStrategy {
 			}
 		}
 		return res;
+	}
+
+	@Override
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this);
 	}
 }

@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 import com.github.damianwajser.model.details.DetailField;
 import com.github.damianwajser.model.details.DetailFieldCollection;
 import com.github.damianwajser.utils.ReflectionUtils;
@@ -33,4 +35,8 @@ public class CollectionStrategy extends DetailFieldStrategy {
 		return detailFields;
 	}
 
+	@Override
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this);
+	}
 }

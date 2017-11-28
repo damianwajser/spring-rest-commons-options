@@ -75,8 +75,13 @@ public final class ReflectionUtils {
 		return Arrays.asList(m.getParameters()).stream().filter(p -> {
 			boolean ok = p.getAnnotation(PathVariable.class) == null;
 			ok = ok && p.getAnnotation(RequestParam.class) == null;
-			return ok && p.getAnnotation(RequestHeader.class) == null;
+			return ok;
 		}).collect(Collectors.toList());
+	}
+
+	public static List<Parameter> getHeaders(Method m) {
+		return Arrays.asList(m.getParameters()).stream().filter(p -> p.getAnnotation(RequestHeader.class) != null)
+				.collect(Collectors.toList());
 	}
 
 	public static Optional<Type> getRealType(Type type, Optional<Class<?>> parametrizedClass) {
@@ -113,8 +118,8 @@ public final class ReflectionUtils {
 		Optional<Type> t = Optional.ofNullable(type);
 		if (ParameterizedType.class.isAssignableFrom(type.getClass())) {
 			t = ReflectionUtils.getGenericType(type.getClass());
-			if(!t.isPresent()) {
-				t = getGenericType((ParameterizedType)type);
+			if (!t.isPresent()) {
+				t = getGenericType((ParameterizedType) type);
 			}
 		}
 		return t;

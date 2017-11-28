@@ -45,6 +45,9 @@ public class GetPojoControllerTest {
 			TestUtils.checkTestPathId(endpoint);
 			realField = endpoint.getBodyResponse().getFields();
 			assertEquals(Collections.EMPTY_LIST, endpoint.getQueryString().getParams());
+			assertEquals(1, endpoint.getHeaders().size());
+			assertEquals("Authorization", endpoint.getHeaders().get(0).getName());
+			assertEquals("String", endpoint.getHeaders().get(0).getType());
 			break;
 		case "GET - /test123?arg0={Integer}&arg1={String}":
 			assertEquals(endpoint.getQueryString().getParams().size(), 2);
