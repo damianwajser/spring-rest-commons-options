@@ -65,7 +65,7 @@ public class GetPojoControllerTest {
 			break;
 		}
 		TestUtils.checkRequestBodyEmpty(endpoint);
-		TestUtils.checkPojoFields(realField);
+		TestUtils.checkPojoFields(realField, true);
 		assertEquals("GET", endpoint.getHttpMethod());
 	}
 

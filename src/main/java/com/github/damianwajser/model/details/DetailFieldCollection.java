@@ -1,5 +1,6 @@
 package com.github.damianwajser.model.details;
 
+import java.util.Collections;
 import java.util.List;
 
 public class DetailFieldCollection extends DetailField{
@@ -10,6 +11,7 @@ public class DetailFieldCollection extends DetailField{
 		super.setType("collection");
 	}
 	public List<DetailField> getCollection() {
+		Collections.sort(collection, (f,f1)->f.getName().compareTo(f1.getName()));
 		return collection;
 	}
 

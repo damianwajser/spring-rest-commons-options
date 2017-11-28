@@ -13,6 +13,7 @@ import javax.validation.constraints.AssertTrue;
 
 import org.hibernate.validator.constraints.NotBlank;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.damianwajser.model.Endpoint;
 import com.github.damianwajser.model.Parameters;
 import com.github.damianwajser.model.details.DetailField;
@@ -99,16 +100,25 @@ public class TestUtils {
 		assertEquals(8, i);
 	}
 
-	public static void checkPojoFields(List<DetailField> realField) {
-		assertEquals(2, realField.size());
-		checkField(realField.get(0), "notBlank", "String");
-		checkField(realField.get(1), "visible", "boolean");
-
+	public static void checkPojoFields(List<DetailField> realField, boolean isRequest) {
+		assertEquals(5, realField.size());
+		if (isRequest) {
+			checkField(realField.get(0), "notBlank", "String");
+			checkField(realField.get(1), "property", "String");
+			checkField(realField.get(2), "set", "String");
+			checkField(realField.get(3), "testGetJson", "String");
+		}else {
+			checkField(realField.get(0), "get", "String");
+			checkField(realField.get(1), "notBlank", "String");
+			checkField(realField.get(2), "property", "String");
+			checkField(realField.get(3), "testSetJson", "String");
+		}
+		checkField(realField.get(4), "visible", "boolean");
 	}
 
 	public static void checkPojoFieldsValidation(List<DetailField> realField) {
-		checkPojoFields(realField);
-		DetailFieldWithValidations notBlank = (DetailFieldWithValidations) realField.get(0);
+		checkPojoFields(realField, false);
+		DetailFieldWithValidations notBlank = (DetailFieldWithValidations) realField.get(1);
 		assertEquals(1, notBlank.getValidation().size());
 		assertEquals("validacion", notBlank.getValidation().get(0).getMessageStr());
 
@@ -150,7 +160,7 @@ public class TestUtils {
 		PatternValidator processingCodeValidator = (PatternValidator) processingCode.getValidation().get(1);
 		assertEquals("Valor invalido de processingCode", processingCodeValidator.getMessageStr());
 		assertEquals("(000000)|(020000)|(200000)|(220000)", processingCodeValidator.getRegularExpression());
-		
+
 		DetailFieldWithValidations transactionType = (DetailFieldWithValidations) requestField.get(i);
 		assertEquals(1, transactionType.getValidation().size());
 		assertEquals("El campo transactionType es obligatorio", transactionType.getValidation().get(0).getMessageStr());

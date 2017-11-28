@@ -51,7 +51,6 @@ public class ModifyPojoControllerTest {
 			break;
 		}
 		TestUtils.checkPojoFieldsValidation(requestField);
-		TestUtils.checkPojoFields(responseField);
 	}
 
 }
