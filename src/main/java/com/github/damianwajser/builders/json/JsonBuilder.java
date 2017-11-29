@@ -87,30 +87,32 @@ public class JsonBuilder implements OptionsBuilder<Optional<OptionsResult>> {
 		this.fillBaseUrl();
 		Optional<OptionsResult> result = getResult();
 		result.ifPresent(o -> fixEndpoints(o));
-		result.ifPresent(r -> {
-			if (exceptionHandlers != null) {
-				exceptionHandlers.forEach(handler -> {
-					Arrays.asList(getRealObject(handler).getClass().getDeclaredMethods()).stream()
-							.filter(m -> m.isAnnotationPresent(ExceptionHandler.class)
-									&& m.isAnnotationPresent(ResponseStatus.class))
-							.forEach(m -> {
-								ResponseStatus status = m.getAnnotation(ResponseStatus.class);
-								Type returnType = m.getGenericReturnType();
-								DetailFieldStrategy strategy = null;
-								strategy = DetailFieldResponseFactory.getCreationStrategy(returnType,
-										m.getDeclaringClass());
-								r.getHttpCodes().put(status.value().value(), strategy.createDetailField(false));
-							});
-				});
-			}
-		});
+		result.ifPresent(r -> buildExceptions(r));
 		return result;
+	}
+
+	private void buildExceptions(OptionsResult r) {
+		if (exceptionHandlers != null) {
+			exceptionHandlers.forEach(handler -> {
+				Arrays.asList(getRealObject(handler).getClass().getDeclaredMethods()).stream()
+						.filter(m -> m.isAnnotationPresent(ExceptionHandler.class)
+								&& m.isAnnotationPresent(ResponseStatus.class))
+						.forEach(m -> {
+							ResponseStatus status = m.getAnnotation(ResponseStatus.class);
+							Type returnType = m.getGenericReturnType();
+							DetailFieldStrategy strategy = null;
+							strategy = DetailFieldResponseFactory.getCreationStrategy(returnType,
+									m.getDeclaringClass());
+							r.getHttpCodes().put(status.value().value(), strategy.createDetailField(false));
+						});
+			});
+		}
 	}
 
 	private void fixEndpoints(OptionsResult result) {
 		if (result.getBaseUrl().equals("/") && !result.getEnpoints().isEmpty()) {
 			Map<String, Integer> count = new HashMap<>();
-			result.getEnpoints().forEach(e -> fixEndpoint(count, e));
+			result.getEnpoints().forEach(e -> countRelativeUrls(count, e));
 			LOGGER.info("Contador de arbol: {}", count);
 			if (!count.isEmpty()) {
 				Entry<String, Integer> realBaseUrl = Collections.max(count.entrySet(),
@@ -124,7 +126,7 @@ public class JsonBuilder implements OptionsBuilder<Optional<OptionsResult>> {
 		}
 	}
 
-	private void fixEndpoint(Map<String, Integer> count, Endpoint e) {
+	private void countRelativeUrls(Map<String, Integer> count, Endpoint e) {
 		LOGGER.info("fixeando relative url: {}", e.getRelativeUrl());
 		String[] relatives = e.getRelativeUrl().split("/");
 		String url = "";
