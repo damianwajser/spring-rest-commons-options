@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.github.damianwajser.model.Pojo;
 
-@RequestMapping("/test123")
+@RequestMapping("/test1234")
 public class ModifyPojoController {
 
 	@PutMapping("/{id}")

@@ -1,10 +1,13 @@
 package com.github.damianwajser.builders.json;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
@@ -18,26 +21,45 @@ import org.springframework.aop.support.AopUtils;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.http.HttpMethod;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import com.github.damianwajser.builders.OptionsBuilder;
 import com.github.damianwajser.model.Endpoint;
 import com.github.damianwajser.model.OptionsResult;
+import com.github.damianwajser.model.details.DetailField;
+import com.github.damianwajser.model.details.response.DetailFieldResponseFactory;
+import com.github.damianwajser.model.details.strategys.DetailFieldStrategy;
 import com.github.damianwajser.utils.ReflectionUtils;
 
 public class JsonBuilder implements OptionsBuilder<Optional<OptionsResult>> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(JsonBuilder.class);
 
+	@JsonIgnore
+	private static Collection<Object> exceptionHandlers;
+
+	@JsonIgnore
 	private Object controller;
+
 	private String url;
+
 	@JsonUnwrapped
 	private Collection<Method> methods;
 
 	public JsonBuilder(Object obj) {
+		this(obj, null);
+	}
+
+	public JsonBuilder(Object obj, Collection<Object> handlers) {
 		LOGGER.info("create options to: {}", obj.getClass().getSimpleName());
 		this.controller = obj;
+		if (exceptionHandlers == null)
+			exceptionHandlers = handlers;
 	}
 
 	private void fillMethods() {
@@ -65,6 +87,23 @@ public class JsonBuilder implements OptionsBuilder<Optional<OptionsResult>> {
 		this.fillBaseUrl();
 		Optional<OptionsResult> result = getResult();
 		result.ifPresent(o -> fixEndpoints(o));
+		result.ifPresent(r -> {
+			if (exceptionHandlers != null) {
+				exceptionHandlers.forEach(handler -> {
+					Arrays.asList(getRealObject(handler).getClass().getDeclaredMethods()).stream()
+							.filter(m -> m.isAnnotationPresent(ExceptionHandler.class)
+									&& m.isAnnotationPresent(ResponseStatus.class))
+							.forEach(m -> {
+								ResponseStatus status = m.getAnnotation(ResponseStatus.class);
+								Type returnType = m.getGenericReturnType();
+								DetailFieldStrategy strategy = null;
+								strategy = DetailFieldResponseFactory.getCreationStrategy(returnType,
+										m.getDeclaringClass());
+								r.getHttpCodes().put(status.value().value(), strategy.createDetailField(false));
+							});
+				});
+			}
+		});
 		return result;
 	}
 
@@ -127,15 +166,21 @@ public class JsonBuilder implements OptionsBuilder<Optional<OptionsResult>> {
 	}
 
 	private void getRealController() {
-		if (AopUtils.isAopProxy(this.controller)) {
+		this.controller = getRealObject(this.controller);
+	}
+
+	private Object getRealObject(Object object) {
+		Object result = object;
+		if (AopUtils.isAopProxy(object)) {
 			try {
-				LOGGER.debug("{} spring proxy, get real object", this.controller);
-				this.controller = ((Advised) this.controller).getTargetSource().getTarget();
-				LOGGER.debug("Real Object: {}", this.controller);
+				LOGGER.debug("{} spring proxy, get real object", object);
+				result = ((Advised) object).getTargetSource().getTarget();
+				LOGGER.debug("Real Object: {}", object);
 			} catch (Exception e) {
-				LOGGER.error("Problemas al obtener el controller: {}", this.controller, e);
+				LOGGER.error("Problemas al obtener el controller: {}", object, e);
 			}
 		}
+		return result;
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 package com.github.damianwajser.controller;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -17,6 +18,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -74,16 +77,17 @@ public class OptionsController implements ApplicationListener<ApplicationReadyEv
 			Map<String, Object> beans = context.getBeansWithAnnotation(RestController.class);
 			LOGGER.debug("Get All Controllers");
 			beans.putAll(context.getBeansWithAnnotation(Controller.class));
+			Map<String, Object> exceptionHandlers = context.getBeansWithAnnotation(ControllerAdvice.class);
 			beans.forEach((k, v) -> {
 				if (!v.equals(this)) {
-					new JsonBuilder(v).build().ifPresent(c -> {
+					new JsonBuilder(v, exceptionHandlers.values()).build().ifPresent(c -> {
 						LOGGER.info("Add the controller for: " + c.getBaseUrl());
 						controllers.put(c.getBaseUrl(), c);
 					});
 				}
 			});
 		} catch (Exception e) {
-			LOGGER.error("problemas al crear la dcumentacion", e);
+			LOGGER.error("problemas al crear la documentacion", e);
 		}
 	}
 }

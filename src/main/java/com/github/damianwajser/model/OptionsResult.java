@@ -2,18 +2,32 @@ package com.github.damianwajser.model;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
+import com.github.damianwajser.model.details.DetailField;
 
 @JsonPropertyOrder("baseUrl")
 public class OptionsResult {
 	@JsonUnwrapped
 	private List<Endpoint> enpoints = new ArrayList<>();
 	private String baseUrl;
+	@JsonProperty("httpCodes")
+	private Map<Integer, List<DetailField>> httpCodes = new HashMap<>();
+	
+	public Map<Integer, List<DetailField>> getHttpCodes() {
+		return httpCodes;
+	}
+
+	public void setHttpCodes(Map<Integer, List<DetailField>> httpCodes) {
+		this.httpCodes = httpCodes;
+	}
 
 	public OptionsResult(String baseUrl) {
 		super();

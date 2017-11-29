@@ -27,11 +27,11 @@ public class ModifyPojoControllerTest {
 	public void testGetAll() throws Exception {
 		JsonBuilder builder = new JsonBuilder(new ModifyPojoController());
 		OptionsResult result = builder.build().get();
-		assertEquals("/test123", result.getBaseUrl());
+		assertEquals("/test1234", result.getBaseUrl());
 		List<Endpoint> endpoints = result.getEnpoints();
 		for (int i = 0; i < endpoints.size(); i++) {
 			Endpoint endpoint = endpoints.get(i);
-			assertEquals("/test123", endpoint.getBaseUrl());
+			assertEquals("/test1234", endpoint.getBaseUrl());
 			checkAll(endpoint);
 		}
 	}
@@ -41,10 +41,10 @@ public class ModifyPojoControllerTest {
 		List<DetailField> requestField = null;
 		System.out.println("checkeando: " + endpoint.getEndpoint());
 		switch (endpoint.getEndpoint()) {
-		case "PUT - /test123/{id}":
+		case "PUT - /test1234/{id}":
 			TestUtils.checkTestPathId(endpoint);
 			assertEquals("PUT", endpoint.getHttpMethod());
-		case "POST - /test123":
+		case "POST - /test1234":
 			responseField = endpoint.getBodyResponse().getFields();
 			requestField = endpoint.getBodyRequest().getFields();
 			assertEquals(Collections.EMPTY_LIST, endpoint.getQueryString().getParams());

@@ -2,11 +2,13 @@ package com.github.damianwajser.test.simple;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -17,6 +19,7 @@ import com.github.damianwajser.model.Endpoint;
 import com.github.damianwajser.model.OptionsResult;
 import com.github.damianwajser.model.details.DetailField;
 import com.github.damianwajser.model.details.DetailFieldCollection;
+import com.github.damianwajser.utils.ExceptionHandlerForJunit;
 import com.github.damianwajser.utils.TestUtils;
 
 @ContextConfiguration(classes = { WebMvcConfiguration.class })
@@ -26,14 +29,18 @@ public class GetPojoControllerTest {
 	@Test
 	@org.junit.jupiter.api.Test
 	public void testGetAll() throws Exception {
-		JsonBuilder builder = new JsonBuilder(new GetPojoController());
+		JsonBuilder builder = new JsonBuilder(new GetPojoController(), Arrays.asList(new ExceptionHandlerForJunit()));
 		OptionsResult result = builder.build().get();
 		assertEquals("/test123", result.getBaseUrl());
+		assertEquals(1, result.getHttpCodes().size());
+		assertEquals(404, result.getHttpCodes().entrySet().iterator().next().getKey().intValue());
+		// assertEquals("404", result.getHttpCodes().get(404).get(1));
 		List<Endpoint> endpoints = result.getEnpoints();
 		for (int i = 0; i < endpoints.size(); i++) {
 			Endpoint endpoint = endpoints.get(i);
 			assertEquals("/test123", endpoint.getBaseUrl());
 			checkAllGet(endpoint);
+
 		}
 	}
 
