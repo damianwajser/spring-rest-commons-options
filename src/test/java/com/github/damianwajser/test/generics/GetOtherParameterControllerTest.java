@@ -1,7 +1,9 @@
 package com.github.damianwajser.test.generics;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -12,11 +14,12 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.github.damianwajser.builders.json.JsonBuilder;
+import com.github.damianwajser.builders.json.ResorucesBuilder;
 import com.github.damianwajser.config.WebMvcConfiguration;
 import com.github.damianwajser.controllers.generics.OtherParameterController;
+import com.github.damianwajser.model.CollectionResources;
 import com.github.damianwajser.model.Endpoint;
-import com.github.damianwajser.model.OptionsResult;
+import com.github.damianwajser.model.Resource;
 import com.github.damianwajser.model.details.DetailField;
 import com.github.damianwajser.model.details.DetailFieldCollection;
 import com.github.damianwajser.utils.TestUtils;
@@ -40,10 +43,14 @@ public class GetOtherParameterControllerTest {
 	@Before
 	@BeforeEach
 	public void setup() {
-		JsonBuilder builder = new JsonBuilder(new OtherParameterController());
-		OptionsResult result = builder.build().get();
-		assertEquals("/other/parameter", result.getBaseUrl());
-		endpoints = result.getEnpoints();
+		ResorucesBuilder builder = ResorucesBuilder.getInstance();
+		builder.build(Arrays.asList(new OtherParameterController()));
+		CollectionResources resources = builder.getResources();
+		assertNotNull(resources);
+		Resource r = resources.getResource("/other/parameter");
+		endpoints = r.getEndpoints();
+		assertEquals("POST", endpoints.get(POST).getHttpMethod());
+
 	}
 
 	@Test
@@ -67,9 +74,10 @@ public class GetOtherParameterControllerTest {
 		TestUtils.checkTestPathId(endpoint);
 		checkSingleResponse(endpoint);
 	}
+
 	@Test
 	@org.junit.jupiter.api.Test
-	public void deleta() throws Exception {
+	public void delete() throws Exception {
 		Endpoint endpoint = endpoints.get(DELETE);
 		assertEquals("DELETE", endpoint.getHttpMethod());
 		assertEquals("/other/parameter", endpoint.getBaseUrl());
@@ -153,27 +161,6 @@ public class GetOtherParameterControllerTest {
 		assertEquals(Collections.EMPTY_LIST, endpoint.getQueryString().getParams());
 		checkSingleResponse(endpoint);
 		TestUtils.checkOtherParameterWithValidation(endpoint.getBodyRequest().getFields());
-	}
-
-	private void getAllTest() {
-		Endpoint endpoint = endpoints.get(0);
-		assertEquals("/other/parameter", endpoint.getBaseUrl());
-		List<DetailField> responseField = null;
-		List<DetailField> requestField = null;
-		System.out.println("checkeando: " + endpoint.getEndpoint());
-		switch (endpoint.getEndpoint()) {
-		case "PUT - /other/parameter/{id}":
-			TestUtils.checkTestPathId(endpoint);
-			assertEquals("PUT", endpoint.getHttpMethod());
-		case "POST - /other/parameter":
-			requestField = endpoint.getBodyRequest().getFields();
-			responseField = endpoint.getBodyResponse().getFields();
-			assertEquals(Collections.EMPTY_LIST, endpoint.getQueryString().getParams());
-			TestUtils.checkOtherParameterWithValidation(requestField);
-			break;
-		}
-		TestUtils.checkOtherParameterResponse(responseField);
-		assertEquals("GET", endpoint.getHttpMethod());
 	}
 
 	private void checkSingleResponse(Endpoint endpoint) {

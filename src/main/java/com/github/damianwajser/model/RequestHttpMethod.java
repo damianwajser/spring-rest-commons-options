@@ -12,7 +12,7 @@ import com.github.damianwajser.utils.ReflectionUtils;
 
 public class RequestHttpMethod {
 
-	private RequestMethod[] httpMethod;
+	private RequestMethod[] httpMethod = new RequestMethod[0];
 
 	public RequestHttpMethod(Method m) {
 		ReflectionUtils.filterRequestMappingAnnontations(m).findFirst().ifPresent(

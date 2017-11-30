@@ -1,5 +1,6 @@
 package com.github.damianwajser.controllers.simple;
 
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -16,7 +17,7 @@ public class TreeUrlsController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET, path = "private/v1/account/{accountId}/ypf")
-	public void get() {
+	public void get(@PathVariable("accountId") Integer account) {
 	}
 
 	@RequestMapping(method = RequestMethod.GET, path = "private/v1/ypf")

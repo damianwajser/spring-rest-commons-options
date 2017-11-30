@@ -18,9 +18,10 @@ public class OptionsResult {
 	@JsonUnwrapped
 	private List<Endpoint> enpoints = new ArrayList<>();
 	private String baseUrl;
+	private String resources;
 	@JsonProperty("httpCodes")
 	private Map<Integer, List<DetailField>> httpCodes = new HashMap<>();
-	
+
 	public Map<Integer, List<DetailField>> getHttpCodes() {
 		return httpCodes;
 	}
@@ -59,5 +60,13 @@ public class OptionsResult {
 	@Override
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this);
+	}
+
+	public String getResource() {
+		return resources;
+	}
+
+	public void setResource(String resource) {
+		this.resources = resource;
 	}
 }

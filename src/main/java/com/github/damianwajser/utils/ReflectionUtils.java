@@ -16,6 +16,8 @@ import java.util.stream.Stream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.aop.framework.Advised;
+import org.springframework.aop.support.AopUtils;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -173,5 +175,27 @@ public final class ReflectionUtils {
 			}
 		}
 		return clazz;
+	}
+
+	public static Object proxyToObject(Object object) {
+		Object result = object;
+		if (AopUtils.isAopProxy(object)) {
+			try {
+				LOGGER.debug("{} spring proxy, get real object", object);
+				result = ((Advised) object).getTargetSource().getTarget();
+				LOGGER.debug("Real Object: {}", object);
+			} catch (Exception e) {
+				LOGGER.error("Problemas al obtener el controller: {}", object, e);
+			}
+		}
+		return result;
+	}
+
+	public static List<Object> proxyToObject(Iterable<Object> proxys) {
+		List<Object> objects = new ArrayList<>();
+		if (proxys != null) {
+			proxys.forEach(p -> objects.add(proxyToObject(p)));
+		}
+		return objects;
 	}
 }

@@ -1,19 +1,11 @@
 package com.github.damianwajser.utils;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
-import javax.validation.constraints.AssertTrue;
-
-import org.hibernate.validator.constraints.NotBlank;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.damianwajser.model.Endpoint;
 import com.github.damianwajser.model.Parameters;
 import com.github.damianwajser.model.details.DetailField;

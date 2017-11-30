@@ -1,7 +1,9 @@
 package com.github.damianwajser.test.simple;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -10,11 +12,12 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.github.damianwajser.builders.json.JsonBuilder;
+import com.github.damianwajser.builders.json.ResorucesBuilder;
 import com.github.damianwajser.config.WebMvcConfiguration;
 import com.github.damianwajser.controllers.simple.ModifyPojoController;
+import com.github.damianwajser.model.CollectionResources;
 import com.github.damianwajser.model.Endpoint;
-import com.github.damianwajser.model.OptionsResult;
+import com.github.damianwajser.model.Resource;
 import com.github.damianwajser.model.details.DetailField;
 import com.github.damianwajser.utils.TestUtils;
 
@@ -25,14 +28,18 @@ public class ModifyPojoControllerTest {
 	@Test
 	@org.junit.jupiter.api.Test
 	public void testGetAll() throws Exception {
-		JsonBuilder builder = new JsonBuilder(new ModifyPojoController());
-		OptionsResult result = builder.build().get();
-		assertEquals("/test1234", result.getBaseUrl());
-		List<Endpoint> endpoints = result.getEnpoints();
+		ResorucesBuilder builder = ResorucesBuilder.getInstance();
+		builder.build(Arrays.asList(new ModifyPojoController()));
+		CollectionResources resources = builder.getResources();
+		assertNotNull(resources);
+		Resource r = resources.getResource("/test1234");
+		// assertEquals("404", result.getHttpCodes().get(404).get(1));
+		List<Endpoint> endpoints = r.getEndpoints();
 		for (int i = 0; i < endpoints.size(); i++) {
 			Endpoint endpoint = endpoints.get(i);
 			assertEquals("/test1234", endpoint.getBaseUrl());
 			checkAll(endpoint);
+
 		}
 	}
 
