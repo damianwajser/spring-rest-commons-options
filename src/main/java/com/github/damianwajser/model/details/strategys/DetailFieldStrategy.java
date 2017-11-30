@@ -54,11 +54,13 @@ public abstract class DetailFieldStrategy {
 			boolean isRequest) {
 		detailField.setName(getName(field, optField, isRequest));
 		detailField.setType(field.getPropertyType().getSimpleName());
-		optField.ifPresent(f -> detailField.setAuditable(
-				field.getWriteMethod() != null ? field.getWriteMethod().isAnnotationPresent(Auditable.class)
-						: false || field.getReadMethod() != null
-								? field.getReadMethod().isAnnotationPresent(Auditable.class)
-								: false));
+		optField.ifPresent(f -> detailField.setAuditable(isAuditable(field)));
+	}
+
+	private boolean isAuditable(PropertyDescriptor field) {
+		boolean isAuditable = field.getWriteMethod() != null && field.getWriteMethod().isAnnotationPresent(Auditable.class);
+		isAuditable = isAuditable || field.getReadMethod() != null && field.getReadMethod().isAnnotationPresent(Auditable.class);
+		return isAuditable;
 	}
 
 	private String getName(PropertyDescriptor field, Optional<Field> optField, boolean isRequest) {

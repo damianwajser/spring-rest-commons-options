@@ -4,7 +4,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 
-@ComponentScan({"com.github.damianwajser","com.test.damianwajser"})
+@ComponentScan({ "com.github.damianwajser", "com.test.damianwajser" })
 @SpringBootApplication
 public class Application {
 

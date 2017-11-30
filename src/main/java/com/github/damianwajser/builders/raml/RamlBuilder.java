@@ -7,13 +7,12 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.damianwajser.builders.OptionsBuilder;
 import com.github.damianwajser.model.Endpoint;
 import com.github.damianwajser.model.OptionsResult;
 import com.github.damianwajser.model.Parameters;
 import com.github.damianwajser.model.QueryString;
 
-public class RamlBuilder implements OptionsBuilder<Map<String, Object>> {
+public class RamlBuilder {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(RamlBuilder.class);
 

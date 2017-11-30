@@ -1,6 +1,8 @@
 package com.github.damianwajser.test.simple;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -9,17 +11,18 @@ import java.util.List;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.github.damianwajser.builders.json.JsonBuilder;
+import com.github.damianwajser.builders.json.ResorucesBuilder;
 import com.github.damianwajser.config.WebMvcConfiguration;
 import com.github.damianwajser.controllers.simple.GetPojoController;
+import com.github.damianwajser.model.CollectionResources;
 import com.github.damianwajser.model.Endpoint;
-import com.github.damianwajser.model.OptionsResult;
+import com.github.damianwajser.model.Resource;
 import com.github.damianwajser.model.details.DetailField;
 import com.github.damianwajser.model.details.DetailFieldCollection;
-import com.github.damianwajser.utils.ExceptionHandlerForJunit;
 import com.github.damianwajser.utils.TestUtils;
 
 @ContextConfiguration(classes = { WebMvcConfiguration.class })
@@ -29,13 +32,13 @@ public class GetPojoControllerTest {
 	@Test
 	@org.junit.jupiter.api.Test
 	public void testGetAll() throws Exception {
-		JsonBuilder builder = new JsonBuilder(new GetPojoController(), Arrays.asList(new ExceptionHandlerForJunit()));
-		OptionsResult result = builder.build().get();
-		assertEquals("/test123", result.getBaseUrl());
-		assertEquals(1, result.getHttpCodes().size());
-		assertEquals(404, result.getHttpCodes().entrySet().iterator().next().getKey().intValue());
+		ResorucesBuilder builder = ResorucesBuilder.getInstance();
+		builder.build(Arrays.asList(new GetPojoController()));
+		CollectionResources resources = builder.getResources();
+		assertNotNull(resources);
+		Resource r = resources.getResource("/test123");
 		// assertEquals("404", result.getHttpCodes().get(404).get(1));
-		List<Endpoint> endpoints = result.getEnpoints();
+		List<Endpoint> endpoints = r.getEndpoints();
 		for (int i = 0; i < endpoints.size(); i++) {
 			Endpoint endpoint = endpoints.get(i);
 			assertEquals("/test123", endpoint.getBaseUrl());
@@ -70,6 +73,8 @@ public class GetPojoControllerTest {
 			assertEquals("collection", field1.getType());
 			realField = field1.getCollection();
 			break;
+		default:
+			fail("No se esta chequeando el metodo: " + endpoint.getEndpoint());
 		}
 		TestUtils.checkRequestBodyEmpty(endpoint);
 		TestUtils.checkPojoFields(realField, true);
