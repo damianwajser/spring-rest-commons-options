@@ -124,101 +124,205 @@ curl -X OPTIONS http://localhost:8080/example
 Response:
 ```js
 {
-    "baseUrl": "/example",
-    "enpoints": [
-        {
-            "endpoint": "GET - /example/{id}",
-            "httpMethod": "GET",
-            "relativeUrl": "/{id}",
-            "queryString": {
-                "params": []
-            },
-            "pathVariable": {
-                "params": [
-                    {
-                        "required": true,
-                        "name": "id",
-                        "type": "Integer"
-                    }
-                ]
-            },
-            "bodyRequest": {
-                "fields": [],
-                "jsonSchema": null
-            },
-            "bodyResponse": {
-                "fields": [
-                    {
-                        "name": "description",
-                        "type": "String",
-                        "auditable": false
-                    }
-                ],
-                "jsonSchema": {
-                    "type": "object",
-                    "id": "urn:jsonschema:com:test:damianwajser:model:Example",
-                    "properties": {
-                        "description": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
-        },
-        {
-            "endpoint": "POST - /example/",
-            "httpMethod": "POST",
-            "relativeUrl": "/",
-            "queryString": {
-                "params": []
-            },
-            "pathVariable": {
-                "params": []
-            },
-            "bodyRequest": {
-                "fields": [
-                    {
-                        "name": "description",
-                        "type": "String",
-                        "auditable": false,
-                        "validation": [
+    "resources": {
+        "/example": {
+            "endpoints": [
+                {
+                    "endpoint": "GET - /example/{id}",
+                    "httpMethod": "GET",
+                    "relativeUrl": "/{id}",
+                    "queryString": {
+                        "params": []
+                    },
+                    "pathVariable": {
+                        "params": [
                             {
-                                "name": "NotEmpty",
-                                "message": "The field description is required"
+                                "required": true,
+                                "name": "id",
+                                "type": "Integer"
                             }
                         ]
-                    }
-                ],
-                "jsonSchema": {
-                    "type": "object",
-                    "id": "urn:jsonschema:com:test:damianwajser:model:Example",
-                    "properties": {
-                        "description": {
-                            "type": "string"
+                    },
+                    "bodyRequest": {
+                        "fields": [],
+                        "jsonSchema": null
+                    },
+                    "bodyResponse": {
+                        "fields": [
+                            {
+                                "name": "description",
+                                "type": "String",
+                                "auditable": false
+                            }
+                        ],
+                        "jsonSchema": {
+                            "type": "object",
+                            "id": "urn:jsonschema:com:test:damianwajser:model:Example",
+                            "properties": {
+                                "description": {
+                                    "type": "string"
+                                }
+                            }
                         }
-                    }
-                }
-            },
-            "bodyResponse": {
-                "fields": [
-                    {
-                        "name": "description",
-                        "type": "String",
-                        "auditable": false
-                    }
-                ],
-                "jsonSchema": {
-                    "type": "object",
-                    "id": "urn:jsonschema:com:test:damianwajser:model:Example",
-                    "properties": {
-                        "description": {
-                            "type": "string"
+                    },
+                    "headers": [],
+                    "url": "/example/{id}"
+                },
+                {
+                    "endpoint": "GET - /example/{id}",
+                    "httpMethod": "GET",
+                    "relativeUrl": "/{id}",
+                    "queryString": {
+                        "params": []
+                    },
+                    "pathVariable": {
+                        "params": [
+                            {
+                                "required": true,
+                                "name": "id",
+                                "type": "Integer"
+                            }
+                        ]
+                    },
+                    "bodyRequest": {
+                        "fields": [],
+                        "jsonSchema": null
+                    },
+                    "bodyResponse": {
+                        "fields": [
+                            {
+                                "name": "description",
+                                "type": "String",
+                                "auditable": false
+                            }
+                        ],
+                        "jsonSchema": {
+                            "type": "object",
+                            "id": "urn:jsonschema:com:test:damianwajser:model:Example",
+                            "properties": {
+                                "description": {
+                                    "type": "string"
+                                }
+                            }
                         }
-                    }
+                    },
+                    "headers": [],
+                    "url": "/example/{id}"
+                },
+                {
+                    "endpoint": "POST - /example",
+                    "httpMethod": "POST",
+                    "relativeUrl": "",
+                    "queryString": {
+                        "params": []
+                    },
+                    "pathVariable": {
+                        "params": []
+                    },
+                    "bodyRequest": {
+                        "fields": [
+                            {
+                                "name": "description",
+                                "type": "String",
+                                "auditable": false,
+                                "validation": [
+                                    {
+                                        "name": "NotEmpty",
+                                        "message": "The field description is required"
+                                    }
+                                ]
+                            }
+                        ],
+                        "jsonSchema": {
+                            "type": "object",
+                            "id": "urn:jsonschema:com:test:damianwajser:model:Example",
+                            "properties": {
+                                "description": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "bodyResponse": {
+                        "fields": [
+                            {
+                                "name": "description",
+                                "type": "String",
+                                "auditable": false
+                            }
+                        ],
+                        "jsonSchema": {
+                            "type": "object",
+                            "id": "urn:jsonschema:com:test:damianwajser:model:Example",
+                            "properties": {
+                                "description": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "headers": [],
+                    "url": "/example"
+                },
+                {
+                    "endpoint": "POST - /example",
+                    "httpMethod": "POST",
+                    "relativeUrl": "",
+                    "queryString": {
+                        "params": []
+                    },
+                    "pathVariable": {
+                        "params": []
+                    },
+                    "bodyRequest": {
+                        "fields": [
+                            {
+                                "name": "description",
+                                "type": "String",
+                                "auditable": false,
+                                "validation": [
+                                    {
+                                        "name": "NotEmpty",
+                                        "message": "The field description is required"
+                                    }
+                                ]
+                            }
+                        ],
+                        "jsonSchema": {
+                            "type": "object",
+                            "id": "urn:jsonschema:com:test:damianwajser:model:Example",
+                            "properties": {
+                                "description": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "bodyResponse": {
+                        "fields": [
+                            {
+                                "name": "description",
+                                "type": "String",
+                                "auditable": false
+                            }
+                        ],
+                        "jsonSchema": {
+                            "type": "object",
+                            "id": "urn:jsonschema:com:test:damianwajser:model:Example",
+                            "properties": {
+                                "description": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "headers": [],
+                    "url": "/example"
                 }
-            }
+            ]
         }
-    ]
+    },
+    "httpCodes": {}
 }
 ```
 ## License
