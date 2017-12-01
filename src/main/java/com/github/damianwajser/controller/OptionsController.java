@@ -23,19 +23,16 @@ import com.github.damianwajser.model.CollectionResources;
 import com.github.damianwajser.utils.StringUtils;
 
 @RestController
-@PropertySource("classpath:application.properties")
+@PropertySource(value = "classpath:application.properties", ignoreResourceNotFound = true)
 public class OptionsController implements ApplicationListener<ApplicationReadyEvent> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(OptionsController.class);
 	@Autowired
 	private ApplicationContext context;
 
-	@Value("${urls}")
-	private String url;
-
 	@RequestMapping(value = "/**", method = RequestMethod.OPTIONS, produces = "application/json")
-	public CollectionResources handleResultsJson(HttpServletRequest request, @RequestParam("method") Optional<String> method)
-			throws HttpRequestMethodNotSupportedException {
+	public CollectionResources handleResultsJson(HttpServletRequest request,
+			@RequestParam("method") Optional<String> method) throws HttpRequestMethodNotSupportedException {
 		String path = request.getServletPath().equals("/") ? request.getServletPath()
 				: StringUtils.deleteIfEnd(request.getServletPath(), "/");
 		LOGGER.info("solicitando JSON: {}", path);
@@ -43,21 +40,23 @@ public class OptionsController implements ApplicationListener<ApplicationReadyEv
 		return resources.filterPath(path);
 	}
 
-//	@RequestMapping(value = "/**", method = RequestMethod.OPTIONS, consumes = "application/x-yaml", produces = "application/x-yaml")
-//	public Object handleResultsYML(HttpServletRequest request) {
-//		String path = StringUtils.deleteIfEnd(request.getServletPath(), "/");
-//		LOGGER.info("solicitando RAML: {}", path);
-//		CollectionResources resources = ResorucesBuilder.getInstance().getResources();
-//		 
-//		return new RamlBuilder(resources.filterPath(path)).build();
-//
-//	}
+	// @RequestMapping(value = "/**", method = RequestMethod.OPTIONS, consumes =
+	// "application/x-yaml", produces = "application/x-yaml")
+	// public Object handleResultsYML(HttpServletRequest request) {
+	// String path = StringUtils.deleteIfEnd(request.getServletPath(), "/");
+	// LOGGER.info("solicitando RAML: {}", path);
+	// CollectionResources resources =
+	// ResorucesBuilder.getInstance().getResources();
+	//
+	// return new RamlBuilder(resources.filterPath(path)).build();
+	//
+	// }
 
 	@RequestMapping(value = "/endpoints", method = RequestMethod.GET)
 	public Iterable<String> handleResults() {
 		return ResorucesBuilder.getInstance().getEnpoints();
 	}
-	
+
 	@Override
 	public void onApplicationEvent(final ApplicationReadyEvent event) {
 		try {
