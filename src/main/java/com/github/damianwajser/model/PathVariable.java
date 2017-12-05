@@ -17,6 +17,9 @@ public class PathVariable {
 	private List<Parameters> params = new ArrayList<>();
 	private static Pattern pattern = Pattern.compile("\\{[a-zA-Z0-9]*\\}");
 
+	public PathVariable() {
+	}
+
 	public PathVariable(Method m, String relativePath) {
 		params = ReflectionUtils.getPathVariable(m);
 		if (!params.isEmpty()) {

@@ -44,13 +44,25 @@
 		</developer>
 	</developers>
 	<dependencies>
-		<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 			<version>1.5.8.RELEASE</version>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-commons-core</artifactId>
+			<version>1.4.1.RELEASE</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-core</artifactId>
+			<version>5.0.2.RELEASE</version>
+			<scope>provided</scope>
+		</dependency>
+
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
@@ -77,13 +89,14 @@
 			<groupId>org.hibernate.validator</groupId>
 			<artifactId>hibernate-validator</artifactId>
 			<version>6.0.4.Final</version>
-<!-- 			 <exclusions> -->
-<!--                 Exclude SLF4j to avoid version conflicts (we have 1.6.2, this drags in 1.6.1) -->
-<!--                 <exclusion> -->
-<!--                     <groupId>org.slf4j</groupId> -->
-<!--                     <artifactId>slf4j-api</artifactId> -->
-<!--                 </exclusion> -->
-<!--             </exclusions> -->
+			<!-- <exclusions> -->
+			<!-- Exclude SLF4j to avoid version conflicts (we have 1.6.2, this drags 
+				in 1.6.1) -->
+			<!-- <exclusion> -->
+			<!-- <groupId>org.slf4j</groupId> -->
+			<!-- <artifactId>slf4j-api</artifactId> -->
+			<!-- </exclusion> -->
+			<!-- </exclusions> -->
 		</dependency>
 		<dependency>
 			<groupId>org.hibernate</groupId>

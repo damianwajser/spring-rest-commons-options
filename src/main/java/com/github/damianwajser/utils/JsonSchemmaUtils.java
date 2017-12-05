@@ -87,7 +87,7 @@ public final class JsonSchemmaUtils {
 	}
 
 	private static Optional<JsonSchema> getRequestSchemma(Method m, Class<?> controller) {
-		List<Parameter> p = ReflectionUtils.getParameters(m);
+		List<Parameter> p = ReflectionUtils.getParametersBody(m);
 		Optional<JsonSchema> schemma = Optional.empty();
 		if (!p.isEmpty()) {
 			Optional<Type> t = ReflectionUtils.getRealType(p.get(0).getParameterizedType(), controller);

@@ -12,15 +12,18 @@ import com.github.damianwajser.utils.ReflectionUtils;
 
 public class BodyRequest extends Body {
 
+	public BodyRequest() {
+	}
+
 	public BodyRequest(Method m, Class<?> controllerClass) {
 		super(m, controllerClass);
-		
+
 	}
 
 	@Override
 	protected List<DetailField> buildFields() {
 		List<DetailField> detailFields = new ArrayList<>();
-		ReflectionUtils.getParameters(this.getMethod()).forEach(p -> detailFields.addAll(DetailFieldRequestFactory
+		ReflectionUtils.getParametersBody(this.getMethod()).forEach(p -> detailFields.addAll(DetailFieldRequestFactory
 				.getCreationStrategy(p, super.getParametrizedClass()).createDetailField(true)));
 		return detailFields;
 	}

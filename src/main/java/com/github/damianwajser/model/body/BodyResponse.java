@@ -11,6 +11,8 @@ import com.github.damianwajser.model.details.strategys.DetailFieldStrategy;
 import com.github.damianwajser.utils.JsonSchemmaUtils;
 
 public class BodyResponse extends Body {
+	public BodyResponse() {
+	}
 
 	public BodyResponse(Method m, Class<?> controllerClass) {
 		super(m, controllerClass);

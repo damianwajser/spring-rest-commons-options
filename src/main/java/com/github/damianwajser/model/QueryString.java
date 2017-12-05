@@ -17,6 +17,9 @@ public class QueryString {
 		this.params = ReflectionUtils.getQueryString(m);
 	}
 
+	public QueryString() {
+	}
+
 	public String toString() {
 		StringBuilder pathVariable = new StringBuilder();
 		params.forEach(r -> {

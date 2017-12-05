@@ -1,5 +1,8 @@
 package com.github.damianwajser.utils;
 
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
@@ -19,6 +22,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.aop.framework.Advised;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.core.annotation.AnnotationUtils;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -73,10 +77,11 @@ public final class ReflectionUtils {
 		return getClass(t);
 	}
 
-	public static List<Parameter> getParameters(Method m) {
+	public static List<Parameter> getParametersBody(Method m) {
 		return Arrays.asList(m.getParameters()).stream().filter(p -> {
 			boolean ok = p.getAnnotation(PathVariable.class) == null;
 			ok = ok && p.getAnnotation(RequestParam.class) == null;
+			ok = ok && !p.getClass().isAssignableFrom(Pageable.class);
 			return ok;
 		}).collect(Collectors.toList());
 	}
@@ -151,6 +156,17 @@ public final class ReflectionUtils {
 					(String) (AnnotationUtils.getValue(a).equals("") ? parameter.getName()
 							: AnnotationUtils.getValue(a)),
 					typeStr));
+		} else if (Pageable.class.isAssignableFrom(parameter.getType())) {
+			try {
+				for (PropertyDescriptor propertyDescriptor : Introspector.getBeanInfo(parameter.getType())
+						.getPropertyDescriptors()) {
+				parameters.add(new Parameters(false, propertyDescriptor.getName(), propertyDescriptor.getPropertyType().getSimpleName()));
+					System.out.println(propertyDescriptor);
+				}
+			} catch (IntrospectionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 

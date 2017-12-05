@@ -42,6 +42,9 @@ public class Endpoint implements Comparable<Endpoint> {
 	private BodyResponse bodyResponse;
 	private List<Header> headers;
 
+	public Endpoint() {
+	}
+
 	public Endpoint(String relativeUrl, Method m, Object controller) {
 		this.baseUrl = fillBaseUrl(controller);
 		this.setRelativeUrl(relativeUrl);

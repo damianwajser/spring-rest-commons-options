@@ -11,6 +11,9 @@ public class Parameters {
 	private String name;
 	private String type;
 
+	public Parameters() {
+	}
+
 	public Parameters(boolean required, String name, String type) {
 		super();
 		this.type = type;

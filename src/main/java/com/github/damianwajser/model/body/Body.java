@@ -24,6 +24,9 @@ public abstract class Body {
 
 	private JsonSchema jsonSchema;
 
+	public Body() {
+	}
+
 	public Body(Method m, Class<?> controllerClass) {
 		this.method = m;
 		this.parametrizedClass = controllerClass;
@@ -36,7 +39,7 @@ public abstract class Body {
 	protected abstract List<DetailField> buildFields();
 
 	public List<DetailField> getFields() {
-		Collections.sort(fields, (f,f1)->f.getName().compareTo(f1.getName()));
+		Collections.sort(fields, (f, f1) -> f.getName().compareTo(f1.getName()));
 		return fields;
 	}
 
