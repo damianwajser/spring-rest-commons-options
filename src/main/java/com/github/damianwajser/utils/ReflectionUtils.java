@@ -140,12 +140,12 @@ public final class ReflectionUtils {
 		List<Parameters> parameters = new ArrayList<>();
 		Arrays.asList(m.getParameters()).forEach(parameter -> {
 			RequestParam a = parameter.getAnnotation(RequestParam.class);
-			collectParameters(parameters, parameter, a);
+			collectParameters(parameters, parameter, a, false);
 		});
 		return parameters;
 	}
 
-	private static void collectParameters(Collection<Parameters> parameters, Parameter parameter, Annotation a) {
+	private static void collectParameters(Collection<Parameters> parameters, Parameter parameter, Annotation a, boolean isPathVariable) {
 		if (a != null) {
 			String typeStr = parameter.getType().getSimpleName();
 			Type type = parameter.getParameterizedType();
@@ -156,7 +156,7 @@ public final class ReflectionUtils {
 					(String) (AnnotationUtils.getValue(a).equals("") ? parameter.getName()
 							: AnnotationUtils.getValue(a)),
 					typeStr));
-		} else if (Pageable.class.isAssignableFrom(parameter.getType())) {
+		} else if (Pageable.class.isAssignableFrom(parameter.getType()) && !isPathVariable) {
 			try {
 				for (PropertyDescriptor propertyDescriptor : Introspector.getBeanInfo(parameter.getType())
 						.getPropertyDescriptors()) {
@@ -164,7 +164,6 @@ public final class ReflectionUtils {
 					System.out.println(propertyDescriptor);
 				}
 			} catch (IntrospectionException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -174,7 +173,7 @@ public final class ReflectionUtils {
 		List<Parameters> parameters = new ArrayList<>();
 		Arrays.asList(m.getParameters()).forEach(parameter -> {
 			PathVariable a = parameter.getAnnotation(PathVariable.class);
-			collectParameters(parameters, parameter, a);
+			collectParameters(parameters, parameter, a, true);
 		});
 		return parameters;
 	}
