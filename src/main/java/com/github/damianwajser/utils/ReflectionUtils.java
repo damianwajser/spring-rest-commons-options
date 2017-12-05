@@ -81,7 +81,7 @@ public final class ReflectionUtils {
 		return Arrays.asList(m.getParameters()).stream().filter(p -> {
 			boolean ok = p.getAnnotation(PathVariable.class) == null;
 			ok = ok && p.getAnnotation(RequestParam.class) == null;
-			ok = ok && !p.getClass().isAssignableFrom(Pageable.class);
+			ok = ok && !Pageable.class.isAssignableFrom(p.getType());
 			return ok;
 		}).collect(Collectors.toList());
 	}
