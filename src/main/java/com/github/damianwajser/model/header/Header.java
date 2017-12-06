@@ -7,6 +7,9 @@ public class Header {
 	private String name;
 	private String type;
 
+	public Header() {
+	}
+
 	public Header(String name, String type) {
 		super();
 		this.name = name;

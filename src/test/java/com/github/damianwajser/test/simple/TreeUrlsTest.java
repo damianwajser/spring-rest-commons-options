@@ -11,6 +11,8 @@ import com.github.damianwajser.config.WebMvcConfiguration;
 @RunWith(SpringJUnit4ClassRunner.class)
 public class TreeUrlsTest {
 
+	public TreeUrlsTest() {
+	}
 	@Test
 	@org.junit.jupiter.api.Test
 	public void test() throws Exception {

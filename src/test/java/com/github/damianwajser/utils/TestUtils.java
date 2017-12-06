@@ -92,9 +92,9 @@ public class TestUtils {
 		assertEquals(8, i);
 	}
 
-	public static void checkPojoFields(List<DetailField> realField, boolean isRequest) {
+	public static void checkPojoFields(List<DetailField> realField, boolean isResponse) {
 		assertEquals(5, realField.size());
-		if (isRequest) {
+		if (isResponse) {
 			checkField(realField.get(0), "notBlank", "String");
 			checkField(realField.get(1), "property", "String");
 			checkField(realField.get(2), "set", "String");

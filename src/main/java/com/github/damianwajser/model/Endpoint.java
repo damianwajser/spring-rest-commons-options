@@ -77,7 +77,8 @@ public class Endpoint implements Comparable<Endpoint> {
 	}
 
 	public String getHttpMethod() {
-		return this.methods.getHttpMethod().length == 0 ? "" : this.methods.getHttpMethod()[0].name();
+		return this.methods == null || this.methods.getHttpMethod().length == 0 ? ""
+				: this.methods.getHttpMethod()[0].name();
 	}
 
 	public QueryString getQueryString() {

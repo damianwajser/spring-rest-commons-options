@@ -12,7 +12,7 @@ import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import com.github.damianwajser.builders.json.ResorucesBuilder;
 import com.github.damianwajser.config.WebMvcConfiguration;
@@ -25,7 +25,7 @@ import com.github.damianwajser.model.details.DetailFieldCollection;
 import com.github.damianwajser.utils.TestUtils;
 
 @ContextConfiguration(classes = { WebMvcConfiguration.class })
-@RunWith(SpringJUnit4ClassRunner.class)
+@RunWith(SpringRunner.class)
 public class GetOtherParameterControllerTest {
 
 	private List<Endpoint> endpoints;
@@ -39,6 +39,9 @@ public class GetOtherParameterControllerTest {
 	private static final int GET_BY_CODE = 6;
 	private static final int POST = 7;
 	private static final int PUT = 8;
+
+	public GetOtherParameterControllerTest() {
+	}
 
 	@Before
 	@BeforeEach

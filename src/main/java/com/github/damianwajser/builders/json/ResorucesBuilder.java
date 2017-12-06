@@ -71,6 +71,7 @@ public class ResorucesBuilder {
 									.startsWith("org.springframework.boot.autoconfigure.web")
 							&& !m.getDeclaringClass().equals(OptionsController.class))
 					.collect(Collectors.toList());
+			LOGGER.debug("Se analizan los siguientes endpoints: {}", methods);
 			methods.forEach(m -> {
 				String relativeUrl = getRelativeUrl(m);
 				Endpoint endpoint = new Endpoint(relativeUrl, m, c);

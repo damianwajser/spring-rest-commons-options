@@ -1,6 +1,5 @@
 package com.github.damianwajser.test.simple;
 
-import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.embedded.LocalServerPort;
@@ -17,9 +16,11 @@ public class OptionsControllerTest {
 	@Autowired
 	private TestRestTemplate restTemplate;
 
-	@org.junit.Test
-	@Test
+	public OptionsControllerTest() {
+	}
+
 	public void testCreationOfANewProjectSucceeds() throws Exception {
-		//System.out.println(this.restTemplate.exchange("http://localhost:" + port + "/other/parameter", HttpMethod.OPTIONS, null, CollectionResources.class));
+		// System.out.println(this.restTemplate.exchange("http://localhost:" + port +
+		// "/other/parameter", HttpMethod.OPTIONS, null, CollectionResources.class));
 	}
 }

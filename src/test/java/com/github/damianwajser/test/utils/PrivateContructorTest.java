@@ -20,13 +20,11 @@ import com.github.damianwajser.utils.JsonSchemmaUtils;
 public class PrivateContructorTest {
 
 	@Test
-	@org.junit.jupiter.api.Test
 	public void detailFieldResponseFactoryTest() throws Exception {
 		privateConstructor(DetailFieldResponseFactory.class);
 	}
 
 	@Test
-	@org.junit.jupiter.api.Test
 	public void jsonSchemmaUtilsTest() throws Exception {
 		privateConstructor(JsonSchemmaUtils.class);
 	}

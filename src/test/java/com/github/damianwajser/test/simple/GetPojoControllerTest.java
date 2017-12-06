@@ -10,10 +10,8 @@ import java.util.List;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import com.github.damianwajser.builders.json.ResorucesBuilder;
 import com.github.damianwajser.config.WebMvcConfiguration;
@@ -26,8 +24,10 @@ import com.github.damianwajser.model.details.DetailFieldCollection;
 import com.github.damianwajser.utils.TestUtils;
 
 @ContextConfiguration(classes = { WebMvcConfiguration.class })
-@RunWith(SpringJUnit4ClassRunner.class)
+@RunWith(SpringRunner.class)
 public class GetPojoControllerTest {
+	public GetPojoControllerTest() {
+	}
 
 	@Test
 	@org.junit.jupiter.api.Test
