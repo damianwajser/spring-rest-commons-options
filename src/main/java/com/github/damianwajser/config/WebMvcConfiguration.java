@@ -10,6 +10,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator.Feature;
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 
@@ -26,6 +27,7 @@ public class WebMvcConfiguration extends WebMvcConfigurerAdapter {
 			super(new YAMLMapper().enable(Feature.MINIMIZE_QUOTES), MediaType.parseMediaType("application/x-yaml"));
 			this.getObjectMapper().configure(JsonGenerator.Feature.QUOTE_FIELD_NAMES, false);
 			this.getObjectMapper().configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
+			this.getObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
 		}
 	}
 }

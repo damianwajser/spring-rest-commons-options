@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.github.damianwajser.builders.json.ResorucesBuilder;
+import com.github.damianwajser.builders.raml.RamlBuilder;
 import com.github.damianwajser.model.CollectionResources;
 import com.github.damianwajser.utils.StringUtils;
 
@@ -31,7 +32,7 @@ public class OptionsController implements ApplicationListener<ApplicationReadyEv
 
 	@RequestMapping(value = "/**", method = RequestMethod.OPTIONS, produces = "application/json")
 	public CollectionResources handleResultsJson(HttpServletRequest request,
-			@RequestParam("method") Optional<String> method) throws HttpRequestMethodNotSupportedException {
+			@RequestParam("method") Optional<String> method) {
 		String path = request.getServletPath().equals("/") ? request.getServletPath()
 				: StringUtils.deleteIfEnd(request.getServletPath(), "/");
 		LOGGER.info("solicitando JSON: {}", path);
@@ -39,17 +40,12 @@ public class OptionsController implements ApplicationListener<ApplicationReadyEv
 		return resources.filterPath(path);
 	}
 
-	// @RequestMapping(value = "/**", method = RequestMethod.OPTIONS, consumes =
-	// "application/x-yaml", produces = "application/x-yaml")
-	// public Object handleResultsYML(HttpServletRequest request) {
-	// String path = StringUtils.deleteIfEnd(request.getServletPath(), "/");
-	// LOGGER.info("solicitando RAML: {}", path);
-	// CollectionResources resources =
-	// ResorucesBuilder.getInstance().getResources();
-	//
-	// return new RamlBuilder(resources.filterPath(path)).build();
-	//
-	// }
+	@RequestMapping(value = "/**", method = RequestMethod.OPTIONS, produces = "application/x-yaml")
+	public Object handleResultsYML(HttpServletRequest request) {
+		CollectionResources resource = handleResultsJson(request, Optional.empty());
+		return new RamlBuilder(resource).build();
+
+	}
 
 	@RequestMapping(value = "/endpoints", method = RequestMethod.GET)
 	public Iterable<String> handleResults() {

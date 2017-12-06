@@ -161,10 +161,9 @@ public final class ReflectionUtils {
 				for (PropertyDescriptor propertyDescriptor : Introspector.getBeanInfo(parameter.getType())
 						.getPropertyDescriptors()) {
 				parameters.add(new Parameters(false, propertyDescriptor.getName(), propertyDescriptor.getPropertyType().getSimpleName()));
-					System.out.println(propertyDescriptor);
 				}
 			} catch (IntrospectionException e) {
-				e.printStackTrace();
+				LOGGER.error("Problemas al obtener el Pageable: {}", parameter, e);
 			}
 		}
 	}

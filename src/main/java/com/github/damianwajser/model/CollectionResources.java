@@ -66,10 +66,19 @@ public class CollectionResources {
 		aux.httpCodes = this.httpCodes;
 		return aux;
 	}
-	
+
 	@JsonIgnore
-	public Resource getResource (String path) {
+	public Resource getResource(String path) {
 		return this.resources.get(path);
+	}
+
+	@JsonIgnore
+	public Map<String, Resource> getResources() {
+		return this.resources;
+	}
+	@JsonIgnore
+	public Map<Integer, List<DetailField>> getHttpCodes() {
+		return this.httpCodes;
 	}
 	@Override
 	public String toString() {
