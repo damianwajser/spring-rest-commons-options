@@ -106,7 +106,7 @@ public class ResorucesBuilder {
 		List<Object> exceptionsHandlers = ReflectionUtils
 				.proxyToObject(context.getBeansWithAnnotation(ControllerAdvice.class).values());
 		LOGGER.debug("Get All RestController");
-		exceptionsHandlers.forEach(h -> buildHttpCodes(h));
+		exceptionsHandlers.forEach(this::buildHttpCodes);
 		controllers
 				.addAll(ReflectionUtils.proxyToObject(context.getBeansWithAnnotation(RestController.class).values()));
 		LOGGER.debug("Get All Controller");

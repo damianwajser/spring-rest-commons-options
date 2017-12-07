@@ -46,7 +46,7 @@ public class ModelStrategy extends DetailFieldStrategy {
 						Optional<Field> field = getField(clazz, propertyDescriptor);
 						if (checkIfAddField(field, propertyDescriptor, isRequest)) {
 							Optional<DetailField> detail = super.createDetail(propertyDescriptor, field, isRequest);
-							detail.ifPresent(d -> detailFields.add(d));
+							detail.ifPresent(detailFields::add);
 						}
 					}
 				}

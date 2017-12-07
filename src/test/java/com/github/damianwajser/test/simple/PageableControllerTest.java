@@ -10,7 +10,6 @@ import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.context.embedded.LocalServerPort;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -21,7 +20,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.github.damianwajser.builders.json.ResorucesBuilder;
-import com.github.damianwajser.controllers.simple.ModifyPojoController;
 import com.github.damianwajser.controllers.simple.PageableController;
 import com.github.damianwajser.model.CollectionResources;
 import com.github.damianwajser.model.Endpoint;

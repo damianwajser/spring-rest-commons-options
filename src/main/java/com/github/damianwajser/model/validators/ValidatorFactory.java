@@ -68,7 +68,7 @@ public final class ValidatorFactory {
 	private static List<Validator> getValidators(List<Annotation> annotations) {
 		List<Validator> validations = new ArrayList<>();
 		for (Annotation annotation : annotations) {
-			getValidator(annotation).ifPresent(v -> validations.add(v));
+			getValidator(annotation).ifPresent(validations::add);
 		}
 		return validations;
 	}
