@@ -12,7 +12,7 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.github.damianwajser.builders.json.ResorucesBuilder;
+import com.github.damianwajser.builders.json.ResourcesBuilder;
 import com.github.damianwajser.config.WebMvcConfiguration;
 import com.github.damianwajser.controllers.simple.ModifyPojoController;
 import com.github.damianwajser.model.CollectionResources;
@@ -28,7 +28,7 @@ public class ModifyPojoControllerTest {
 	@Test
 	@org.junit.jupiter.api.Test
 	public void testGetAll() throws Exception {
-		ResorucesBuilder builder = ResorucesBuilder.getInstance();
+		ResourcesBuilder builder = ResourcesBuilder.getInstance();
 		builder.build(Arrays.asList(new ModifyPojoController()));
 		CollectionResources resources = builder.getResources();
 		assertNotNull(resources);

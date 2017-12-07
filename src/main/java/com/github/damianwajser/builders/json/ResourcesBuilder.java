@@ -29,21 +29,21 @@ import com.github.damianwajser.model.details.response.DetailFieldResponseFactory
 import com.github.damianwajser.model.details.strategys.DetailFieldStrategy;
 import com.github.damianwajser.utils.ReflectionUtils;
 
-public class ResorucesBuilder {
-	private static final Logger LOGGER = LoggerFactory.getLogger(ResorucesBuilder.class);
+public class ResourcesBuilder {
+	private static final Logger LOGGER = LoggerFactory.getLogger(ResourcesBuilder.class);
 
-	private static ResorucesBuilder instance;
+	private static ResourcesBuilder instance;
 	private List<Object> controllers;
 	private CollectionResources resources;
 
-	private ResorucesBuilder() {
+	private ResourcesBuilder() {
 	}
 
-	public static synchronized ResorucesBuilder getInstance() {
+	public static synchronized ResourcesBuilder getInstance() {
 		if (instance == null) {
-			synchronized (ResorucesBuilder.class) {
+			synchronized (ResourcesBuilder.class) {
 				if (instance == null) {
-					instance = new ResorucesBuilder();
+					instance = new ResourcesBuilder();
 				}
 			}
 		}

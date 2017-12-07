@@ -59,10 +59,9 @@ public final class ReflectionUtils {
 	public static Optional<Type> getGenericType(Class<?> clazz) {
 		LOGGER.debug("metodo getGenericType({})", clazz);
 		Optional<Type> t = Optional.empty();
-		if (clazz != null) {
-			if (clazz.getGenericSuperclass() != null && clazz.getGenericSuperclass() instanceof ParameterizedType) {
-				t = Optional.ofNullable(((ParameterizedType) clazz.getGenericSuperclass()).getActualTypeArguments()[0]);
-			}
+		if (clazz != null && clazz.getGenericSuperclass() != null
+				&& clazz.getGenericSuperclass() instanceof ParameterizedType) {
+			t = Optional.ofNullable(((ParameterizedType) clazz.getGenericSuperclass()).getActualTypeArguments()[0]);
 		}
 
 		return t;
@@ -145,7 +144,8 @@ public final class ReflectionUtils {
 		return parameters;
 	}
 
-	private static void collectParameters(Collection<Parameters> parameters, Parameter parameter, Annotation a, boolean isPathVariable) {
+	private static void collectParameters(Collection<Parameters> parameters, Parameter parameter, Annotation a,
+			boolean isPathVariable) {
 		if (a != null) {
 			String typeStr = parameter.getType().getSimpleName();
 			Type type = parameter.getParameterizedType();
@@ -160,7 +160,8 @@ public final class ReflectionUtils {
 			try {
 				for (PropertyDescriptor propertyDescriptor : Introspector.getBeanInfo(parameter.getType())
 						.getPropertyDescriptors()) {
-				parameters.add(new Parameters(false, propertyDescriptor.getName(), propertyDescriptor.getPropertyType().getSimpleName()));
+					parameters.add(new Parameters(false, propertyDescriptor.getName(),
+							propertyDescriptor.getPropertyType().getSimpleName()));
 				}
 			} catch (IntrospectionException e) {
 				LOGGER.error("Problemas al obtener el Pageable: {}", parameter, e);

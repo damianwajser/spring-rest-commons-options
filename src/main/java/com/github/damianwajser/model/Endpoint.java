@@ -55,6 +55,7 @@ public class Endpoint implements Comparable<Endpoint> {
 		this.setBodyResponse(new BodyResponse(m, controller.getClass()));
 		headers = new ArrayList<>();
 		ReflectionUtils.getHeaders(m).forEach(h -> {
+			LOGGER.debug("obteniendo el header: {}", h);
 			RequestHeader rh = h.getDeclaredAnnotationsByType(RequestHeader.class)[0];
 			headers.add(new Header(rh.value(), h.getType().getSimpleName()));
 		});

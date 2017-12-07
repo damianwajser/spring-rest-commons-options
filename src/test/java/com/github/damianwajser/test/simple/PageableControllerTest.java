@@ -19,7 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.github.damianwajser.builders.json.ResorucesBuilder;
+import com.github.damianwajser.builders.json.ResourcesBuilder;
 import com.github.damianwajser.controllers.simple.PageableController;
 import com.github.damianwajser.model.CollectionResources;
 import com.github.damianwajser.model.Endpoint;
@@ -39,7 +39,7 @@ public class PageableControllerTest {
 
 	@BeforeEach
 	private void initJunit5() {
-		ResorucesBuilder builder = ResorucesBuilder.getInstance();
+		ResourcesBuilder builder = ResourcesBuilder.getInstance();
 		builder.build(Arrays.asList(new PageableController()));
 		resources = builder.getResources();
 

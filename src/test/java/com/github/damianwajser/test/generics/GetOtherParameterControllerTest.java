@@ -14,7 +14,7 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.github.damianwajser.builders.json.ResorucesBuilder;
+import com.github.damianwajser.builders.json.ResourcesBuilder;
 import com.github.damianwajser.config.WebMvcConfiguration;
 import com.github.damianwajser.controllers.generics.OtherParameterController;
 import com.github.damianwajser.model.CollectionResources;
@@ -46,7 +46,7 @@ public class GetOtherParameterControllerTest {
 	@Before
 	@BeforeEach
 	public void setup() {
-		ResorucesBuilder builder = ResorucesBuilder.getInstance();
+		ResourcesBuilder builder = ResourcesBuilder.getInstance();
 		builder.build(Arrays.asList(new OtherParameterController()));
 		CollectionResources resources = builder.getResources();
 		assertNotNull(resources);

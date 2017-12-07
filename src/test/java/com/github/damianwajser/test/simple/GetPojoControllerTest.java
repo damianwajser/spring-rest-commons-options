@@ -13,7 +13,7 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.github.damianwajser.builders.json.ResorucesBuilder;
+import com.github.damianwajser.builders.json.ResourcesBuilder;
 import com.github.damianwajser.config.WebMvcConfiguration;
 import com.github.damianwajser.controllers.simple.GetPojoController;
 import com.github.damianwajser.model.CollectionResources;
@@ -32,7 +32,7 @@ public class GetPojoControllerTest {
 	@Test
 	@org.junit.jupiter.api.Test
 	public void testGetAll() throws Exception {
-		ResorucesBuilder builder = ResorucesBuilder.getInstance();
+		ResourcesBuilder builder = ResourcesBuilder.getInstance();
 		builder.build(Arrays.asList(new GetPojoController()));
 		CollectionResources resources = builder.getResources();
 		assertNotNull(resources);
@@ -60,7 +60,7 @@ public class GetPojoControllerTest {
 			assertEquals("String", endpoint.getHeaders().get(0).getType());
 			break;
 		case "GET - /test123?arg0={Integer}&arg1={String}":
-			assertEquals(endpoint.getQueryString().getParams().size(), 2);
+			assertEquals(2, endpoint.getQueryString().getParams().size());
 			TestUtils.checkParam(endpoint.getQueryString().getParams().get(0), "Integer", true, "arg0");
 			TestUtils.checkParam(endpoint.getQueryString().getParams().get(1), "String", true, "arg1");
 		case "GET - /test123":

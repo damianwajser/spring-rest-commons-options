@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.github.damianwajser.builders.json.ResorucesBuilder;
+import com.github.damianwajser.builders.json.ResourcesBuilder;
 import com.github.damianwajser.builders.raml.RamlBuilder;
 import com.github.damianwajser.model.CollectionResources;
 import com.github.damianwajser.utils.StringUtils;
@@ -35,7 +35,7 @@ public class OptionsController implements ApplicationListener<ApplicationReadyEv
 		String path = request.getServletPath().equals("/") ? request.getServletPath()
 				: StringUtils.deleteIfEnd(request.getServletPath(), "/");
 		LOGGER.info("solicitando JSON: {}", path);
-		CollectionResources resources = ResorucesBuilder.getInstance().getResources();
+		CollectionResources resources = ResourcesBuilder.getInstance().getResources();
 		return resources.filterPath(path);
 	}
 
@@ -48,14 +48,14 @@ public class OptionsController implements ApplicationListener<ApplicationReadyEv
 
 	@RequestMapping(value = "/endpoints", method = RequestMethod.GET)
 	public Iterable<String> handleResults() {
-		return ResorucesBuilder.getInstance().getEnpoints();
+		return ResourcesBuilder.getInstance().getEnpoints();
 	}
 
 	@Override
 	public void onApplicationEvent(final ApplicationReadyEvent event) {
 		try {
 			LOGGER.info("Comenzando la creacion de documentacion");
-			ResorucesBuilder.getInstance().build(context);
+			ResourcesBuilder.getInstance().build(context);
 		} catch (Exception e) {
 			LOGGER.error("problemas al crear la documentacion", e);
 		}
