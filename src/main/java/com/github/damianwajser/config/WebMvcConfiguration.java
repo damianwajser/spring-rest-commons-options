@@ -1,6 +1,11 @@
 package com.github.damianwajser.config;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
@@ -8,8 +13,11 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.AbstractJackson2HttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.PrettyPrinter;
+import com.fasterxml.jackson.core.util.MinimalPrettyPrinter;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator.Feature;
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
@@ -28,6 +36,7 @@ public class WebMvcConfiguration extends WebMvcConfigurerAdapter {
 			this.getObjectMapper().configure(JsonGenerator.Feature.QUOTE_FIELD_NAMES, false);
 			this.getObjectMapper().configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
 			this.getObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
+			this.getObjectMapper().setSerializationInclusion(Include.NON_NULL);
 		}
 	}
 }

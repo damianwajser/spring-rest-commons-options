@@ -1,22 +1,18 @@
 package com.github.damianwajser.builders.raml;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
+import com.github.damianwajser.builders.raml.model.BodyRaml;
+import com.github.damianwajser.builders.raml.model.QueryParameterRaml;
+import com.github.damianwajser.builders.raml.model.ResourceMethodRaml;
+import com.github.damianwajser.builders.raml.model.ResourceRaml;
 import com.github.damianwajser.model.CollectionResources;
 import com.github.damianwajser.model.Endpoint;
 import com.github.damianwajser.model.Parameters;
-import com.github.damianwajser.model.QueryString;
-import com.github.damianwajser.model.details.DetailField;
+import com.github.damianwajser.model.Resource;
 
 public class RamlBuilder {
 
@@ -28,83 +24,67 @@ public class RamlBuilder {
 		this.resources = resources;
 	}
 
-	public Map<String, Object> build() {
-		return getEnpointsRaml(resources);
+	public Raml build() {
+		return getResourceRaml(resources);
 	}
 
-	private Map<String, Object> getEnpointsRaml(CollectionResources resources) {
-		Map<String, Object> root = new HashMap<>();
-		Map<String, Map<String, Object>> endpoints = new HashMap<>();
-		resources.getResources().forEach((k, resource) -> {
-			LOGGER.info("create raml for: " + k);
-			resource.getEndpoints().forEach(e -> {
-				String relativeUrl = e.getRelativeUrl().isEmpty() ? "/" : e.getRelativeUrl();
-				if (!endpoints.containsKey(relativeUrl)) {
-					endpoints.put(relativeUrl, getMethods(e, resources.getHttpCodes()));
-				} else {
-					endpoints.get(relativeUrl).putAll(getMethods(e, resources.getHttpCodes()));
-				}
-			});
-			root.put(k, endpoints);
+	private Raml getResourceRaml(CollectionResources resources) {
+		Raml raml = new Raml("e-BookMobile API", "http://api.e-bookmobile.com/{version}", "v1");
+		ResourceRaml root = new ResourceRaml();
+		resources.getResources().forEach((path, resource) -> getEndpointsRaml(path, root, resource));
+		raml.setResources(root);
+		return raml;
+
+	}
+
+	private void getEndpointsRaml(String path, ResourceRaml root, Resource resource) {
+		ResourceRaml raml = new ResourceRaml();
+		resource.getEndpoints().forEach(e -> {
+			List<Parameters> params = e.getPathVariable().getParams();
+			if (params != null && !params.isEmpty()) {
+				raml.add("/{" + params.get(0).getName() + "}", getMethods(e));
+			} else if (e.getRelativeUrl().equals("/") || e.getRelativeUrl().isEmpty()) {
+				LOGGER.info("agregando el path: {}, relative: {}", path, e.getRelativeUrl());
+				root.add(path, getMethods(e));
+			} else {
+				LOGGER.info("agregando el path: {}, relative: {}", path, e.getRelativeUrl());
+				raml.add(e.getRelativeUrl(), getMethods(e));
+			}
 		});
-		return root;
-
+		root.add(path, raml);
 	}
 
-	private Map<String, Object> getMethods(Endpoint e, Map<Integer, List<DetailField>> httpCodes) {
-		Map<String, Object> methods = new HashMap<>();
-		methods.put(e.getHttpMethod(), getMethodInfo(e, httpCodes));
+	private ResourceRaml getMethods(Endpoint e) {
+		ResourceRaml methods = new ResourceRaml();
+		ResourceRaml qs = buildQueryString(e);
+		if (qs.getResource() != null && !qs.getResource().isEmpty())
+			methods.add(e.getHttpMethod(), qs);
+		methods.add(e.getHttpMethod(), buildBody(e));
 		return methods;
 	}
 
-	private Object getMethodInfo(Endpoint e, Map<Integer, List<DetailField>> httpCodes) {
-		Map<String, Object> info = new HashMap<>();
-		Optional<Map<String, Object>> queryParameters = getQueryParameters(e.getQueryString());
-		if (queryParameters.isPresent()) {
-			info.put("description", "aca descripcion");
-			info.put("queryParameters", queryParameters.get());
-			info.put("responses", getHttpCodesInfo(httpCodes, e));
-		}
-		return info;
+	private ResourceRaml buildBody(Endpoint e) {
+		ResourceRaml body = new ResourceRaml();
+		ResourceRaml bodyResponse = new ResourceRaml();
+		ResourceRaml bodyRaml = new ResourceRaml();
+		bodyRaml.add("body", getRealBody(e));
+		body.add("200", bodyRaml);
+		bodyResponse.add("responses", body);
+		return bodyResponse;
 	}
 
-	private Map<Integer, Object> getHttpCodesInfo(Map<Integer, List<DetailField>> httpCodes, Endpoint e) {
-		Map<Integer, Object> http = new HashMap<>();
-		ObjectMapper mapper = new ObjectMapper();
-		try {
-			mapper.enable(SerializationFeature.INDENT_OUTPUT);
-			http.put(HttpStatus.OK.value(), mapper.writeValueAsString(e.getBodyResponse().getJsonSchema()));
-		} catch (JsonProcessingException e1) {
-			LOGGER.error("error al parsear el JsonSchema: {}", e.getBodyResponse().getJsonSchema(), e1);
-		}
-		httpCodes.forEach((code, body) -> http.put(code, getBodyHttp(body)));
-		return http;
+	private ResourceRaml getRealBody(Endpoint e) {
+		ResourceRaml body = new ResourceRaml();
+		BodyRaml bodyRaml = new BodyRaml();
+		bodyRaml.setJsonSchema(e.getBodyResponse().getJsonSchema());
+		body.add("application/json", bodyRaml);
+		return body;
 	}
 
-	private Map<String, Object> getBodyHttp(List<DetailField> body) {
-		Map<String, Object> code = new HashMap<>();
-		code.put("description", "algo");
-		Map<String, Object> appJsonMap = new HashMap<>();
-		Map<String, Object> bodyMap = new HashMap<>();
-		appJsonMap.put("application/json", bodyMap);
-		body.forEach(f -> {
-			bodyMap.put("type", "jsonSchemma");
-		});
-
-		code.put("body", appJsonMap);
-		return code;
-	}
-
-	private Optional<Map<String, Object>> getQueryParameters(QueryString queryString) {
-		Map<String, Object> parameters = new HashMap<>();
-		queryString.getParams().forEach(p -> parameters.put(p.getName(), getParameterInfo(p)));
-		return parameters.isEmpty() ? Optional.empty() : Optional.of(parameters);
-	}
-
-	private Object getParameterInfo(Parameters p) {
-		Map<String, Object> info = new HashMap<>();
-		info.put("required", p.isRequired());
-		info.put("type", p.getType());
-		return info;
+	private ResourceRaml buildQueryString(Endpoint e) {
+		ResourceMethodRaml m = new ResourceMethodRaml();
+		e.getQueryString().getParams().forEach(qs -> m.addQueryParameters(qs.getName(),
+				new QueryParameterRaml(qs.getName(), qs.getType(), "", qs.isRequired())));
+		return m;
 	}
 }
